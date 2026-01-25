@@ -59,7 +59,14 @@ function HomePageContent() {
                 <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="rounded-xl flex items-center justify-center">
-                            <Image src="/icon.png" alt="MailMagic" width={35} height={35} className="rounded-xl" />
+                            <Image
+                                src="/icon.png"
+                                alt="MailMagic"
+                                width={35}
+                                height={35}
+                                className="rounded-xl"
+                                priority
+                            />
                         </div>
                         <span className="font-display font-bold text-xl tracking-tight text-slate-900">MailMagic</span>
                     </div>
@@ -111,7 +118,14 @@ function HomePageContent() {
                             <div className="flex items-center gap-6">
                                 <div className="flex -space-x-2">
                                     {[1, 2, 3, 4].map(i => (
-                                        <img key={i} src={`https://api.dicebear.com/7.x/avataaars/svg?seed=user${i}`} className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 shadow-sm" alt="" />
+                                        <Image
+                                            key={i}
+                                            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=user${i}`}
+                                            width={32}
+                                            height={32}
+                                            className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 shadow-sm"
+                                            alt={`User ${i}`}
+                                        />
                                     ))}
                                 </div>
                                 <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
