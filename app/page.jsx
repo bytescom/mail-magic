@@ -3,11 +3,12 @@
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { Mail, Zap, Shield, Clock, ArrowRight, CheckCircle2, Sparkles, Send, Briefcase, Globe, Lock, Star, Twitter, Github, Linkedin } from 'lucide-react';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
-export default function HomePage() {
+function HomePageContent() {
     const { data: session, status } = useSession();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -54,8 +55,8 @@ export default function HomePage() {
             <nav className="fixed top-0 w-full z-50 border-b border-slate-100/60 bg-white/70 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-200">
-                            <Send className="w-4.5 h-4.5 text-white" />
+                        <div className="rounded-xl flex items-center justify-center">
+                            <Image src="/icon.png" alt="MailMagic" width={35} height={35} className="rounded-xl" />
                         </div>
                         <span className="font-display font-bold text-xl tracking-tight text-slate-900">MailMagic</span>
                     </div>
@@ -185,5 +186,21 @@ export default function HomePage() {
                 </div>
             </footer>
         </div>
+    );
+}
+
+// Wrap with Suspense to handle useSearchParams during build
+export default function HomePage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+                <div className="text-center space-y-4">
+                    <div className="w-12 h-12 border-3 border-slate-200 border-t-blue-600 rounded-full animate-spin mx-auto"></div>
+                    <p className="text-slate-500 font-medium text-sm animate-pulse">Loading...</p>
+                </div>
+            </div>
+        }>
+            <HomePageContent />
+        </Suspense>
     );
 }
