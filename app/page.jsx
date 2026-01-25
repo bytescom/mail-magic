@@ -14,9 +14,12 @@ function HomePageContent() {
     const searchParams = useSearchParams();
 
     useEffect(() => {
-        const error = searchParams.get('error');
-        if (error) {
-            toast.error(`Authentication error: ${error}`);
+        // Defensive check for searchParams to prevent build errors
+        if (searchParams) {
+            const error = searchParams.get('error');
+            if (error) {
+                toast.error(`Authentication error: ${error}`);
+            }
         }
 
         if (status === 'authenticated' && session) {

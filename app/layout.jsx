@@ -1,5 +1,7 @@
 import { Toaster } from 'sonner';
 import AuthProvider from '@/components/providers/AuthProvider';
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 import '@/styles/globals.css';
 
 export const metadata = {
@@ -33,6 +35,8 @@ export default function RootLayout({ children }) {
                         theme="dark"
                     />
                 </AuthProvider>
+                <SpeedInsights />
+                <Analytics />
             </body>
         </html>
     );
