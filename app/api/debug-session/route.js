@@ -4,6 +4,11 @@ import { authOptions } from '../auth/[...nextauth]/route';
 
 export async function GET() {
     try {
+        // 🔒 SECURITY: Only allow in development mode
+        if (process.env.NODE_ENV === 'production') {
+            return NextResponse.json({ error: 'Not found' }, { status: 404 });
+        }
+
         const session = await getServerSession(authOptions);
 
         return NextResponse.json({

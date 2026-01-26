@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -8,7 +8,8 @@ import { ListChecks, CheckCircle2, XCircle, Filter, Download, ArrowRight, Clock,
 import { toast } from 'sonner';
 import { formatDate, getStatusBadgeClass, cn } from '@/lib/utils';
 
-export default function LogsPage() {
+// Separate component for content that uses useSearchParams
+function LogsPageContent() {
     const searchParams = useSearchParams();
     const [logs, setLogs] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -434,5 +435,23 @@ export default function LogsPage() {
                 </div>
             </DashboardLayout>
         </ProtectedRoute>
+    );
+}
+
+// Main export with Suspense boundary (required for useSearchParams in Next.js 13+)
+export default function LogsPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 flex items-center justify-center">
+                <div className="text-center space-y-4">
+                    <div className="w-16 h-16 mx-auto">
+                        <div className="w-full h-full border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                    </div>
+                    <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Loading Activity Logs...</p>
+                </div>
+            </div>
+        }>
+            <LogsPageContent />
+        </Suspense>
     );
 }
