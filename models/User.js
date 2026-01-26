@@ -26,20 +26,20 @@ const UserSchema = new mongoose.Schema({
     tokenExpiry: {
         type: Date,
     },
-    // Resume file
+    // Resume file (stored in Vercel Blob)
     resume: {
-        filename: String,
-        mimeType: String,
-        size: Number,
-        data: String, // Base64 encoded
-        uploadedAt: Date,
+        url: String,           // Vercel Blob URL (e.g., https://xxx.blob.vercel.com/resume.pdf)
+        filename: String,      // Original filename
+        mimeType: String,      // MIME type (e.g., application/pdf)
+        size: Number,          // File size in bytes
+        uploadedAt: Date,      // Upload timestamp
     },
-    // Cover Letter file
+    // Cover Letter file (stored in Vercel Blob)
     coverLetter: {
+        url: String,           // Vercel Blob URL
         filename: String,
         mimeType: String,
         size: Number,
-        data: String, // Base64 encoded
         uploadedAt: Date,
     },
     // User preferences

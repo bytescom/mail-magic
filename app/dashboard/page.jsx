@@ -161,9 +161,10 @@ export default function DashboardPage() {
                                 {stats?.recentLogs && stats.recentLogs.length > 0 ? (
                                     <div className="divide-y divide-slate-100">
                                         {stats.recentLogs.map((log) => (
-                                            <div
+                                            <Link
                                                 key={log._id}
-                                                className="flex items-center gap-4 p-5 hover:bg-slate-50/50 active:bg-slate-100 transition-colors group cursor-default"
+                                                href={`/logs?logId=${log._id}`}
+                                                className="flex items-center gap-4 p-5 hover:bg-slate-50/50 active:bg-slate-100 transition-colors group cursor-pointer"
                                             >
                                                 <div className={cn(
                                                     "w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105",
@@ -189,7 +190,7 @@ export default function DashboardPage() {
                                                     <span className="text-xs font-bold text-slate-400">Details</span>
                                                     <ChevronRight className="w-4 h-4 text-slate-400" />
                                                 </div>
-                                            </div>
+                                            </Link>
                                         ))}
                                     </div>
                                 ) : (

@@ -10,8 +10,8 @@ export const authOptions = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             authorization: {
                 params: {
-                    prompt: 'select_account',
-                    access_type: 'offline',
+                    prompt: 'consent',  // Force consent screen to get refresh token
+                    access_type: 'offline',  // Required for refresh token
                     response_type: 'code',
                     scope: [
                         'openid',
@@ -54,6 +54,13 @@ export const authOptions = {
                 }
                 console.log('⏰ Token expiry calculated:', tokenExpiry);
 
+                // Warning if refresh token is missing
+                if (!account?.refresh_token) {
+                    console.warn('⚠️ WARNING: No refresh token received from Google!');
+                    console.warn('⚠️ User will not be able to send emails after access token expires.');
+                    console.warn('⚠️ This usually means the user needs to revoke access and sign in again.');
+                }
+
                 // Find or create user
                 let dbUser = await User.findOne({ email: user.email });
                 console.log('👤 User found:', dbUser ? 'Yes' : 'No - creating new user');
@@ -78,6 +85,10 @@ export const authOptions = {
                     dbUser.updatedAt = new Date();
                     await dbUser.save();
                     console.log('✅ User updated:', dbUser._id);
+                    console.log('📝 Tokens updated:', {
+                        hasAccessToken: !!dbUser.accessToken,
+                        hasRefreshToken: !!dbUser.refreshToken,
+                    });
                 }
 
                 console.log('✅ SignIn callback completed successfully');
