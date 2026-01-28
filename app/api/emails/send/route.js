@@ -141,6 +141,10 @@ export async function POST(request) {
 
         if (!user || !user.accessToken || !user.refreshToken) {
             console.error('❌ Gmail tokens missing from database');
+
+            // Check token expiry if available
+            const tokenExpired = user?.tokenExpiry ? new Date(user.tokenExpiry) < new Date() : true;
+
             return NextResponse.json({
                 error: 'Gmail authentication required. Please sign out and sign in again to authorize Gmail access.',
                 code: 'MISSING_GMAIL_TOKENS',
@@ -148,6 +152,12 @@ export async function POST(request) {
                     userFound: !!user,
                     hasAccessToken: !!user?.accessToken,
                     hasRefreshToken: !!user?.refreshToken,
+                    tokenExpiry: user?.tokenExpiry,
+                    tokenExpired: tokenExpired,
+                },
+                action: {
+                    message: 'Visit /token-diagnostics to check your token status',
+                    diagnosticsUrl: '/token-diagnostics'
                 }
             }, { status: 401 });
         }
