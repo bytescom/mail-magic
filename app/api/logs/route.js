@@ -2,6 +2,9 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import dbConnect from '@/lib/mongodb';
 import EmailLog from '@/models/EmailLog';
+// Import models that will be used in populate() - required for serverless environments
+import EmailTemplate from '@/models/EmailTemplate';
+import HrEmail from '@/models/HrEmail';
 import { NextResponse } from 'next/server';
 
 export async function GET(request) {

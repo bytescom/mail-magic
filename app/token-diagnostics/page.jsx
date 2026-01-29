@@ -78,17 +78,17 @@ export default function TokenDiagnostics() {
                         </div>
 
                         {/* Run Diagnostics Button */}
-                        <div className="flex gap-4 mb-6">
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
                             <button
                                 onClick={runDiagnostics}
                                 disabled={loading}
-                                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition-colors"
+                                className="flex-1 px-4 sm:px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition-colors text-sm sm:text-base"
                             >
                                 {loading ? '🔄 Running Diagnostics...' : '🔍 Run Token Diagnostics'}
                             </button>
                             <button
                                 onClick={handleSignOut}
-                                className="px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium transition-colors"
+                                className="px-4 sm:px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium transition-colors text-sm sm:text-base whitespace-nowrap"
                             >
                                 🚪 Sign Out & Re-authenticate
                             </button>
@@ -107,8 +107,8 @@ export default function TokenDiagnostics() {
                             <div className="space-y-4">
                                 {/* Status Badge */}
                                 <div className={`p-4 rounded-lg border-2 ${diagnostics.valid
-                                        ? 'bg-green-50 border-green-200'
-                                        : 'bg-red-50 border-red-200'
+                                    ? 'bg-green-50 border-green-200'
+                                    : 'bg-red-50 border-red-200'
                                     }`}>
                                     <div className="flex items-center justify-between">
                                         <div>
@@ -134,13 +134,13 @@ export default function TokenDiagnostics() {
                                     <h3 className="font-semibold text-gray-900 mb-3">Token Details</h3>
                                     <div className="space-y-2 text-sm">
                                         {diagnostics.details && Object.entries(diagnostics.details).map(([key, value]) => (
-                                            <div key={key} className="flex justify-between items-center py-1 border-b border-gray-200 last:border-0">
-                                                <span className="font-medium text-gray-700">
+                                            <div key={key} className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-200 last:border-0 gap-1">
+                                                <span className="font-medium text-gray-700 text-xs sm:text-sm">
                                                     {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:
                                                 </span>
-                                                <span className={`font-mono ${typeof value === 'boolean'
-                                                        ? value ? 'text-green-600' : 'text-red-600'
-                                                        : 'text-gray-900'
+                                                <span className={`font-mono text-xs sm:text-sm break-all ${typeof value === 'boolean'
+                                                    ? value ? 'text-green-600' : 'text-red-600'
+                                                    : 'text-gray-900'
                                                     }`}>
                                                     {typeof value === 'boolean'
                                                         ? (value ? '✓ Yes' : '✗ No')
@@ -193,13 +193,13 @@ export default function TokenDiagnostics() {
                         )}
 
                         {/* Help Section */}
-                        <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                            <h3 className="font-semibold text-blue-900 mb-2">💡 Troubleshooting Tips</h3>
-                            <ul className="space-y-2 text-sm text-blue-800">
-                                <li>• <strong>304 Status in Production?</strong> Check if your environment variables (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXTAUTH_URL) are correctly set in your hosting provider.</li>
-                                <li>• <strong>Missing Refresh Token?</strong> Sign out completely and sign in again to get a new refresh token.</li>
-                                <li>• <strong>Token Expired?</strong> Click "Run Token Diagnostics" - it will attempt to auto-refresh your token.</li>
-                                <li>• <strong>Still Not Working?</strong> Revoke access in your Google Account settings, then sign in again.</li>
+                        <div className="mt-8 p-4 sm:p-6 bg-blue-50 border border-blue-200 rounded-lg">
+                            <h3 className="font-semibold text-blue-900 mb-3 text-sm sm:text-base">💡 Troubleshooting Tips</h3>
+                            <ul className="space-y-2 sm:space-y-3 text-xs sm:text-sm text-blue-800 leading-relaxed">
+                                <li className="flex gap-2"><span className="shrink-0">•</span><span><strong>304 Status in Production?</strong> Check if your environment variables (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXTAUTH_URL) are correctly set in your hosting provider.</span></li>
+                                <li className="flex gap-2"><span className="shrink-0">•</span><span><strong>Missing Refresh Token?</strong> Sign out completely and sign in again to get a new refresh token.</span></li>
+                                <li className="flex gap-2"><span className="shrink-0">•</span><span><strong>Token Expired?</strong> Click "Run Token Diagnostics" - it will attempt to auto-refresh your token.</span></li>
+                                <li className="flex gap-2"><span className="shrink-0">•</span><span><strong>Still Not Working?</strong> Revoke access in your Google Account settings, then sign in again.</span></li>
                             </ul>
                         </div>
                     </div>
