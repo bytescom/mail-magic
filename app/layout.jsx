@@ -1,8 +1,28 @@
+import { Inter, Outfit } from 'next/font/google';
 import { Toaster } from 'sonner';
 import AuthProvider from '@/components/providers/AuthProvider';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import '@/styles/globals.css';
+
+// Optimize font loading with Next.js font optimization
+const inter = Inter({
+    subsets: ['latin'],
+    weight: ['300', '400', '500', '600', '700', '800', '900'],
+    variable: '--font-inter',
+    display: 'swap', // Prevent invisible text while fonts load
+    preload: true,
+    fallback: ['system-ui', '-apple-system', 'sans-serif'],
+});
+
+const outfit = Outfit({
+    subsets: ['latin'],
+    weight: ['300', '400', '500', '600', '700', '800', '900'],
+    variable: '--font-outfit',
+    display: 'swap',
+    preload: true,
+    fallback: ['sans-serif'],
+});
 
 export const metadata = {
     title: 'MailMagic - Apply to 10x More Jobs in 10x Less Time',
@@ -23,8 +43,15 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en">
-            <body className="font-sans">
+        <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
+            <head>
+                {/* Preconnect to external domains for faster resource loading */}
+                <link rel="preconnect" href="https://api.dicebear.com" />
+                <link rel="preconnect" href="https://lh3.googleusercontent.com" />
+                <link rel="dns-prefetch" href="https://api.dicebear.com" />
+                <link rel="dns-prefetch" href="https://lh3.googleusercontent.com" />
+            </head>
+            <body className="font-sans antialiased">
                 <AuthProvider>
                     {children}
                     <Toaster
