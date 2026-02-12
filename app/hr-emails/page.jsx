@@ -523,61 +523,13 @@ export default function HrEmailsPage() {
 
                                     <div className="space-y-2">
                                         <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-1">Position / Role <span className="text-rose-400">*</span></label>
-                                        <div className="relative">
-                                            <select
-                                                value={formData.jobRole}
-                                                onChange={(e) => setFormData({ ...formData, jobRole: e.target.value })}
-                                                required
-                                                className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all cursor-pointer appearance-none"
-                                            >
-                                                <option value="">Select a role or type below...</option>
-                                                <optgroup label="Engineering">
-                                                    <option value="Software Engineer">Software Engineer</option>
-                                                    <option value="Frontend Developer">Frontend Developer</option>
-                                                    <option value="Backend Developer">Backend Developer</option>
-                                                    <option value="Full Stack Developer">Full Stack Developer</option>
-                                                    <option value="DevOps Engineer">DevOps Engineer</option>
-                                                    <option value="Data Engineer">Data Engineer</option>
-                                                    <option value="Machine Learning Engineer">Machine Learning Engineer</option>
-                                                    <option value="QA Engineer">QA Engineer</option>
-                                                    <option value="Software Tester">Software Tester</option>
-                                                    <option value="Mobile Developer">Mobile Developer</option>
-                                                </optgroup>
-                                                <optgroup label="Design">
-                                                    <option value="UI/UX Designer">UI/UX Designer</option>
-                                                    <option value="Product Designer">Product Designer</option>
-                                                    <option value="Graphic Designer">Graphic Designer</option>
-                                                </optgroup>
-                                                <optgroup label="Management">
-                                                    <option value="Product Manager">Product Manager</option>
-                                                    <option value="Project Manager">Project Manager</option>
-                                                    <option value="Engineering Manager">Engineering Manager</option>
-                                                    <option value="Technical Lead">Technical Lead</option>
-                                                </optgroup>
-                                                <optgroup label="Data & Analytics">
-                                                    <option value="Data Scientist">Data Scientist</option>
-                                                    <option value="Data Analyst">Data Analyst</option>
-                                                    <option value="Business Analyst">Business Analyst</option>
-                                                </optgroup>
-                                                <optgroup label="Internships">
-                                                    <option value="Software Engineer Intern">Software Engineer Intern</option>
-                                                    <option value="Frontend Developer Intern">Frontend Developer Intern</option>
-                                                    <option value="Backend Developer Intern">Backend Developer Intern</option>
-                                                    <option value="Full Stack Developer Intern">Full Stack Developer Intern</option>
-                                                    <option value="QA Intern">QA Intern</option>
-                                                    <option value="Data Science Intern">Data Science Intern</option>
-                                                </optgroup>
-                                            </select>
-                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                                                <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                                            </div>
-                                        </div>
                                         <input
                                             type="text"
                                             value={formData.jobRole}
                                             onChange={(e) => setFormData({ ...formData, jobRole: e.target.value })}
-                                            className="w-full px-5 py-3 rounded-xl bg-white border border-slate-100 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all placeholder:font-normal"
-                                            placeholder="Or type a custom role here..."
+                                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all placeholder:font-normal"
+                                            placeholder="e.g., Software Engineer, Product Manager, Data Scientist..."
+                                            required
                                         />
                                     </div>
 
