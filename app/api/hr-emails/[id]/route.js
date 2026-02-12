@@ -7,6 +7,7 @@ import { NextResponse } from 'next/server';
 export async function GET(request, { params }) {
     try {
         const session = await getServerSession(authOptions);
+        const { id } = await params;
 
         if (!session) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -14,7 +15,7 @@ export async function GET(request, { params }) {
 
         await dbConnect();
         const hrEmail = await HrEmail.findOne({
-            _id: params.id,
+            _id: id,
             userId: session.user.id,
         });
 
@@ -32,6 +33,7 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
     try {
         const session = await getServerSession(authOptions);
+        const { id } = await params;
 
         if (!session) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -39,9 +41,32 @@ export async function PUT(request, { params }) {
 
         const body = await request.json();
 
+        // Validate email format if email is being updated
+        if (body.email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(body.email)) {
+                return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
+            }
+            body.email = body.email.toLowerCase();
+        }
+
         await dbConnect();
+
+        // Check for duplicate email if email is being changed
+        if (body.email) {
+            const existing = await HrEmail.findOne({
+                userId: session.user.id,
+                email: body.email,
+                _id: { $ne: id },
+            });
+
+            if (existing) {
+                return NextResponse.json({ error: 'This email already exists in your contacts' }, { status: 409 });
+            }
+        }
+
         const hrEmail = await HrEmail.findOneAndUpdate(
-            { _id: params.id, userId: session.user.id },
+            { _id: id, userId: session.user.id },
             {
                 ...body,
                 updatedAt: new Date(),
@@ -63,6 +88,7 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
     try {
         const session = await getServerSession(authOptions);
+        const { id } = await params;
 
         if (!session) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -70,7 +96,7 @@ export async function DELETE(request, { params }) {
 
         await dbConnect();
         const hrEmail = await HrEmail.findOneAndDelete({
-            _id: params.id,
+            _id: id,
             userId: session.user.id,
         });
 

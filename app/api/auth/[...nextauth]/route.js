@@ -10,7 +10,6 @@ export const authOptions = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             authorization: {
                 params: {
-                    prompt: 'consent',  // Force consent screen to get refresh token
                     access_type: 'offline',  // Required for refresh token
                     response_type: 'code',
                     scope: [

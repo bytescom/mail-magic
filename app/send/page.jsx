@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import DashboardLayout from '@/components/DashboardLayout';
-import { Send, CheckCircle, FileText, Users, Loader2, Paperclip, Upload, X, File, Sparkles, AlertCircle, Info, ChevronRight, LayoutPanelTop, Eye, History, Mail, ArrowRight, User2, Building2, Clock, Trash2, ShieldAlert, Zap } from 'lucide-react';
+import { Send, CheckCircle, FileText, Users, Loader2, Paperclip, Upload, X, File, Sparkles, AlertCircle, Info, ChevronRight, LayoutPanelTop, Eye, History, Mail, ArrowRight, User2, Building2, Clock, Trash2, ShieldAlert, Zap, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { replaceVariables, cn } from '@/lib/utils';
 
@@ -38,6 +38,7 @@ export default function SendEmailsPage() {
 
     // HR Filter state
     const [hrFilter, setHrFilter] = useState('not_contacted'); // 'all', 'contacted', 'not_contacted'
+    const [hrSearchQuery, setHrSearchQuery] = useState('');
 
     // Confirmation modal state
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -311,11 +312,26 @@ export default function SendEmailsPage() {
 
     const selectedTemplateObj = templates.find((t) => t._id === selectedTemplate);
 
-    // Filter HR emails based on contact status
+    // Filter HR emails based on contact status and search
     const filteredHrEmails = hrEmails.filter((hr) => {
-        if (hrFilter === 'all') return true;
-        if (hrFilter === 'contacted') return hr.status === 'contacted';
-        if (hrFilter === 'not_contacted') return hr.status !== 'contacted';
+        // Status filter
+        if (hrFilter === 'contacted' && hr.status !== 'contacted') return false;
+        if (hrFilter === 'not_contacted' && hr.status === 'contacted') return false;
+
+        // Search filter
+        if (hrSearchQuery.trim()) {
+            const query = hrSearchQuery.toLowerCase().trim();
+            const matchesName = hr.hrName && hr.hrName.toLowerCase().includes(query);
+            const matchesEmail = hr.email && hr.email.toLowerCase().includes(query);
+            const matchesCompany = hr.company && hr.company.toLowerCase().includes(query);
+            const matchesRole = hr.jobRole && hr.jobRole.toLowerCase().includes(query);
+            const matchesTags = hr.tags && hr.tags.some(tag => tag.toLowerCase().includes(query));
+
+            if (!matchesName && !matchesEmail && !matchesCompany && !matchesRole && !matchesTags) {
+                return false;
+            }
+        }
+
         return true;
     });
 
@@ -560,6 +576,26 @@ export default function SendEmailsPage() {
                                         >
                                             All ({hrEmails.length})
                                         </button>
+                                    </div>
+
+                                    {/* Search Input */}
+                                    <div className="relative">
+                                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                        <input
+                                            type="text"
+                                            value={hrSearchQuery}
+                                            onChange={(e) => setHrSearchQuery(e.target.value)}
+                                            placeholder="Search by name, company, role, email, or tags..."
+                                            className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-sm font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
+                                        />
+                                        {hrSearchQuery && (
+                                            <button
+                                                onClick={() => setHrSearchQuery('')}
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all"
+                                            >
+                                                <X className="w-4 h-4" />
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="p-4 sm:p-8">

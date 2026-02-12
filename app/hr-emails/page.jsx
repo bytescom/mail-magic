@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import DashboardLayout from '@/components/DashboardLayout';
-import { Plus, Upload, Pencil, Trash2, Users, FileSpreadsheet, Search, Filter, X, Building2, User2, Briefcase, Mail } from 'lucide-react';
+import { Plus, Upload, Pencil, Trash2, Users, FileSpreadsheet, Search, Filter, X, Building2, User2, Briefcase, Mail, Hash } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -19,6 +19,7 @@ export default function HrEmailsPage() {
         hrName: '',
         company: '',
         jobRole: '',
+        tags: '',
         notes: '',
     });
 
@@ -46,27 +47,55 @@ export default function HrEmailsPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Client-side duplicate check (only on create, not edit)
+        if (!currentEmail) {
+            const isDuplicate = hrEmails.some(
+                (hr) => hr.email.toLowerCase() === formData.email.toLowerCase()
+            );
+            if (isDuplicate) {
+                toast.error('This email already exists in your contacts');
+                return;
+            }
+        }
+
         const url = currentEmail
             ? `/api/hr-emails/${currentEmail._id}`
             : '/api/hr-emails';
         const method = currentEmail ? 'PUT' : 'POST';
 
         try {
+            // Parse tags from #hashtag format into array
+            const tagsArray = formData.tags
+                ? formData.tags
+                    .split(/[\s,]+/)
+                    .map(t => t.replace(/^#/, '').trim())
+                    .filter(Boolean)
+                : [];
+
+            const submitData = {
+                ...formData,
+                tags: tagsArray,
+            };
+
             const response = await fetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(submitData),
             });
 
             if (response.ok) {
                 toast.success(currentEmail ? 'Contact updated!' : 'Contact added!');
                 setShowModal(false);
-                setFormData({ email: '', hrName: '', company: '', jobRole: '', notes: '' });
+                setFormData({ email: '', hrName: '', company: '', jobRole: '', tags: '', notes: '' });
                 setCurrentEmail(null);
                 fetchHrEmails();
             } else {
-                const error = await response.json();
-                toast.error(error.error || 'Failed to save contact');
+                const errorData = await response.json();
+                if (response.status === 409) {
+                    toast.error('This email already exists in your contacts');
+                } else {
+                    toast.error(errorData.error || 'Failed to save contact');
+                }
             }
         } catch (error) {
             console.error('Error:', error);
@@ -98,6 +127,7 @@ export default function HrEmailsPage() {
             hrName: email.hrName || '',
             company: email.company || '',
             jobRole: email.jobRole || '',
+            tags: email.tags ? email.tags.map(t => `#${t}`).join(' ') : '',
             notes: email.notes || '',
         });
         setShowModal(true);
@@ -130,11 +160,26 @@ export default function HrEmailsPage() {
         }
     };
 
-    const filteredEmails = hrEmails.filter(contact =>
-        contact.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (contact.hrName && contact.hrName.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (contact.company && contact.company.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
+    const filteredEmails = hrEmails.filter(contact => {
+        const query = searchQuery.toLowerCase().trim();
+        if (!query) return true;
+
+        // Support #hashtag search
+        if (query.startsWith('#')) {
+            const tagQuery = query.slice(1);
+            return contact.tags && contact.tags.some(tag =>
+                tag.toLowerCase().includes(tagQuery)
+            );
+        }
+
+        return (
+            contact.email.toLowerCase().includes(query) ||
+            (contact.hrName && contact.hrName.toLowerCase().includes(query)) ||
+            (contact.company && contact.company.toLowerCase().includes(query)) ||
+            (contact.jobRole && contact.jobRole.toLowerCase().includes(query)) ||
+            (contact.tags && contact.tags.some(tag => tag.toLowerCase().includes(query)))
+        );
+    });
 
     if (loading) {
         return (
@@ -176,7 +221,7 @@ export default function HrEmailsPage() {
                             <button
                                 onClick={() => {
                                     setCurrentEmail(null);
-                                    setFormData({ email: '', hrName: '', company: '', jobRole: '', notes: '' });
+                                    setFormData({ email: '', hrName: '', company: '', jobRole: '', tags: '', notes: '' });
                                     setShowModal(true);
                                 }}
                                 className="bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-xl shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer"
@@ -238,139 +283,176 @@ export default function HrEmailsPage() {
                     ) : (
                         <div className="space-y-6">
                             {/* Mobile Card View */}
-                            <div className="grid grid-cols-1 gap-4 lg:hidden">
+                            {/* Mobile Card View */}
+                            <div className="grid grid-cols-1 gap-3 lg:hidden">
                                 {filteredEmails.map((email) => (
-                                    <div key={email._id} className="bg-white border border-slate-200/60 p-6 rounded-[2rem] shadow-sm space-y-4">
-                                        <div className="flex items-start justify-between">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center border border-slate-200/50">
-                                                    <User2 className="w-5 h-5 text-slate-400" />
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <p className="font-display font-bold text-slate-900 text-base truncate">{email.hrName || 'Lead Identifier'}</p>
-                                                    <p className="text-xs font-medium text-slate-500 truncate">{email.email}</p>
-                                                </div>
+                                    <div key={email._id} className="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm">
+                                        {/* Email Header */}
+                                        <div className="flex items-center gap-3 mb-3 pb-3 border-b border-slate-100">
+                                            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200/60">
+                                                <Mail className="w-4 h-4 text-slate-500" />
                                             </div>
-                                            <div className={cn(
-                                                "w-2 h-2 rounded-full mt-2",
-                                                email.status === 'contacted' ? "bg-emerald-500" : "bg-blue-500"
-                                            )} />
+                                            <p className="text-[13px] font-semibold text-slate-800 truncate flex-1">{email.email}</p>
                                         </div>
 
-                                        <div className="grid grid-cols-2 gap-4 py-4 border-y border-slate-50">
+                                        {/* Company & Role Grid */}
+                                        <div className="grid grid-cols-2 gap-3 mb-3">
                                             <div>
-                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Company</p>
-                                                <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5 line-clamp-1">
-                                                    <Building2 className="w-3 h-3 text-blue-500" />
-                                                    {email.company || 'Private Entity'}
+                                                <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Company</p>
+                                                <p className="text-[13px] font-semibold text-slate-800 line-clamp-1">
+                                                    {email.company || '—'}
                                                 </p>
                                             </div>
                                             <div>
-                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Role</p>
-                                                <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5 line-clamp-1">
-                                                    <Briefcase className="w-3 h-3 text-slate-300" />
-                                                    {email.jobRole || 'Recruiter'}
+                                                <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Role</p>
+                                                <p className="text-[13px] font-semibold text-slate-800 line-clamp-1">
+                                                    {email.jobRole || '—'}
                                                 </p>
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center justify-between gap-3 pt-2">
-                                            <span className={cn(
-                                                "px-3 py-1 rounded-lg font-bold text-[9px] uppercase tracking-wider",
-                                                email.status === 'contacted' ? "bg-emerald-50 text-emerald-600" : "bg-blue-50 text-blue-600"
-                                            )}>
-                                                {email.status || 'Active'}
-                                            </span>
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={() => handleEdit(email)}
-                                                    className="p-2.5 rounded-xl bg-slate-50 text-slate-400 hover:text-blue-600 transition-all border border-slate-200/60"
-                                                >
-                                                    <Pencil className="w-4 h-4" />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(email._id)}
-                                                    className="p-2.5 rounded-xl bg-slate-50 text-slate-400 hover:text-rose-600 transition-all border border-slate-200/60"
-                                                >
-                                                    <Trash2 className="w-4 h-4" />
-                                                </button>
+                                        {/* Tags */}
+                                        {email.tags && email.tags.length > 0 && (
+                                            <div className="mb-3">
+                                                <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tags</p>
+                                                <div className="flex flex-wrap gap-1.5">
+                                                    {email.tags.map((tag, i) => {
+                                                        const colors = [
+                                                            'bg-blue-50 text-blue-700 border-blue-200',
+                                                            'bg-emerald-50 text-emerald-700 border-emerald-200',
+                                                            'bg-violet-50 text-violet-700 border-violet-200',
+                                                            'bg-amber-50 text-amber-700 border-amber-200',
+                                                            'bg-rose-50 text-rose-700 border-rose-200',
+                                                            'bg-cyan-50 text-cyan-700 border-cyan-200',
+                                                        ];
+                                                        return (
+                                                            <span
+                                                                key={i}
+                                                                className={cn(
+                                                                    "px-2.5 py-1 rounded-lg text-[11px] font-semibold border",
+                                                                    colors[i % colors.length]
+                                                                )}
+                                                            >
+                                                                {tag}
+                                                            </span>
+                                                        );
+                                                    })}
+                                                </div>
                                             </div>
+                                        )}
+
+                                        {/* Actions */}
+                                        <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                                            <button
+                                                onClick={() => handleEdit(email)}
+                                                className="px-4 py-2 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors text-[12px] font-semibold flex items-center gap-1.5"
+                                            >
+                                                <Pencil className="w-3.5 h-3.5" />
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(email._id)}
+                                                className="px-4 py-2 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 transition-colors text-[12px] font-semibold flex items-center gap-1.5"
+                                            >
+                                                <Trash2 className="w-3.5 h-3.5" />
+                                                Delete
+                                            </button>
                                         </div>
                                     </div>
                                 ))}
                             </div>
 
                             {/* Desktop Table View */}
-                            <div className="hidden lg:block bg-white border border-slate-200/60 rounded-[2.5rem] shadow-sm overflow-hidden mb-12">
+                            <div className="hidden lg:block bg-white border border-slate-200/60 rounded-2xl shadow-sm overflow-hidden mb-12">
                                 <div className="overflow-x-auto">
-                                    <table className="w-full text-left font-sans text-sans">
+                                    <table className="w-full text-left font-sans">
                                         <thead>
-                                            <tr className="border-b border-slate-100 bg-slate-50/50">
-                                                <th className="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Contact Identity</th>
-                                                <th className="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Professional Profile</th>
-                                                <th className="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Lifecycle Status</th>
-                                                <th className="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest text-right">Actions</th>
+                                            <tr className="border-b border-slate-200/80 bg-slate-50/70">
+                                                <th className="pl-6 pr-4 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Email</th>
+                                                <th className="px-4 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Company</th>
+                                                <th className="px-4 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Role</th>
+                                                <th className="px-4 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Tags</th>
+                                                <th className="pl-4 pr-6 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-wider text-right">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-slate-100">
                                             {filteredEmails.map((email, index) => (
                                                 <tr
                                                     key={email._id}
-                                                    className="hover:bg-slate-50/80 transition-all group animate-in slide-in-from-left-2 duration-500 fill-mode-both"
-                                                    style={{ animationDelay: `${index * 30}ms` }}
+                                                    className="hover:bg-slate-50/60 transition-colors group"
                                                 >
-                                                    <td className="px-8 py-6">
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center group-hover:bg-blue-600 transition-all duration-500 shadow-sm border border-slate-200/50">
-                                                                <User2 className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+                                                    {/* Email Column — avatar + email */}
+                                                    <td className="pl-6 pr-4 py-3.5">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200/60">
+                                                                <User2 className="w-4 h-4 text-slate-800" />
                                                             </div>
-                                                            <div className="min-w-0 max-w-[200px]">
-                                                                <p className="font-display font-bold text-slate-900 text-base truncate">{email.hrName || 'Lead Identifier'}</p>
-                                                                <p className="text-sm font-medium text-slate-500 flex items-center gap-1.5 mt-0.5 group-hover:text-blue-600 transition-colors truncate">
-                                                                    <Mail className="w-3.5 h-3.5 opacity-50" />
-                                                                    {email.email}
-                                                                </p>
-                                                            </div>
+                                                            <p className="text-[13px] font-medium text-slate-700 truncate">{email.email}</p>
                                                         </div>
                                                     </td>
-                                                    <td className="px-8 py-6">
-                                                        <div className="space-y-1.5">
-                                                            <p className="text-sm font-bold text-slate-900 flex items-center gap-2 truncate">
-                                                                <Building2 className="w-4 h-4 text-blue-500" />
-                                                                {email.company || 'Private Entity'}
-                                                            </p>
-                                                            <p className="text-sm font-medium text-slate-500 flex items-center gap-2 truncate">
-                                                                <Briefcase className="w-4 h-4 text-slate-300" />
-                                                                {email.jobRole || 'Senior Recruiter'}
-                                                            </p>
+
+                                                    {/* Company Column */}
+                                                    <td className="px-4 py-3.5">
+                                                        <p className="text-[13px] font-medium text-slate-700 truncate max-w-[180px]">{email.company || '—'}</p>
+                                                    </td>
+
+                                                    {/* Role Column */}
+                                                    <td className="px-4 py-3.5">
+                                                        <p className="text-[13px] font-medium text-slate-700 truncate max-w-[180px]">{email.jobRole || '—'}</p>
+                                                    </td>
+
+                                                    {/* Tags Column — colored pill badges */}
+                                                    <td className="px-4 py-3.5">
+                                                        <div className="flex flex-wrap gap-1.5 max-w-[220px]">
+                                                            {email.tags && email.tags.length > 0 ? (
+                                                                email.tags.slice(0, 3).map((tag, i) => {
+                                                                    const colors = [
+                                                                        'bg-blue-50 text-blue-600 border-blue-100',
+                                                                        'bg-emerald-50 text-emerald-600 border-emerald-100',
+                                                                        'bg-violet-50 text-violet-600 border-violet-100',
+                                                                        'bg-amber-50 text-amber-600 border-amber-100',
+                                                                        'bg-rose-50 text-rose-600 border-rose-100',
+                                                                        'bg-cyan-50 text-cyan-600 border-cyan-100',
+                                                                    ];
+                                                                    return (
+                                                                        <span
+                                                                            key={i}
+                                                                            className={cn(
+                                                                                "px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border whitespace-nowrap",
+                                                                                colors[i % colors.length]
+                                                                            )}
+                                                                        >
+                                                                            {tag}
+                                                                        </span>
+                                                                    );
+                                                                })
+                                                            ) : (
+                                                                <span className="text-[12px] text-slate-300">—</span>
+                                                            )}
+                                                            {email.tags && email.tags.length > 3 && (
+                                                                <span className="px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-slate-100 text-slate-400 border border-slate-200 whitespace-nowrap">
+                                                                    +{email.tags.length - 3}
+                                                                </span>
+                                                            )}
                                                         </div>
                                                     </td>
-                                                    <td className="px-8 py-6">
-                                                        <div className={cn(
-                                                            "inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border font-bold text-[10px] uppercase tracking-wider",
-                                                            email.status === 'contacted'
-                                                                ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                                                                : "bg-blue-50 text-blue-600 border-blue-100"
-                                                        )}>
-                                                            <div className={cn("h-1.5 w-1.5 rounded-full", email.status === 'contacted' ? "bg-emerald-500" : "bg-blue-500")} />
-                                                            {email.status || 'Verified Active'}
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-8 py-6">
-                                                        <div className="flex gap-1.5 justify-end opacity-0 group-hover:opacity-100 transition-all translate-x-1 group-hover:translate-x-0">
+
+                                                    {/* Actions Column */}
+                                                    <td className="pl-4 pr-6 py-3.5">
+                                                        <div className="flex gap-1 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
                                                             <button
                                                                 onClick={() => handleEdit(email)}
-                                                                className="p-2.5 rounded-xl bg-white text-slate-400 hover:text-blue-600 hover:shadow-md transition-all border border-slate-200/60 cursor-pointer"
-                                                                title="Edit Details"
+                                                                className="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all cursor-pointer"
+                                                                title="Edit"
                                                             >
-                                                                <Pencil className="w-4 h-4" />
+                                                                <Pencil className="w-3.5 h-3.5" />
                                                             </button>
                                                             <button
                                                                 onClick={() => handleDelete(email._id)}
-                                                                className="p-2.5 rounded-xl bg-white text-slate-400 hover:text-rose-600 hover:shadow-md transition-all border border-slate-200/60 cursor-pointer"
-                                                                title="Remove Contact"
+                                                                className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all cursor-pointer"
+                                                                title="Delete"
                                                             >
-                                                                <Trash2 className="w-4 h-4" />
+                                                                <Trash2 className="w-3.5 h-3.5" />
                                                             </button>
                                                         </div>
                                                     </td>
@@ -385,9 +467,9 @@ export default function HrEmailsPage() {
 
                     {/* Add/Edit Modal */}
                     {showModal && (
-                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 text-sans">
-                            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => setShowModal(false)} />
-                            <div className="bg-white max-w-xl w-full rounded-[2.5rem] shadow-2xl relative z-10 animate-in zoom-in-95 duration-300 flex flex-col overflow-hidden">
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 text-sans overflow-y-auto">
+                            <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => setShowModal(false)} />
+                            <div className="bg-white max-w-xl w-full rounded-[2.5rem] shadow-2xl relative z-10 animate-in zoom-in-95 duration-300 flex flex-col max-h-[90vh] overflow-hidden my-auto">
                                 <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                                     <div>
                                         <h2 className="text-2xl font-display font-bold text-slate-900 tracking-tight">
@@ -402,7 +484,7 @@ export default function HrEmailsPage() {
                                         <X className="w-5 h-5" />
                                     </button>
                                 </div>
-                                <form onSubmit={handleSubmit} className="p-8 space-y-6">
+                                <form onSubmit={handleSubmit} className="p-8 space-y-6 overflow-y-auto">
                                     <div className="space-y-2">
                                         <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-1">Work Email Address</label>
                                         <input
@@ -427,23 +509,25 @@ export default function HrEmailsPage() {
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-1">Organization</label>
+                                            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-1">Organization <span className="text-rose-400">*</span></label>
                                             <input
                                                 type="text"
                                                 value={formData.company}
                                                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                                                 className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all placeholder:font-normal"
                                                 placeholder="Tesla Inc."
+                                                required
                                             />
                                         </div>
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-1">Position / Role</label>
+                                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-1">Position / Role <span className="text-rose-400">*</span></label>
                                         <div className="relative">
                                             <select
                                                 value={formData.jobRole}
                                                 onChange={(e) => setFormData({ ...formData, jobRole: e.target.value })}
+                                                required
                                                 className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all cursor-pointer appearance-none"
                                             >
                                                 <option value="">Select a role or type below...</option>
@@ -498,11 +582,26 @@ export default function HrEmailsPage() {
                                     </div>
 
                                     <div className="space-y-2">
+                                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-1 flex items-center gap-1.5">
+                                            <Hash className="w-3 h-3" />
+                                            Tags
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.tags}
+                                            onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all placeholder:font-normal"
+                                            placeholder="#react #frontend #remote #startup"
+                                        />
+                                        <p className="text-[10px] text-slate-400 ml-1 font-medium">Space-separated hashtags for filtering. e.g. #react #frontend</p>
+                                    </div>
+
+                                    <div className="space-y-2">
                                         <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-1">Strategic Notes</label>
                                         <textarea
                                             value={formData.notes}
                                             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all resize-none min-h-[100px] placeholder:font-normal"
+                                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all resize-none min-h-[80px] placeholder:font-normal"
                                             placeholder="Found through LinkedIn, interested in React roles..."
                                         />
                                     </div>
@@ -538,9 +637,10 @@ export default function HrEmailsPage() {
                                 </div>
                                 <div className="p-10 space-y-8">
                                     <div className="space-y-4">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center">Required Data Schema</p>
-                                        <div className="bg-slate-900 p-5 rounded-2xl font-mono text-[13px] text-blue-400 border border-slate-800 shadow-inner text-center">
-                                            email, hrName, company, jobRole, notes
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center">CSV Data Schema</p>
+                                        <div className="bg-slate-900 p-5 rounded-2xl font-mono text-[13px] border border-slate-800 shadow-inner text-center space-y-2">
+                                            <div className="text-blue-400">email*, company*, jobRole*, hrName, tags, notes</div>
+                                            <div className="text-slate-500 text-[11px]">* = required &nbsp;|&nbsp; tags = #hashtag format</div>
                                         </div>
                                     </div>
 
