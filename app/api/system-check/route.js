@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import EmailTemplate from '@/models/EmailTemplate';
@@ -8,6 +10,17 @@ import mongoose from 'mongoose';
 
 export async function GET() {
     try {
+        // 🔒 SECURITY: Only allow in development mode
+        if (process.env.NODE_ENV === 'production') {
+            return NextResponse.json({ error: 'Not found' }, { status: 404 });
+        }
+
+        // 🔒 SECURITY: Require authentication
+        const session = await getServerSession(authOptions);
+        if (!session) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         console.log('🔍 Starting comprehensive system check...');
 
         // 1. Test MongoDB Connection

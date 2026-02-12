@@ -38,10 +38,22 @@ function calculateDynamicDelay(emailIndex, baseDelay) {
 
 export async function POST(request) {
     try {
+        console.log('📧 Email send request received');
         const session = await getServerSession(authOptions);
 
+        console.log('🔐 Session check:', {
+            hasSession: !!session,
+            userEmail: session?.user?.email,
+            userId: session?.user?.id,
+            hasAccessToken: !!session?.accessToken,
+        });
+
         if (!session) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+            console.error('❌ No session found - user not authenticated');
+            return NextResponse.json({
+                error: 'Unauthorized - Please sign in again',
+                code: 'NO_SESSION'
+            }, { status: 401 });
         }
 
         const body = await request.json();
@@ -119,29 +131,78 @@ export async function POST(request) {
 
         // Get user for Gmail API
         const user = await User.findById(session.user.id);
+
+        console.log('👤 User token status:', {
+            userFound: !!user,
+            hasAccessToken: !!user?.accessToken,
+            hasRefreshToken: !!user?.refreshToken,
+            tokenExpiry: user?.tokenExpiry,
+        });
+
         if (!user || !user.accessToken || !user.refreshToken) {
-            return NextResponse.json({ error: 'Gmail authentication required' }, { status: 401 });
+            console.error('❌ Gmail tokens missing from database');
+
+            // Check token expiry if available
+            const tokenExpired = user?.tokenExpiry ? new Date(user.tokenExpiry) < new Date() : true;
+
+            return NextResponse.json({
+                error: 'Gmail authentication required. Please sign out and sign in again to authorize Gmail access.',
+                code: 'MISSING_GMAIL_TOKENS',
+                details: {
+                    userFound: !!user,
+                    hasAccessToken: !!user?.accessToken,
+                    hasRefreshToken: !!user?.refreshToken,
+                    tokenExpiry: user?.tokenExpiry,
+                    tokenExpired: tokenExpired,
+                },
+                action: {
+                    message: 'Visit /token-diagnostics to check your token status',
+                    diagnosticsUrl: '/token-diagnostics'
+                }
+            }, { status: 401 });
         }
 
-        // Prepare attachments if requested
+        // Prepare attachments if requested (fetch from Vercel Blob)
         const attachments = [];
-        if (attachResume && user.resume && user.resume.data) {
-            attachments.push({
-                filename: user.resume.filename,
-                mimeType: user.resume.mimeType,
-                data: user.resume.data,
-            });
-        }
-        if (attachCoverLetter && user.coverLetter && user.coverLetter.data) {
-            attachments.push({
-                filename: user.coverLetter.filename,
-                mimeType: user.coverLetter.mimeType,
-                data: user.coverLetter.data,
-            });
+
+        if (attachResume && user.resume && user.resume.url) {
+            try {
+                console.log('📎 Fetching resume from Blob:', user.resume.url);
+                const response = await fetch(user.resume.url);
+                const arrayBuffer = await response.arrayBuffer();
+                const base64Data = Buffer.from(arrayBuffer).toString('base64');
+
+                attachments.push({
+                    filename: user.resume.filename,
+                    mimeType: user.resume.mimeType,
+                    data: base64Data,
+                });
+                console.log('✅ Resume attached');
+            } catch (error) {
+                console.error('❌ Failed to fetch resume from Blob:', error);
+            }
         }
 
-        // Initialize Gmail service
-        const gmailService = new GmailService(user.accessToken, user.refreshToken);
+        if (attachCoverLetter && user.coverLetter && user.coverLetter.url) {
+            try {
+                console.log('📎 Fetching cover letter from Blob:', user.coverLetter.url);
+                const response = await fetch(user.coverLetter.url);
+                const arrayBuffer = await response.arrayBuffer();
+                const base64Data = Buffer.from(arrayBuffer).toString('base64');
+
+                attachments.push({
+                    filename: user.coverLetter.filename,
+                    mimeType: user.coverLetter.mimeType,
+                    data: base64Data,
+                });
+                console.log('✅ Cover letter attached');
+            } catch (error) {
+                console.error('❌ Failed to fetch cover letter from Blob:', error);
+            }
+        }
+
+        // Initialize Gmail service with userId for token refresh
+        const gmailService = new GmailService(user.accessToken, user.refreshToken, user._id.toString());
 
         const results = {
             sent: [],
@@ -183,11 +244,15 @@ export async function POST(request) {
                 const emailBody = replaceVariables(template.body, emailVariables);
 
                 // Send email with optional attachments
+                // Format sender as "Name <email>" for proper display
+                const senderName = user.name || variables.your_name || 'Job Applicant';
+                const fromHeader = `${senderName} <${user.email}>`;
+
                 const result = await gmailService.sendEmail({
                     to: hrEmail.email,
                     subject,
                     body: emailBody,
-                    from: user.email,
+                    from: fromHeader,
                     attachments,
                 });
 

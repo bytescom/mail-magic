@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import DashboardLayout from '@/components/DashboardLayout';
-import { Send, CheckCircle, FileText, Users, Loader2, Paperclip, Upload, X, File, Sparkles, AlertCircle, Info, ChevronRight, LayoutPanelTop, Eye, History, Mail, ArrowRight, User2, Building2, Clock, Trash2, ShieldAlert, Zap } from 'lucide-react';
+import { Send, CheckCircle, FileText, Users, Loader2, Paperclip, Upload, X, File, Sparkles, AlertCircle, Info, ChevronRight, LayoutPanelTop, Eye, History, Mail, ArrowRight, User2, Building2, Clock, Trash2, ShieldAlert, Zap, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { replaceVariables, cn } from '@/lib/utils';
 
@@ -38,6 +38,11 @@ export default function SendEmailsPage() {
 
     // HR Filter state
     const [hrFilter, setHrFilter] = useState('not_contacted'); // 'all', 'contacted', 'not_contacted'
+    const [hrSearchQuery, setHrSearchQuery] = useState('');
+
+    // Confirmation modal state
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [confirmAction, setConfirmAction] = useState(null);
 
     // Spam Prevention Limits (must match backend)
     const SPAM_LIMITS = {
@@ -77,14 +82,18 @@ export default function SendEmailsPage() {
 
     const fetchUserFiles = async () => {
         try {
-            const response = await fetch('/api/user/files');
-            if (response.ok) {
-                const data = await response.json();
-                setUserFiles({
-                    resume: data.resume || null,
-                    coverLetter: data.coverLetter || null,
-                });
-            }
+            // Fetch resume
+            const resumeResponse = await fetch('/api/upload-resume');
+            const resumeData = resumeResponse.ok ? await resumeResponse.json() : {};
+
+            // Fetch cover letter
+            const coverLetterResponse = await fetch('/api/upload-cover-letter');
+            const coverLetterData = coverLetterResponse.ok ? await coverLetterResponse.json() : {};
+
+            setUserFiles({
+                resume: resumeData.resume || null,
+                coverLetter: coverLetterData.coverLetter || null,
+            });
         } catch (error) {
             console.error('Error fetching user files:', error);
         }
@@ -115,9 +124,9 @@ export default function SendEmailsPage() {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('type', type);
 
-            const response = await fetch('/api/user/files', {
+            const endpoint = type === 'resume' ? '/api/upload-resume' : '/api/upload-cover-letter';
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 body: formData,
             });
@@ -126,7 +135,7 @@ export default function SendEmailsPage() {
                 const data = await response.json();
                 setUserFiles(prev => ({
                     ...prev,
-                    [type]: data.file,
+                    [type]: data[type] || data.resume || data.coverLetter,
                 }));
                 toast.success(`${type === 'resume' ? 'Resume' : 'Cover letter'} uploaded successfully!`);
 
@@ -148,31 +157,38 @@ export default function SendEmailsPage() {
     };
 
     const handleDeleteFile = async (type) => {
-        if (!confirm(`Delete your ${type === 'resume' ? 'resume' : 'cover letter'}?`)) return;
+        setConfirmAction({
+            title: `Delete ${type === 'resume' ? 'Resume' : 'Cover Letter'}?`,
+            message: `This will permanently remove your ${type === 'resume' ? 'resume' : 'cover letter'} from the system.`,
+            type: 'delete',
+            onConfirm: async () => {
+                try {
+                    const endpoint = type === 'resume' ? '/api/upload-resume' : '/api/upload-cover-letter';
+                    const response = await fetch(endpoint, {
+                        method: 'DELETE',
+                    });
 
-        try {
-            const response = await fetch(`/api/user/files?type=${type}`, {
-                method: 'DELETE',
-            });
-
-            if (response.ok) {
-                setUserFiles(prev => ({
-                    ...prev,
-                    [type]: null,
-                }));
-                if (type === 'resume') {
-                    setAttachResume(false);
-                } else {
-                    setAttachCoverLetter(false);
+                    if (response.ok) {
+                        setUserFiles(prev => ({
+                            ...prev,
+                            [type]: null,
+                        }));
+                        if (type === 'resume') {
+                            setAttachResume(false);
+                        } else {
+                            setAttachCoverLetter(false);
+                        }
+                        toast.success(`${type === 'resume' ? 'Resume' : 'Cover letter'} deleted`);
+                    } else {
+                        toast.error('Failed to delete file');
+                    }
+                } catch (error) {
+                    console.error('Delete error:', error);
+                    toast.error('Failed to delete file');
                 }
-                toast.success(`${type === 'resume' ? 'Resume' : 'Cover letter'} deleted`);
-            } else {
-                toast.error('Failed to delete file');
             }
-        } catch (error) {
-            console.error('Delete error:', error);
-            toast.error('Failed to delete file');
-        }
+        });
+        setShowConfirmModal(true);
     };
 
     const handleSend = async () => {
@@ -191,42 +207,47 @@ export default function SendEmailsPage() {
             return;
         }
 
-        if (!confirm(`Send emails to ${selectedHrEmails.length} recipient(s)?`)) {
-            return;
-        }
+        setConfirmAction({
+            title: 'Launch Email Campaign?',
+            message: `You're about to send personalized emails to ${selectedHrEmails.length} recipient${selectedHrEmails.length !== 1 ? 's' : ''}. This action cannot be undone.`,
+            type: 'send',
+            count: selectedHrEmails.length,
+            onConfirm: async () => {
+                setSending(true);
 
-        setSending(true);
+                try {
+                    const response = await fetch('/api/emails/send', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            templateId: selectedTemplate,
+                            hrEmailIds: selectedHrEmails,
+                            variables,
+                            attachResume: attachResume && userFiles.resume,
+                            attachCoverLetter: attachCoverLetter && userFiles.coverLetter,
+                        }),
+                    });
 
-        try {
-            const response = await fetch('/api/emails/send', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    templateId: selectedTemplate,
-                    hrEmailIds: selectedHrEmails,
-                    variables,
-                    attachResume: attachResume && userFiles.resume,
-                    attachCoverLetter: attachCoverLetter && userFiles.coverLetter,
-                }),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                toast.success(`Successfully dispatched ${result.results.sent.length} communications!`);
-                if (result.results.failed.length > 0) {
-                    toast.error(`${result.results.failed.length} dispatches failed.`);
+                    if (response.ok) {
+                        const result = await response.json();
+                        toast.success(`Successfully dispatched ${result.results.sent.length} communications!`);
+                        if (result.results.failed.length > 0) {
+                            toast.error(`${result.results.failed.length} dispatches failed.`);
+                        }
+                        setSelectedHrEmails([]);
+                    } else {
+                        const error = await response.json();
+                        toast.error(error.error || 'Failed to send emails');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    toast.error('Something went wrong');
+                } finally {
+                    setSending(false);
                 }
-                setSelectedHrEmails([]);
-            } else {
-                const error = await response.json();
-                toast.error(error.error || 'Failed to send emails');
             }
-        } catch (error) {
-            console.error('Error:', error);
-            toast.error('Something went wrong');
-        } finally {
-            setSending(false);
-        }
+        });
+        setShowConfirmModal(true);
     };
 
     const handlePreview = () => {
@@ -291,11 +312,26 @@ export default function SendEmailsPage() {
 
     const selectedTemplateObj = templates.find((t) => t._id === selectedTemplate);
 
-    // Filter HR emails based on contact status
+    // Filter HR emails based on contact status and search
     const filteredHrEmails = hrEmails.filter((hr) => {
-        if (hrFilter === 'all') return true;
-        if (hrFilter === 'contacted') return hr.status === 'contacted';
-        if (hrFilter === 'not_contacted') return hr.status !== 'contacted';
+        // Status filter
+        if (hrFilter === 'contacted' && hr.status !== 'contacted') return false;
+        if (hrFilter === 'not_contacted' && hr.status === 'contacted') return false;
+
+        // Search filter
+        if (hrSearchQuery.trim()) {
+            const query = hrSearchQuery.toLowerCase().trim();
+            const matchesName = hr.hrName && hr.hrName.toLowerCase().includes(query);
+            const matchesEmail = hr.email && hr.email.toLowerCase().includes(query);
+            const matchesCompany = hr.company && hr.company.toLowerCase().includes(query);
+            const matchesRole = hr.jobRole && hr.jobRole.toLowerCase().includes(query);
+            const matchesTags = hr.tags && hr.tags.some(tag => tag.toLowerCase().includes(query));
+
+            if (!matchesName && !matchesEmail && !matchesCompany && !matchesRole && !matchesTags) {
+                return false;
+            }
+        }
+
         return true;
     });
 
@@ -540,6 +576,26 @@ export default function SendEmailsPage() {
                                         >
                                             All ({hrEmails.length})
                                         </button>
+                                    </div>
+
+                                    {/* Search Input */}
+                                    <div className="relative">
+                                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                        <input
+                                            type="text"
+                                            value={hrSearchQuery}
+                                            onChange={(e) => setHrSearchQuery(e.target.value)}
+                                            placeholder="Search by name, company, role, email, or tags..."
+                                            className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-sm font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
+                                        />
+                                        {hrSearchQuery && (
+                                            <button
+                                                onClick={() => setHrSearchQuery('')}
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all"
+                                            >
+                                                <X className="w-4 h-4" />
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="p-4 sm:p-8">
@@ -882,6 +938,116 @@ export default function SendEmailsPage() {
                                         </button>
                                     </div>
                                 </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Confirmation Modal */}
+                    {showConfirmModal && confirmAction && (
+                        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6 text-sans animate-in fade-in duration-300">
+                            <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-lg" onClick={() => setShowConfirmModal(false)} />
+                            <div className="bg-white max-w-md w-full rounded-[2.5rem] shadow-2xl relative z-10 animate-in slide-in-from-bottom-8 zoom-in-95 duration-500 overflow-hidden border border-slate-200">
+                                {/* Decorative gradient background */}
+                                <div className={cn(
+                                    "absolute top-0 left-0 right-0 h-32 opacity-10",
+                                    confirmAction.type === 'send' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
+                                        'bg-gradient-to-br from-rose-500 to-orange-600'
+                                )} />
+
+                                <div className="relative p-8 space-y-6">
+                                    {/* Icon */}
+                                    <div className="flex justify-center">
+                                        <div className={cn(
+                                            "w-16 h-16 rounded-3xl flex items-center justify-center shadow-lg",
+                                            confirmAction.type === 'send' ?
+                                                'bg-blue-600 shadow-blue-500/30' :
+                                                'bg-rose-600 shadow-rose-500/30'
+                                        )}>
+                                            {confirmAction.type === 'send' ? (
+                                                <Send className="w-7 h-7 text-white" />
+                                            ) : (
+                                                <AlertCircle className="w-7 h-7 text-white" />
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="text-center space-y-3 px-2">
+                                        <h2 className="text-2xl font-display font-bold text-slate-900 tracking-tight">
+                                            {confirmAction.title}
+                                        </h2>
+                                        <p className="text-sm text-slate-600 font-medium leading-relaxed">
+                                            {confirmAction.message}
+                                        </p>
+
+                                        {confirmAction.count && (
+                                            <div className="flex items-center justify-center gap-2 pt-2">
+                                                <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-xl">
+                                                    <div className="flex items-center gap-2">
+                                                        <Users className="w-4 h-4 text-blue-600" />
+                                                        <span className="text-lg font-display font-bold text-blue-900">
+                                                            {confirmAction.count}
+                                                        </span>
+                                                        <span className="text-xs font-bold text-blue-600 uppercase">
+                                                            Recipients
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Actions */}
+                                    <div className="flex gap-3 pt-4">
+                                        <button
+                                            onClick={() => setShowConfirmModal(false)}
+                                            className="flex-1 bg-slate-100 text-slate-700 font-bold py-4 rounded-2xl text-sm transition-all hover:bg-slate-200 active:scale-95 border border-slate-200"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                setShowConfirmModal(false);
+                                                confirmAction.onConfirm();
+                                            }}
+                                            className={cn(
+                                                "flex-1 font-bold py-4 rounded-2xl text-sm transition-all active:scale-95 shadow-xl flex items-center justify-center gap-2 group",
+                                                confirmAction.type === 'send' ?
+                                                    'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/40' :
+                                                    'bg-rose-600 text-white hover:bg-rose-700 shadow-rose-500/40'
+                                            )}
+                                        >
+                                            {confirmAction.type === 'send' ? (
+                                                <>
+                                                    <Zap className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                                                    <span>Launch Now</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                                                    <span>Delete</span>
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+
+                                    {/* Safety notice for send */}
+                                    {confirmAction.type === 'send' && (
+                                        <div className="px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl">
+                                            <div className="flex items-start gap-3">
+                                                <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                                                <div>
+                                                    <p className="text-xs font-bold text-amber-900 uppercase tracking-wide mb-1">
+                                                        Spam Protection Active
+                                                    </p>
+                                                    <p className="text-[10px] text-amber-700 leading-relaxed">
+                                                        Emails will be sent with 3-15 second delays to maintain deliverability.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     )}

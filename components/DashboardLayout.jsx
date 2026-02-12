@@ -168,8 +168,8 @@ export default function DashboardLayout({ children }) {
                     {/* Logo Section */}
                     <div className="h-20 px-7 flex items-center border-b border-slate-50">
                         <Link href="/dashboard" className="flex items-center gap-3 group">
-                            <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center transition-transform group-hover:scale-110 duration-300 shadow-lg shadow-blue-200">
-                                <Send className="w-4.5 h-4.5 text-white" />
+                            <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center transition-transform group-hover:scale-110 duration-300 shadow-lg shadow-blue-200 overflow-hidden">
+                                <img src="/icon.png" alt="MailMagic Logo" className="w-8 h-8 text-white" />
                             </div>
                             <span className="font-display font-bold text-xl tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
                                 MailMagic

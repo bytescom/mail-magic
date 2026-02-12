@@ -1,18 +1,13 @@
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/route';
 
 export async function GET() {
     try {
-        // 🔒 SECURITY: Only allow in development mode
-        if (process.env.NODE_ENV === 'production') {
-            return NextResponse.json({ error: 'Not found' }, { status: 404 });
-        }
-
         const session = await getServerSession(authOptions);
 
         return NextResponse.json({
-            hasSession: !!session,
+            authenticated: !!session,
             session: session ? {
                 user: {
                     name: session.user?.name,
@@ -20,13 +15,13 @@ export async function GET() {
                     id: session.user?.id,
                 },
                 hasAccessToken: !!session.accessToken,
+                hasRefreshToken: !!session.refreshToken,
             } : null,
-            timestamp: new Date().toISOString(),
         });
     } catch (error) {
         return NextResponse.json({
+            authenticated: false,
             error: error.message,
-            hasSession: false,
         }, { status: 500 });
     }
 }

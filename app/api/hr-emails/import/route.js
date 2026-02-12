@@ -42,6 +42,8 @@ export async function POST(request) {
 
         for (const row of result.data) {
             const email = row.email || row.Email;
+            const company = row.company || row.Company;
+            const jobRole = row.jobRole || row['Job Role'] || row.jobrole;
 
             if (!email) {
                 errors.push({ row, reason: 'Missing email' });
@@ -52,6 +54,16 @@ export async function POST(request) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 errors.push({ row, reason: 'Invalid email format' });
+                continue;
+            }
+
+            if (!company) {
+                errors.push({ row, reason: 'Missing company' });
+                continue;
+            }
+
+            if (!jobRole) {
+                errors.push({ row, reason: 'Missing jobRole' });
                 continue;
             }
 
@@ -66,14 +78,22 @@ export async function POST(request) {
                 continue;
             }
 
+            // Parse tags — support "#react #frontend" or "react, frontend" format
+            const rawTags = row.tags || row.Tags || '';
+            const tags = rawTags
+                .split(/[\s,]+/)
+                .map(t => t.replace(/^#/, '').trim())
+                .filter(Boolean);
+
             // Create new HR email
             try {
                 await HrEmail.create({
                     userId: session.user.id,
                     email: email.toLowerCase(),
                     hrName: row.hrName || row['HR Name'] || '',
-                    company: row.company || row.Company || '',
-                    jobRole: row.jobRole || row['Job Role'] || '',
+                    company,
+                    jobRole,
+                    tags,
                     notes: row.notes || row.Notes || '',
                 });
                 imported.push(email);

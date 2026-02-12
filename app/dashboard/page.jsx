@@ -147,49 +147,50 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Main Content Sections */}
-                    <div className="grid lg:grid-cols-7 gap-8">
+                    <div className="grid lg:grid-cols-7 gap-6 lg:gap-8">
                         {/* Recent Activity List */}
-                        <div className="lg:col-span-4 space-y-5 text-sans">
-                            <div className="flex items-center justify-between px-2">
-                                <h3 className="font-display font-bold text-xl text-slate-900 tracking-tight">Recent Applications</h3>
-                                <Link href="/logs" className="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors bg-blue-50 px-3 py-1.5 rounded-full">
+                        <div className="lg:col-span-4 space-y-4 lg:space-y-5 text-sans">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-1 sm:px-2">
+                                <h3 className="font-display font-bold text-lg sm:text-xl text-slate-900 tracking-tight">Recent Applications</h3>
+                                <Link href="/logs" className="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors bg-blue-50 px-3 py-1.5 rounded-full whitespace-nowrap self-start sm:self-auto">
                                     View Activity Logs
                                 </Link>
                             </div>
 
-                            <div className="bg-white border border-slate-200/60 rounded-3xl overflow-hidden shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+                            <div className="bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl overflow-hidden shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
                                 {stats?.recentLogs && stats.recentLogs.length > 0 ? (
                                     <div className="divide-y divide-slate-100">
                                         {stats.recentLogs.map((log) => (
-                                            <div
+                                            <Link
                                                 key={log._id}
-                                                className="flex items-center gap-4 p-5 hover:bg-slate-50/50 active:bg-slate-100 transition-colors group cursor-default"
+                                                href={`/logs?logId=${log._id}`}
+                                                className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 lg:p-5 hover:bg-slate-50/50 active:bg-slate-100 transition-colors group cursor-pointer"
                                             >
                                                 <div className={cn(
-                                                    "w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105",
+                                                    "w-10 h-10 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105",
                                                     log.status === 'sent' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
                                                 )}>
                                                     {log.status === 'sent' ? (
-                                                        <CheckCircle2 className="w-5 h-5" />
+                                                        <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
                                                     ) : (
-                                                        <XCircle className="w-5 h-5" />
+                                                        <XCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                                                     )}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <div className="flex flex-wrap items-center gap-x-2 mb-0.5">
-                                                        <p className="font-bold text-slate-900 truncate leading-tight">{log.recipient}</p>
-                                                        <div className="h-1 w-1 rounded-full bg-slate-300 shrink-0" />
-                                                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">
+                                                    <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-0.5 sm:gap-x-2 mb-0.5">
+                                                        <p className="font-bold text-sm sm:text-base text-slate-900 truncate leading-tight">{log.recipient}</p>
+                                                        <div className="hidden sm:block h-1 w-1 rounded-full bg-slate-300 shrink-0" />
+                                                        <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-tight">
                                                             {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                         </span>
                                                     </div>
-                                                    <p className="text-sm text-slate-500 truncate leading-relaxed font-medium">{log.subject}</p>
+                                                    <p className="text-xs sm:text-sm text-slate-500 truncate leading-relaxed font-medium">{log.subject}</p>
                                                 </div>
-                                                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
+                                                <div className="hidden sm:flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
                                                     <span className="text-xs font-bold text-slate-400">Details</span>
                                                     <ChevronRight className="w-4 h-4 text-slate-400" />
                                                 </div>
-                                            </div>
+                                            </Link>
                                         ))}
                                     </div>
                                 ) : (
@@ -208,41 +209,41 @@ export default function DashboardPage() {
                         </div>
 
                         {/* Secondary Analytics / Performance */}
-                        <div className="lg:col-span-3 space-y-6 font-sans">
-                            <div className="px-2">
-                                <h3 className="font-display font-bold text-xl text-slate-900 tracking-tight">Week Analysis</h3>
+                        <div className="lg:col-span-3 space-y-4 lg:space-y-6 font-sans">
+                            <div className="px-1 sm:px-2">
+                                <h3 className="font-display font-bold text-lg sm:text-xl text-slate-900 tracking-tight">Week Analysis</h3>
                             </div>
 
                             {/* Success Tracking Card */}
-                            <div className="bg-slate-900 rounded-3xl p-8 text-white relative overflow-hidden group shadow-2xl shadow-slate-900/20">
+                            <div className="bg-slate-900 rounded-2xl lg:rounded-3xl p-5 sm:p-6 lg:p-8 text-white relative overflow-hidden group shadow-2xl shadow-slate-900/20">
                                 <div className="absolute -top-10 -right-10 p-8 opacity-[0.03] group-hover:scale-110 transition-transform duration-700 pointer-events-none">
                                     <Calendar className="w-64 h-64" />
                                 </div>
                                 <div className="relative z-10 flex flex-col h-full">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">Overall Success Rate</p>
-                                    <div className="flex items-end gap-3 mb-6">
-                                        <span className="text-5xl font-display font-bold text-blue-400 leading-none">{stats?.stats?.successRate || 0}%</span>
-                                        <div className="flex flex-col mb-1">
-                                            <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-tight">+2.4%</span>
-                                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">vs last week</span>
+                                    <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-2 sm:mb-3">Overall Success Rate</p>
+                                    <div className="flex items-end gap-2 sm:gap-3 mb-4 sm:mb-6">
+                                        <span className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-blue-400 leading-none">{stats?.stats?.successRate || 0}%</span>
+                                        <div className="flex flex-col mb-0.5 sm:mb-1">
+                                            <span className="text-[9px] sm:text-[10px] font-bold text-emerald-400 uppercase tracking-tight">+2.4%</span>
+                                            <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-tight">vs last week</span>
                                         </div>
                                     </div>
 
-                                    <div className="space-y-5 mt-auto">
+                                    <div className="space-y-4 sm:space-y-5 mt-auto">
                                         <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                                             <div
                                                 className="h-full bg-blue-500 transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(59,130,246,0.5)]"
                                                 style={{ width: `${stats?.stats?.successRate || 0}%` }}
                                             />
                                         </div>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div className="bg-white/5 rounded-2xl p-4 border border-white/5 transition-colors hover:bg-white/10">
-                                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Delivered</p>
-                                                <p className="text-xl font-bold">{stats?.stats?.totalEmailsSent || 0}</p>
+                                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                                            <div className="bg-white/5 rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-white/5 transition-colors hover:bg-white/10">
+                                                <p className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider sm:tracking-widest mb-1">Delivered</p>
+                                                <p className="text-lg sm:text-xl font-bold">{stats?.stats?.totalEmailsSent || 0}</p>
                                             </div>
-                                            <div className="bg-white/5 rounded-2xl p-4 border border-white/5 transition-colors hover:bg-white/10">
-                                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Failures</p>
-                                                <p className="text-xl font-bold">{stats?.stats?.totalEmailsFailed || 0}</p>
+                                            <div className="bg-white/5 rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-white/5 transition-colors hover:bg-white/10">
+                                                <p className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider sm:tracking-widest mb-1">Failures</p>
+                                                <p className="text-lg sm:text-xl font-bold">{stats?.stats?.totalEmailsFailed || 0}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -250,15 +251,15 @@ export default function DashboardPage() {
                             </div>
 
                             {/* Simple Quick Link Card */}
-                            <div className="bg-white border border-slate-200/60 p-8 rounded-3xl border-dashed flex flex-col items-center text-center justify-center space-y-4 group hover:border-blue-300 hover:bg-blue-50/20 active:bg-blue-50 active:scale-[0.98] cursor-pointer transition-all duration-300 shadow-sm">
-                                <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-100 shadow-sm group-hover:scale-110 group-active:scale-105 transition-all duration-300">
-                                    <Users className="w-6 h-6 text-slate-400 group-hover:text-blue-500 transition-colors" />
+                            <div className="bg-white border border-slate-200/60 p-5 sm:p-6 lg:p-8 rounded-2xl lg:rounded-3xl border-dashed flex flex-col items-center text-center justify-center space-y-3 sm:space-y-4 group hover:border-blue-300 hover:bg-blue-50/20 active:bg-blue-50 active:scale-[0.98] cursor-pointer transition-all duration-300 shadow-sm">
+                                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-slate-50 rounded-xl sm:rounded-2xl flex items-center justify-center border border-slate-100 shadow-sm group-hover:scale-110 group-active:scale-105 transition-all duration-300">
+                                    <Users className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400 group-hover:text-blue-500 transition-colors" />
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="font-bold text-slate-900 text-lg">Clean your Recruiter List</p>
-                                    <p className="text-sm text-slate-500 font-medium">Better data leads to better response rates.</p>
+                                    <p className="font-bold text-slate-900 text-base sm:text-lg">Clean your Recruiter List</p>
+                                    <p className="text-xs sm:text-sm text-slate-500 font-medium">Better data leads to better response rates.</p>
                                 </div>
-                                <Link href="/hr-emails" className="text-xs font-bold text-blue-600 bg-blue-50 px-5 py-2.5 rounded-xl hover:bg-blue-100 active:bg-blue-200 active:scale-95 transition-all flex items-center gap-2 mt-2">
+                                <Link href="/hr-emails" className="text-xs font-bold text-blue-600 bg-blue-50 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl hover:bg-blue-100 active:bg-blue-200 active:scale-95 transition-all flex items-center gap-2 mt-2">
                                     Review Contacts <ArrowRight className="w-3 h-3" />
                                 </Link>
                             </div>
