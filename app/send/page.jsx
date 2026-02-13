@@ -20,12 +20,11 @@ export default function SendEmailsPage() {
     const [sending, setSending] = useState(false);
     const [preview, setPreview] = useState(null);
 
-    // Attachment states
-    const [attachResume, setAttachResume] = useState(false);
-    const [attachCoverLetter, setAttachCoverLetter] = useState(false);
-    const [userFiles, setUserFiles] = useState({ resume: null, coverLetter: null });
-    const [uploadingResume, setUploadingResume] = useState(false);
-    const [uploadingCoverLetter, setUploadingCoverLetter] = useState(false);
+
+    // REDESIGNED: Unified Document Library (all files in one place)
+    const [documents, setDocuments] = useState([]); // Array of all uploaded documents
+    const [selectedDocumentIds, setSelectedDocumentIds] = useState([]); // Array of selected document IDs to attach
+    const [uploadingDocument, setUploadingDocument] = useState(false);
 
     // Quick add HR email modal
     const [showQuickAddHr, setShowQuickAddHr] = useState(false);
@@ -53,7 +52,7 @@ export default function SendEmailsPage() {
     useEffect(() => {
         fetchTemplates();
         fetchHrEmails();
-        fetchUserFiles();
+        fetchDocuments();
     }, []);
 
     const fetchTemplates = async () => {
@@ -80,26 +79,19 @@ export default function SendEmailsPage() {
         }
     };
 
-    const fetchUserFiles = async () => {
+    const fetchDocuments = async () => {
         try {
-            // Fetch resume
-            const resumeResponse = await fetch('/api/upload-resume');
-            const resumeData = resumeResponse.ok ? await resumeResponse.json() : {};
-
-            // Fetch cover letter
-            const coverLetterResponse = await fetch('/api/upload-cover-letter');
-            const coverLetterData = coverLetterResponse.ok ? await coverLetterResponse.json() : {};
-
-            setUserFiles({
-                resume: resumeData.resume || null,
-                coverLetter: coverLetterData.coverLetter || null,
-            });
+            const response = await fetch('/api/documents');
+            if (response.ok) {
+                const data = await response.json();
+                setDocuments(data.documents || []);
+            }
         } catch (error) {
-            console.error('Error fetching user files:', error);
+            console.error('Error fetching documents:', error);
         }
     };
 
-    const handleFileUpload = async (file, type) => {
+    const handleUploadDocument = async (file) => {
         if (!file) return;
 
         const maxSize = 5 * 1024 * 1024; // 5MB
@@ -112,83 +104,82 @@ export default function SendEmailsPage() {
             'application/pdf',
             'application/msword',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'text/plain',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-excel',
         ];
         if (!allowedTypes.includes(file.type)) {
-            toast.error('Only PDF and Word documents are allowed');
+            toast.error('Only PDF, Word, TXT, and Excel files are allowed');
             return;
         }
 
-        const setUploading = type === 'resume' ? setUploadingResume : setUploadingCoverLetter;
-        setUploading(true);
+        setUploadingDocument(true);
 
         try {
             const formData = new FormData();
             formData.append('file', file);
 
-            const endpoint = type === 'resume' ? '/api/upload-resume' : '/api/upload-cover-letter';
-            const response = await fetch(endpoint, {
+            const response = await fetch('/api/documents', {
                 method: 'POST',
                 body: formData,
             });
 
             if (response.ok) {
                 const data = await response.json();
-                setUserFiles(prev => ({
-                    ...prev,
-                    [type]: data[type] || data.resume || data.coverLetter,
-                }));
-                toast.success(`${type === 'resume' ? 'Resume' : 'Cover letter'} uploaded successfully!`);
-
-                if (type === 'resume') {
-                    setAttachResume(true);
-                } else {
-                    setAttachCoverLetter(true);
-                }
+                setDocuments(prev => [...prev, data.document]);
+                // Auto-select the newly uploaded document
+                setSelectedDocumentIds(prev => [...prev, data.document._id]);
+                toast.success('Document uploaded successfully!');
             } else {
                 const error = await response.json();
-                toast.error(error.error || 'Failed to upload file');
+                toast.error(error.error || 'Failed to upload document');
             }
         } catch (error) {
             console.error('Upload error:', error);
-            toast.error('Failed to upload file');
+            toast.error('Failed to upload document');
         } finally {
-            setUploading(false);
+            setUploadingDocument(false);
         }
     };
 
-    const handleDeleteFile = async (type) => {
+    const handleDeleteDocument = async (documentId) => {
+        const documentToDelete = documents.find(d => d._id === documentId);
+
         setConfirmAction({
-            title: `Delete ${type === 'resume' ? 'Resume' : 'Cover Letter'}?`,
-            message: `This will permanently remove your ${type === 'resume' ? 'resume' : 'cover letter'} from the system.`,
+            title: `Delete ${documentToDelete?.filename || 'Document'}?`,
+            message: `This will permanently remove this document from your library.`,
             type: 'delete',
             onConfirm: async () => {
                 try {
-                    const endpoint = type === 'resume' ? '/api/upload-resume' : '/api/upload-cover-letter';
-                    const response = await fetch(endpoint, {
+                    const response = await fetch('/api/documents', {
                         method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ documentId }),
                     });
 
                     if (response.ok) {
-                        setUserFiles(prev => ({
-                            ...prev,
-                            [type]: null,
-                        }));
-                        if (type === 'resume') {
-                            setAttachResume(false);
-                        } else {
-                            setAttachCoverLetter(false);
-                        }
-                        toast.success(`${type === 'resume' ? 'Resume' : 'Cover letter'} deleted`);
+                        setDocuments(prev => prev.filter(d => d._id !== documentId));
+                        setSelectedDocumentIds(prev => prev.filter(id => id !== documentId));
+                        toast.success('Document deleted successfully!');
                     } else {
-                        toast.error('Failed to delete file');
+                        const error = await response.json();
+                        toast.error(error.error || 'Failed to delete document');
                     }
                 } catch (error) {
                     console.error('Delete error:', error);
-                    toast.error('Failed to delete file');
+                    toast.error('Failed to delete document');
                 }
-            }
+            },
         });
         setShowConfirmModal(true);
+    };
+
+    const toggleDocumentSelection = (documentId) => {
+        setSelectedDocumentIds(prev =>
+            prev.includes(documentId)
+                ? prev.filter(id => id !== documentId)
+                : [...prev, documentId]
+        );
     };
 
     const handleSend = async () => {
@@ -223,8 +214,7 @@ export default function SendEmailsPage() {
                             templateId: selectedTemplate,
                             hrEmailIds: selectedHrEmails,
                             variables,
-                            attachResume: attachResume && userFiles.resume,
-                            attachCoverLetter: attachCoverLetter && userFiles.coverLetter,
+                            documentIds: selectedDocumentIds, // Array of selected document IDs
                         }),
                     });
 
@@ -428,91 +418,129 @@ export default function SendEmailsPage() {
                                     </div>
                                     <span className="px-3 py-1 bg-white border border-slate-200 rounded-full text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Collateral</span>
                                 </div>
-                                <div className="p-6 sm:p-8 grid md:grid-cols-2 gap-6 sm:gap-8">
-                                    {/* Resume Upload Module */}
-                                    <div className="space-y-3 sm:space-y-4">
+                                <div className="p-6 sm:p-8">
+                                    {/* UNIFIED DOCUMENT LIBRARY */}
+                                    <div className="space-y-4">
+                                        {/* Header */}
                                         <div className="flex items-center justify-between px-1">
                                             <div className="flex items-center gap-2">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                                                <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest">Master Resume</p>
+                                                <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                                    Document Library ({documents.length})
+                                                </p>
                                             </div>
-                                            {userFiles.resume && (
-                                                <button onClick={() => setAttachResume(!attachResume)} className={cn(
-                                                    "px-2.5 py-1 rounded-full text-[9px] font-bold uppercase transition-all border cursor-pointer",
-                                                    attachResume ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20" : "bg-white text-slate-400 border-slate-200 hover:border-slate-300"
-                                                )}>
-                                                    {attachResume ? 'Attached' : 'Include?'}
-                                                </button>
+                                            {selectedDocumentIds.length > 0 && (
+                                                <span className="px-2.5 py-1 rounded-full text-[9px] font-bold uppercase bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20">
+                                                    {selectedDocumentIds.length} Selected
+                                                </span>
                                             )}
                                         </div>
 
-                                        {userFiles.resume ? (
-                                            <div className="p-4 sm:p-5 rounded-[1.25rem] sm:rounded-[1.5rem] bg-slate-50 border border-slate-200 flex items-center justify-between group">
-                                                <div className="flex items-center gap-3 sm:gap-4">
-                                                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-sm">
-                                                        <File className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-xs sm:text-sm font-bold text-slate-900 truncate max-w-[100px] sm:max-w-[120px]">{userFiles.resume.filename}</p>
-                                                        <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Verified Asset</p>
-                                                    </div>
+                                        {/* Empty State */}
+                                        {documents.length === 0 && (
+                                            <div className="flex flex-col items-center justify-center gap-3 py-12 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[1.5rem]">
+                                                <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm">
+                                                    <File className="w-6 h-6 text-slate-400" />
                                                 </div>
-                                                <button onClick={() => handleDeleteFile('resume')} className="p-2 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-rose-600 transition-all sm:opacity-0 sm:group-hover:opacity-100 sm:scale-90 sm:group-hover:scale-100 cursor-pointer">
-                                                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                                                </button>
+                                                <div className="text-center">
+                                                    <p className="text-sm font-bold text-slate-600">No documents yet</p>
+                                                    <p className="text-xs text-slate-400 mt-1">Click "Upload" below to add your first document</p>
+                                                </div>
                                             </div>
-                                        ) : (
-                                            <label className="flex flex-col items-center justify-center gap-2 sm:gap-3 py-8 sm:py-10 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[1.25rem] sm:rounded-[1.5rem] cursor-pointer hover:bg-blue-50/50 hover:border-blue-400/50 transition-all group">
-                                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                                                    {uploadingResume ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 animate-spin" /> : <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />}
-                                                </div>
-                                                <p className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight">Upload Master Resume</p>
-                                                <input type="file" accept=".pdf,.doc,.docx" onChange={(e) => handleFileUpload(e.target.files[0], 'resume')} className="hidden" />
-                                            </label>
                                         )}
-                                    </div>
 
-                                    {/* Cover Letter Module */}
-                                    <div className="space-y-3 sm:space-y-4">
-                                        <div className="flex items-center justify-between px-1">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                                                <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest">Cover Letter</p>
-                                            </div>
-                                            {userFiles.coverLetter && (
-                                                <button onClick={() => setAttachCoverLetter(!attachCoverLetter)} className={cn(
-                                                    "px-2.5 py-1 rounded-full text-[9px] font-bold uppercase transition-all border cursor-pointer",
-                                                    attachCoverLetter ? "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-500/20" : "bg-white text-slate-400 border-slate-200 hover:border-slate-300"
-                                                )}>
-                                                    {attachCoverLetter ? 'Attached' : 'Include?'}
-                                                </button>
-                                            )}
-                                        </div>
+                                        {/* Document List */}
+                                        {documents.length > 0 && (
+                                            <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1 custom-scrollbar">
+                                                {documents.map((document) => {
+                                                    const isSelected = selectedDocumentIds.includes(document._id);
+                                                    return (
+                                                        <div
+                                                            key={document._id}
+                                                            className={cn(
+                                                                "p-3 sm:p-4 rounded-[1.25rem] sm:rounded-[1.5rem] border transition-all group cursor-pointer",
+                                                                isSelected
+                                                                    ? "bg-blue-50 border-blue-300 ring-2 ring-blue-500/20"
+                                                                    : "bg-slate-50 border-slate-200 hover:border-blue-200 hover:bg-white"
+                                                            )}
+                                                            onClick={() => toggleDocumentSelection(document._id)}
+                                                        >
+                                                            <div className="flex items-center justify-between gap-3">
+                                                                <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                                                                    {/* Checkbox */}
+                                                                    <div className={cn(
+                                                                        "w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-all",
+                                                                        isSelected ? "bg-blue-600 border-blue-600" : "bg-white border-slate-300"
+                                                                    )}>
+                                                                        {isSelected && (
+                                                                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                                                            </svg>
+                                                                        )}
+                                                                    </div>
 
-                                        {userFiles.coverLetter ? (
-                                            <div className="p-4 sm:p-5 rounded-[1.25rem] sm:rounded-[1.5rem] bg-slate-50 border border-slate-200 flex items-center justify-between group">
-                                                <div className="flex items-center gap-3 sm:gap-4">
-                                                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-sm">
-                                                        <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-xs sm:text-sm font-bold text-slate-900 truncate max-w-[100px] sm:max-w-[120px]">{userFiles.coverLetter.filename}</p>
-                                                        <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Verified Asset</p>
-                                                    </div>
-                                                </div>
-                                                <button onClick={() => handleDeleteFile('coverLetter')} className="p-2 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-rose-600 transition-all sm:opacity-0 sm:group-hover:opacity-100 sm:scale-90 sm:group-hover:scale-100 cursor-pointer">
-                                                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                                                </button>
+                                                                    {/* File Icon */}
+                                                                    <div className={cn(
+                                                                        "w-8 h-8 sm:w-9 sm:h-9 rounded-lg border flex items-center justify-center shadow-sm shrink-0",
+                                                                        isSelected ? "bg-blue-600 border-blue-600" : "bg-white border-slate-200"
+                                                                    )}>
+                                                                        <File className={cn(
+                                                                            "w-4 h-4",
+                                                                            isSelected ? "text-white" : "text-blue-600"
+                                                                        )} />
+                                                                    </div>
+
+                                                                    {/* File Info */}
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <p className={cn(
+                                                                            "text-xs sm:text-sm font-bold truncate",
+                                                                            isSelected ? "text-blue-900" : "text-slate-900"
+                                                                        )}>
+                                                                            {document.filename}
+                                                                        </p>
+                                                                        <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                                                                            {document.size ? `${(document.size / 1024).toFixed(1)} KB` : 'Document'}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Delete Button */}
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleDeleteDocument(document._id);
+                                                                    }}
+                                                                    className="p-2 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-rose-600 hover:border-rose-300 transition-all opacity-0 group-hover:opacity-100 shrink-0"
+                                                                >
+                                                                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
                                             </div>
-                                        ) : (
-                                            <label className="flex flex-col items-center justify-center gap-2 sm:gap-3 py-8 sm:py-10 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[1.25rem] sm:rounded-[1.5rem] cursor-pointer hover:bg-emerald-50/50 hover:border-emerald-400/50 transition-all group">
-                                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                                                    {uploadingCoverLetter ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 animate-spin" /> : <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />}
-                                                </div>
-                                                <p className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight">Upload Base Cover Letter</p>
-                                                <input type="file" accept=".pdf,.doc,.docx" onChange={(e) => handleFileUpload(e.target.files[0], 'coverLetter')} className="hidden" />
-                                            </label>
                                         )}
+
+                                        {/* Upload Button */}
+                                        <label className="flex flex-col items-center justify-center gap-2 sm:gap-3 py-6 sm:py-8 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[1.25rem] sm:rounded-[1.5rem] cursor-pointer hover:bg-blue-50/50 hover:border-blue-400/50 transition-all group">
+                                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                                                {uploadingDocument ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 animate-spin" /> : <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />}
+                                            </div>
+                                            <p className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight">
+                                                {documents.length > 0 ? 'Add Another Document' : 'Upload Document'}
+                                            </p>
+                                            <p className="text-[9px] text-slate-400">PDF, DOC, DOCX, TXT, Excel</p>
+                                            <input
+                                                type="file"
+                                                accept=".pdf,.doc,.docx,.txt,.xlsx,.xls"
+                                                onChange={(e) => {
+                                                    if (e.target.files[0]) {
+                                                        handleUploadDocument(e.target.files[0]);
+                                                    }
+                                                }}
+                                                className="hidden"
+                                            />
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -675,9 +703,9 @@ export default function SendEmailsPage() {
                                             <div className="flex items-center justify-between p-3 sm:p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
                                                 <div className="flex items-center gap-2 sm:gap-3">
                                                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                                                    <span className="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest">Global Files</span>
+                                                    <span className="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest">Attachments</span>
                                                 </div>
-                                                <span className="text-base sm:text-lg font-display font-bold text-white">{[attachResume, attachCoverLetter].filter(Boolean).length}</span>
+                                                <span className="text-base sm:text-lg font-display font-bold text-white">{selectedDocumentIds.length}</span>
                                             </div>
                                         </div>
 

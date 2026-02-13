@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import dbConnect from '@/lib/mongodb';
 import Papa from 'papaparse';
+import * as XLSX from 'xlsx';
 import HrEmail from '@/models/HrEmail';
 import User from '@/models/User';
 import Notification from '@/models/Notification';
@@ -22,16 +23,40 @@ export async function POST(request) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
-        const text = await file.text();
+        const fileName = file.name.toLowerCase();
+        let parsedData = [];
 
-        // Parse CSV
-        const result = Papa.parse(text, {
-            header: true,
-            skipEmptyLines: true,
-        });
+        // Check if Excel file (.xlsx or .xls)
+        if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
+            // Parse Excel file
+            const arrayBuffer = await file.arrayBuffer();
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 
-        if (result.errors.length > 0) {
-            return NextResponse.json({ error: 'Invalid CSV file' }, { status: 400 });
+            // Get first sheet
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+
+            // Convert to JSON
+            parsedData = XLSX.utils.sheet_to_json(worksheet);
+
+            if (parsedData.length === 0) {
+                return NextResponse.json({ error: 'Excel file is empty or invalid' }, { status: 400 });
+            }
+        } else if (fileName.endsWith('.csv')) {
+            // Parse CSV file
+            const text = await file.text();
+            const result = Papa.parse(text, {
+                header: true,
+                skipEmptyLines: true,
+            });
+
+            if (result.errors.length > 0) {
+                return NextResponse.json({ error: 'Invalid CSV file' }, { status: 400 });
+            }
+
+            parsedData = result.data;
+        } else {
+            return NextResponse.json({ error: 'Invalid file type. Please upload CSV or Excel file.' }, { status: 400 });
         }
 
         await dbConnect();
@@ -40,7 +65,7 @@ export async function POST(request) {
         const skipped = [];
         const errors = [];
 
-        for (const row of result.data) {
+        for (const row of parsedData) {
             const email = row.email || row.Email;
             const company = row.company || row.Company;
             const jobRole = row.jobRole || row['Job Role'] || row.jobrole;
@@ -135,7 +160,7 @@ export async function POST(request) {
             },
         });
     } catch (error) {
-        console.error('Error importing CSV:', error);
+        console.error('Error importing file:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

@@ -51,16 +51,6 @@ export async function POST(request) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-        // Delete old cover letter from Blob storage if exists
-        if (user.coverLetter?.url) {
-            try {
-                console.log('🗑️ Deleting old cover letter from Blob storage');
-                await del(user.coverLetter.url);
-            } catch (err) {
-                console.log('⚠️ Old file not found or already deleted');
-            }
-        }
-
         // Upload to Vercel Blob
         console.log('☁️ Uploading to Vercel Blob...');
         const blob = await put(`cover-letters/${session.user.id}/${Date.now()}-${file.name}`, file, {
@@ -70,25 +60,61 @@ export async function POST(request) {
 
         console.log('✅ Uploaded to Blob:', blob.url);
 
-        // Update user in database with URL only
-        user.coverLetter = {
+        // Add to coverLetters array (NEW: Support multiple cover letters)
+        const newCoverLetter = {
             url: blob.url,
             filename: file.name,
             mimeType: file.type,
             size: file.size,
             uploadedAt: new Date(),
         };
+
+        // Initialize coverLetters array if it doesn't exist
+        if (!user.coverLetters) {
+            user.coverLetters = [];
+        }
+
+        // Add new cover letter to array
+        user.coverLetters.push(newCoverLetter);
+
+        // Also update the old single coverLetter field for backward compatibility
+        user.coverLetter = newCoverLetter;
+
         await user.save();
 
-        console.log('💾 Database updated with cover letter URL');
+        console.log('💾 Database updated - Cover letter added to array');
+
+        // Return the new cover letter with its MongoDB _id
+        // Refresh the user to get the populated coverLetters array
+        const savedUser = await User.findById(session.user.id).select('coverLetters');
+
+        // Get the last added cover letter (the one we just added)
+        const coverLettersArray = savedUser.coverLetters || [];
+        const addedCoverLetter = coverLettersArray[coverLettersArray.length - 1];
+
+        if (!addedCoverLetter) {
+            // Fallback: return without _id
+            return NextResponse.json({
+                success: true,
+                message: 'Cover letter uploaded successfully',
+                coverLetter: {
+                    url: blob.url,
+                    filename: file.name,
+                    size: file.size,
+                    uploadedAt: new Date(),
+                },
+            });
+        }
 
         return NextResponse.json({
             success: true,
             message: 'Cover letter uploaded successfully',
             coverLetter: {
-                url: blob.url,
-                filename: file.name,
-                size: file.size,
+                _id: addedCoverLetter._id,
+                url: addedCoverLetter.url,
+                filename: addedCoverLetter.filename,
+                size: addedCoverLetter.size,
+                uploadedAt: addedCoverLetter.uploadedAt,
             },
         });
 
@@ -100,7 +126,7 @@ export async function POST(request) {
     }
 }
 
-// Get current cover letter info
+// Get all cover letters
 export async function GET(request) {
     try {
         const session = await getServerSession(authOptions);
@@ -109,19 +135,24 @@ export async function GET(request) {
         }
 
         await dbConnect();
-        const user = await User.findById(session.user.id).select('coverLetter');
+        const user = await User.findById(session.user.id).select('coverLetters coverLetter');
+
+        // Return array of cover letters (new system) with backward compatibility
+        const coverLetters = user.coverLetters || (user.coverLetter ? [user.coverLetter] : []);
 
         return NextResponse.json({
-            coverLetter: user.coverLetter || null,
+            coverLetters,
+            // Backward compatibility: also return single cover letter
+            coverLetter: user.coverLetter || (coverLetters.length > 0 ? coverLetters[0] : null),
         });
 
     } catch (error) {
-        console.error('Error fetching cover letter:', error);
-        return NextResponse.json({ error: 'Failed to fetch cover letter' }, { status: 500 });
+        console.error('Error fetching cover letters:', error);
+        return NextResponse.json({ error: 'Failed to fetch cover letters' }, { status: 500 });
     }
 }
 
-// Delete cover letter
+// Delete specific cover letter by ID
 export async function DELETE(request) {
     try {
         const session = await getServerSession(authOptions);
@@ -129,19 +160,59 @@ export async function DELETE(request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
+        const body = await request.json();
+        const { coverLetterId } = body;
+
         await dbConnect();
         const user = await User.findById(session.user.id);
 
-        if (user.coverLetter?.url) {
+        if (!user) {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
+
+        // Find the cover letter to delete
+        let coverLetterToDelete = null;
+
+        if (user.coverLetters && user.coverLetters.length > 0) {
+            coverLetterToDelete = user.coverLetters.find(c =>
+                c._id?.toString() === coverLetterId || c.filename === coverLetterId
+            );
+        }
+
+        // Fallback to old single coverLetter field
+        if (!coverLetterToDelete && user.coverLetter && (user.coverLetter._id?.toString() === coverLetterId || user.coverLetter.filename === coverLetterId)) {
+            coverLetterToDelete = user.coverLetter;
+        }
+
+        if (!coverLetterToDelete) {
+            return NextResponse.json({ error: 'Cover letter not found' }, { status: 404 });
+        }
+
+        // Delete from Blob storage
+        if (coverLetterToDelete.url) {
             try {
-                await del(user.coverLetter.url);
+                console.log('🗑️ Deleting from Blob:', coverLetterToDelete.url);
+                await del(coverLetterToDelete.url);
             } catch (err) {
-                console.log('File already deleted or not found');
+                console.log('⚠️ File not found in Blob or already deleted');
             }
         }
 
-        user.coverLetter = undefined;
+        // Remove from coverLetters array
+        if (user.coverLetters && user.coverLetters.length > 0) {
+            user.coverLetters = user.coverLetters.filter(c =>
+                c._id?.toString() !== coverLetterId && c.filename !== coverLetterId
+            );
+        }
+
+        // If deleting the single coverLetter field
+        if (user.coverLetter && (user.coverLetter._id?.toString() === coverLetterId || user.coverLetter.filename === coverLetterId)) {
+            user.coverLetter = undefined;
+        }
+
         await user.save();
+
+        console.log('✅ Cover letter deleted successfully');
 
         return NextResponse.json({
             success: true,

@@ -57,7 +57,14 @@ export async function POST(request) {
         }
 
         const body = await request.json();
-        const { templateId, hrEmailIds, variables, attachResume, attachCoverLetter } = body;
+        const { templateId, hrEmailIds, variables, documentIds } = body;
+
+        console.log('📦 Payload received:', {
+            templateId,
+            hrEmailCount: hrEmailIds?.length,
+            documentIds,
+            documentCount: documentIds?.length || 0,
+        });
 
         if (!templateId || !hrEmailIds || hrEmailIds.length === 0) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -162,44 +169,58 @@ export async function POST(request) {
             }, { status: 401 });
         }
 
-        // Prepare attachments if requested (fetch from Vercel Blob)
+        // ============================================
+        // FETCH MULTIPLE ATTACHMENTS BY IDS
+        // ============================================
         const attachments = [];
 
-        if (attachResume && user.resume && user.resume.url) {
-            try {
-                console.log('📎 Fetching resume from Blob:', user.resume.url);
-                const response = await fetch(user.resume.url);
-                const arrayBuffer = await response.arrayBuffer();
-                const base64Data = Buffer.from(arrayBuffer).toString('base64');
+        if (documentIds && documentIds.length > 0) {
+            console.log(`📎 Fetching ${documentIds.length} document(s)...`);
+            console.log('👤 User documents:', user.documents?.length || 0);
 
-                attachments.push({
-                    filename: user.resume.filename,
-                    mimeType: user.resume.mimeType,
-                    data: base64Data,
-                });
-                console.log('✅ Resume attached');
-            } catch (error) {
-                console.error('❌ Failed to fetch resume from Blob:', error);
+            for (const documentId of documentIds) {
+                try {
+                    // Find document in the documents array
+                    let document = null;
+
+                    if (user.documents && user.documents.length > 0) {
+                        document = user.documents.find(d => d._id?.toString() === documentId);
+                    }
+
+                    if (!document) {
+                        console.warn('⚠️ Document not found for ID:', documentId);
+                        continue;
+                    }
+
+                    if (!document.url) {
+                        console.warn('⚠️ Document URL missing for:', document.filename);
+                        continue;
+                    }
+
+                    console.log('📥 Fetching document from Blob:', document.filename);
+                    const response = await fetch(document.url);
+
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch: ${response.statusText}`);
+                    }
+
+                    const arrayBuffer = await response.arrayBuffer();
+                    const base64Data = Buffer.from(arrayBuffer).toString('base64');
+
+                    attachments.push({
+                        filename: document.filename,
+                        mimeType: document.mimeType || 'application/octet-stream',
+                        data: base64Data,
+                    });
+
+                    console.log('✅ Attached:', document.filename);
+                } catch (error) {
+                    console.error(`❌ Failed to fetch document ${documentId}:`, error.message);
+                }
             }
         }
 
-        if (attachCoverLetter && user.coverLetter && user.coverLetter.url) {
-            try {
-                console.log('📎 Fetching cover letter from Blob:', user.coverLetter.url);
-                const response = await fetch(user.coverLetter.url);
-                const arrayBuffer = await response.arrayBuffer();
-                const base64Data = Buffer.from(arrayBuffer).toString('base64');
-
-                attachments.push({
-                    filename: user.coverLetter.filename,
-                    mimeType: user.coverLetter.mimeType,
-                    data: base64Data,
-                });
-                console.log('✅ Cover letter attached');
-            } catch (error) {
-                console.error('❌ Failed to fetch cover letter from Blob:', error);
-            }
-        }
+        console.log(`📎 Total attachments: ${attachments.length}`);
 
         // Initialize Gmail service with userId for token refresh
         const gmailService = new GmailService(user.accessToken, user.refreshToken, user._id.toString());

@@ -51,16 +51,6 @@ export async function POST(request) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-        // Delete old resume from Blob storage if exists
-        if (user.resume?.url) {
-            try {
-                console.log('🗑️ Deleting old resume from Blob storage');
-                await del(user.resume.url);
-            } catch (err) {
-                console.log('⚠️ Old file not found or already deleted');
-            }
-        }
-
         // Upload to Vercel Blob
         console.log('☁️ Uploading to Vercel Blob...');
         const blob = await put(`resumes/${session.user.id}/${Date.now()}-${file.name}`, file, {
@@ -70,25 +60,61 @@ export async function POST(request) {
 
         console.log('✅ Uploaded to Blob:', blob.url);
 
-        // Update user in database with URL only (not the file!)
-        user.resume = {
+        // Add to resumes array (NEW: Support multiple resumes)
+        const newResume = {
             url: blob.url,
             filename: file.name,
             mimeType: file.type,
             size: file.size,
             uploadedAt: new Date(),
         };
+
+        // Initialize resumes array if it doesn't exist
+        if (!user.resumes) {
+            user.resumes = [];
+        }
+
+        // Add new resume to array
+        user.resumes.push(newResume);
+
+        // Also update the old single resume field for backward compatibility
+        user.resume = newResume;
+
         await user.save();
 
-        console.log('💾 Database updated with resume URL');
+        console.log('💾 Database updated - Resume added to array');
+
+        // Return the new resume with its MongoDB _id
+        // Refresh the user to get the populated resumes array
+        const savedUser = await User.findById(session.user.id).select('resumes');
+
+        // Get the last added resume (the one we just added)
+        const resumesArray = savedUser.resumes || [];
+        const addedResume = resumesArray[resumesArray.length - 1];
+
+        if (!addedResume) {
+            // Fallback: return without _id
+            return NextResponse.json({
+                success: true,
+                message: 'Resume uploaded successfully',
+                resume: {
+                    url: blob.url,
+                    filename: file.name,
+                    size: file.size,
+                    uploadedAt: new Date(),
+                },
+            });
+        }
 
         return NextResponse.json({
             success: true,
             message: 'Resume uploaded successfully',
             resume: {
-                url: blob.url,
-                filename: file.name,
-                size: file.size,
+                _id: addedResume._id,
+                url: addedResume.url,
+                filename: addedResume.filename,
+                size: addedResume.size,
+                uploadedAt: addedResume.uploadedAt,
             },
         });
 
@@ -100,7 +126,7 @@ export async function POST(request) {
     }
 }
 
-// Get current resume info
+// Get all resumes
 export async function GET(request) {
     try {
         const session = await getServerSession(authOptions);
@@ -109,19 +135,24 @@ export async function GET(request) {
         }
 
         await dbConnect();
-        const user = await User.findById(session.user.id).select('resume');
+        const user = await User.findById(session.user.id).select('resumes resume');
+
+        // Return array of resumes (new system) with backward compatibility
+        const resumes = user.resumes || (user.resume ? [user.resume] : []);
 
         return NextResponse.json({
-            resume: user.resume || null,
+            resumes,
+            // Backward compatibility: also return single resume
+            resume: user.resume || (resumes.length > 0 ? resumes[0] : null),
         });
 
     } catch (error) {
-        console.error('Error fetching resume:', error);
-        return NextResponse.json({ error: 'Failed to fetch resume' }, { status: 500 });
+        console.error('Error fetching resumes:', error);
+        return NextResponse.json({ error: 'Failed to fetch resumes' }, { status: 500 });
     }
 }
 
-// Delete resume
+// Delete specific resume by ID
 export async function DELETE(request) {
     try {
         const session = await getServerSession(authOptions);
@@ -129,19 +160,59 @@ export async function DELETE(request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
+        const body = await request.json();
+        const { resumeId } = body;
+
         await dbConnect();
         const user = await User.findById(session.user.id);
 
-        if (user.resume?.url) {
+        if (!user) {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
+
+        // Find the resume to delete
+        let resumeToDelete = null;
+
+        if (user.resumes && user.resumes.length > 0) {
+            resumeToDelete = user.resumes.find(r =>
+                r._id?.toString() === resumeId || r.filename === resumeId
+            );
+        }
+
+        // Fallback to old single resume field
+        if (!resumeToDelete && user.resume && (user.resume._id?.toString() === resumeId || user.resume.filename === resumeId)) {
+            resumeToDelete = user.resume;
+        }
+
+        if (!resumeToDelete) {
+            return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
+        }
+
+        // Delete from Blob storage
+        if (resumeToDelete.url) {
             try {
-                await del(user.resume.url);
+                console.log('🗑️ Deleting from Blob:', resumeToDelete.url);
+                await del(resumeToDelete.url);
             } catch (err) {
-                console.log('File already deleted or not found');
+                console.log('⚠️ File not found in Blob or already deleted');
             }
         }
 
-        user.resume = undefined;
+        // Remove from resumes array
+        if (user.resumes && user.resumes.length > 0) {
+            user.resumes = user.resumes.filter(r =>
+                r._id?.toString() !== resumeId && r.filename !== resumeId
+            );
+        }
+
+        // If deleting the single resume field
+        if (user.resume && (user.resume._id?.toString() === resumeId || user.resume.filename === resumeId)) {
+            user.resume = undefined;
+        }
+
         await user.save();
+
+        console.log('✅ Resume deleted successfully');
 
         return NextResponse.json({
             success: true,

@@ -152,7 +152,7 @@ export default function HrEmailsPage() {
                 setShowImportModal(false);
                 fetchHrEmails();
             } else {
-                toast.error('Failed to import CSV');
+                toast.error('Failed to import file');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -216,7 +216,7 @@ export default function HrEmailsPage() {
                                 className="bg-slate-100 text-slate-900 font-bold px-6 py-3 rounded-2xl text-sm transition-all active:scale-95 hover:bg-slate-200 border border-slate-200/50 flex items-center justify-center gap-2 cursor-pointer"
                             >
                                 <Upload className="w-4 h-4 text-slate-500" />
-                                <span>Import CSV</span>
+                                <span>Import CSV/Excel</span>
                             </button>
                             <button
                                 onClick={() => {
@@ -589,7 +589,7 @@ export default function HrEmailsPage() {
                                 </div>
                                 <div className="p-10 space-y-8">
                                     <div className="space-y-4">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center">CSV Data Schema</p>
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center">CSV/Excel Schema</p>
                                         <div className="bg-slate-900 p-5 rounded-2xl font-mono text-[13px] border border-slate-800 shadow-inner text-center space-y-2">
                                             <div className="text-blue-400">email*, company*, jobRole*, hrName, tags, notes</div>
                                             <div className="text-slate-500 text-[11px]">* = required &nbsp;|&nbsp; tags = #hashtag format</div>
@@ -603,12 +603,12 @@ export default function HrEmailsPage() {
                                                 <FileSpreadsheet className="w-8 h-8 text-blue-600" />
                                             </div>
                                             <div className="text-center">
-                                                <p className="text-lg font-bold text-slate-900">Drop your CSV here</p>
-                                                <p className="text-sm font-medium text-slate-500 mt-1">or click to browse your file system</p>
+                                                <p className="text-lg font-bold text-slate-900">Drop your file here</p>
+                                                <p className="text-sm font-medium text-slate-500 mt-1">CSV or Excel (.xlsx, .xls) accepted</p>
                                             </div>
                                             <input
                                                 type="file"
-                                                accept=".csv"
+                                                accept=".csv,.xlsx,.xls"
                                                 onChange={handleImport}
                                                 className="hidden"
                                             />

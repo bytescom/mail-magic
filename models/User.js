@@ -26,17 +26,47 @@ const UserSchema = new mongoose.Schema({
     tokenExpiry: {
         type: Date,
     },
-    // Resume file (stored in Vercel Blob)
+    // REDESIGNED: Unified Documents Library (replaces separate resume/coverLetter)
+    documents: [{
+        url: String,
+        filename: String,
+        mimeType: String,
+        size: Number,
+        uploadedAt: {
+            type: Date,
+            default: Date.now
+        },
+    }],
+    // Backward compatibility - keep old fields (deprecated)
+    resumes: [{
+        url: String,
+        filename: String,
+        mimeType: String,
+        size: Number,
+        uploadedAt: {
+            type: Date,
+            default: Date.now
+        },
+    }],
+    coverLetters: [{
+        url: String,
+        filename: String,
+        mimeType: String,
+        size: Number,
+        uploadedAt: {
+            type: Date,
+            default: Date.now
+        },
+    }],
     resume: {
-        url: String,           // Vercel Blob URL (e.g., https://xxx.blob.vercel.com/resume.pdf)
-        filename: String,      // Original filename
-        mimeType: String,      // MIME type (e.g., application/pdf)
-        size: Number,          // File size in bytes
-        uploadedAt: Date,      // Upload timestamp
+        url: String,
+        filename: String,
+        mimeType: String,
+        size: Number,
+        uploadedAt: Date,
     },
-    // Cover Letter file (stored in Vercel Blob)
     coverLetter: {
-        url: String,           // Vercel Blob URL
+        url: String,
         filename: String,
         mimeType: String,
         size: Number,

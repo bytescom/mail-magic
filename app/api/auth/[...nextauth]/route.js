@@ -3,6 +3,60 @@ import GoogleProvider from 'next-auth/providers/google';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 
+/**
+ * Refreshes an expired access token using the refresh token
+ */
+async function refreshAccessToken(token) {
+    try {
+        console.log('🔄 Attempting to refresh access token...');
+
+        const url = 'https://oauth2.googleapis.com/token';
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                client_id: process.env.GOOGLE_CLIENT_ID,
+                client_secret: process.env.GOOGLE_CLIENT_SECRET,
+                grant_type: 'refresh_token',
+                refresh_token: token.refreshToken,
+            }),
+        });
+
+        const refreshedTokens = await response.json();
+
+        if (!response.ok) {
+            throw new Error(refreshedTokens.error || 'Failed to refresh token');
+        }
+
+        console.log('✅ Access token refreshed successfully');
+
+        // Update database with new access token
+        await dbConnect();
+        await User.findOneAndUpdate(
+            { email: token.email },
+            {
+                accessToken: refreshedTokens.access_token,
+                tokenExpiry: new Date(Date.now() + refreshedTokens.expires_in * 1000),
+                updatedAt: new Date(),
+            }
+        );
+
+        return {
+            ...token,
+            accessToken: refreshedTokens.access_token,
+            accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+            // Keep the same refresh token, or use new one if provided
+            refreshToken: refreshedTokens.refresh_token ?? token.refreshToken,
+        };
+    } catch (error) {
+        console.error('❌ Error refreshing access token:', error);
+        return {
+            ...token,
+            error: 'RefreshAccessTokenError',
+        };
+    }
+}
+
 export const authOptions = {
     providers: [
         GoogleProvider({
@@ -11,6 +65,7 @@ export const authOptions = {
             authorization: {
                 params: {
                     access_type: 'offline',  // Required for refresh token
+                    prompt: 'consent',       // Force consent to get refresh token
                     response_type: 'code',
                     scope: [
                         'openid',
@@ -75,7 +130,7 @@ export const authOptions = {
                     });
                     console.log('✅ New user created:', dbUser._id);
                 } else {
-                    // Update tokens
+                    // Update tokens - keep existing refresh token if new one not provided
                     dbUser.accessToken = account?.access_token || dbUser.accessToken;
                     dbUser.refreshToken = account?.refresh_token || dbUser.refreshToken;
                     dbUser.tokenExpiry = tokenExpiry;
@@ -124,13 +179,15 @@ export const authOptions = {
                 return token;
             }
 
-            // Access token has expired, try to update it
-            return token; // In production, implement token refresh here
+            // Access token has expired, refresh it
+            console.log('⚠️ Access token expired, refreshing...');
+            return refreshAccessToken(token);
         },
         async session({ session, token }) {
             if (token) {
                 session.accessToken = token.accessToken;
                 session.refreshToken = token.refreshToken;
+                session.error = token.error;
 
                 // Get user from database
                 await dbConnect();
@@ -138,6 +195,12 @@ export const authOptions = {
                 if (dbUser) {
                     session.user.id = dbUser._id.toString();
                     session.user.settings = dbUser.settings;
+
+                    // Use database tokens if token refresh failed
+                    if (token.error === 'RefreshAccessTokenError') {
+                        session.accessToken = dbUser.accessToken;
+                        session.refreshToken = dbUser.refreshToken;
+                    }
                 }
             }
             return session;
@@ -153,6 +216,7 @@ export const authOptions = {
     },
     session: {
         strategy: 'jwt',
+        maxAge: 30 * 24 * 60 * 60, // 30 days
     },
     secret: process.env.NEXTAUTH_SECRET,
 };
