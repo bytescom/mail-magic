@@ -202,7 +202,7 @@ export default function HrEmailsPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div className="space-y-1">
                             <h2 className="text-[11px] font-bold text-blue-600 uppercase tracking-[0.2em]">Contacts</h2>
-                            <h1 className="text-3xl font-display font-bold text-slate-900 tracking-tight">
+                            <h1 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 tracking-tight">
                                 HR & Recruiters
                             </h1>
                             <p className="text-slate-500 max-w-lg text-sm leading-relaxed font-sans">
@@ -528,7 +528,7 @@ export default function HrEmailsPage() {
                                             value={formData.jobRole}
                                             onChange={(e) => setFormData({ ...formData, jobRole: e.target.value })}
                                             className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all placeholder:font-normal"
-                                            placeholder="e.g., Software Engineer, Product Manager, Data Scientist..."
+                                            placeholder="Software Engineer, PM, etc."
                                             required
                                         />
                                     </div>
@@ -554,7 +554,7 @@ export default function HrEmailsPage() {
                                             value={formData.notes}
                                             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                                             className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all resize-none min-h-[80px] placeholder:font-normal"
-                                            placeholder="Found through LinkedIn, interested in React roles..."
+                                            placeholder="Notes about this contact..."
                                         />
                                     </div>
 

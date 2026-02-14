@@ -91,7 +91,7 @@ export default function SettingsPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div className="space-y-1">
                             <h2 className="text-[11px] font-bold text-blue-600 uppercase tracking-[0.2em]">Configuration</h2>
-                            <h1 className="text-3xl font-display font-bold text-slate-900 tracking-tight">System Settings</h1>
+                            <h1 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 tracking-tight">System Settings</h1>
                             <p className="text-slate-500 text-sm leading-relaxed max-w-lg">
                                 Manage your automation preferences and profile security assets.
                             </p>
@@ -105,7 +105,7 @@ export default function SettingsPage() {
                                 <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/10">
                                     <User className="w-5 h-5 text-white" />
                                 </div>
-                                <h2 className="text-xl font-display font-bold text-slate-900">1. Core Profile</h2>
+                                <h2 className="text-base sm:text-lg md:text-xl font-display font-bold text-slate-900">1. Core Profile</h2>
                             </div>
                             <div className="p-8 grid md:grid-cols-2 gap-8">
                                 <div className="space-y-2">
@@ -143,7 +143,7 @@ export default function SettingsPage() {
                                 <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/10">
                                     <Zap className="w-5 h-5 text-white" />
                                 </div>
-                                <h2 className="text-xl font-display font-bold text-slate-900">2. Automation Behavior</h2>
+                                <h2 className="text-base sm:text-lg md:text-xl font-display font-bold text-slate-900">2. Automation Behavior</h2>
                             </div>
                             <div className="p-8 space-y-8">
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 p-6 rounded-3xl bg-slate-50 border border-slate-100">
@@ -197,7 +197,7 @@ export default function SettingsPage() {
                                 <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center shadow-lg shadow-slate-500/10">
                                     <Shield className="w-5 h-5 text-white" />
                                 </div>
-                                <h2 className="text-xl font-display font-bold text-slate-900">3. Security Context</h2>
+                                <h2 className="text-base sm:text-lg md:text-xl font-display font-bold text-slate-900">3. Security Context</h2>
                             </div>
                             <div className="p-8">
                                 <div className="p-6 rounded-[2rem] bg-amber-50 border border-amber-100 flex items-start gap-5">

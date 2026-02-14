@@ -124,7 +124,7 @@ export default function TemplatesPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div className="space-y-1">
                             <h2 className="text-[11px] font-bold text-blue-600 uppercase tracking-[0.2em]">Management</h2>
-                            <h1 className="text-3xl font-display font-bold text-slate-900 tracking-tight">
+                            <h1 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 tracking-tight">
                                 Email Templates
                             </h1>
                             <p className="text-slate-500 max-w-lg text-sm leading-relaxed">
@@ -292,7 +292,7 @@ export default function TemplatesPage() {
                                             value={formData.subject}
                                             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                                             className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all placeholder:font-normal"
-                                            placeholder="Applying for {{job_role}} role at {{company}}"
+                                            placeholder="Application for {{job_role}} at {{company}}"
                                             required
                                         />
                                     </div>

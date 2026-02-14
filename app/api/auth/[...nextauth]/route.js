@@ -64,8 +64,8 @@ export const authOptions = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             authorization: {
                 params: {
-                    access_type: 'offline',  // Required for refresh token
-                    prompt: 'consent',       // Force consent to get refresh token
+                    access_type: 'offline',     // Required for refresh token
+                    prompt: 'select_account',   // Show account selector (better UX than forcing consent every time)
                     response_type: 'code',
                     scope: [
                         'openid',

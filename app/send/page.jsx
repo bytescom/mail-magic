@@ -333,7 +333,7 @@ export default function SendEmailsPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div className="space-y-1">
                             <h2 className="text-[11px] font-bold text-blue-600 uppercase tracking-[0.2em]">Execution</h2>
-                            <h1 className="text-3xl font-display font-bold text-slate-900 tracking-tight">
+                            <h1 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 tracking-tight">
                                 Launch Campaign
                             </h1>
                             <p className="text-slate-500 max-w-lg text-sm leading-relaxed font-sans">
@@ -341,467 +341,481 @@ export default function SendEmailsPage() {
                             </p>
                         </div>
 
-                        <div className="flex items-center gap-3 px-4 py-2 bg-blue-50 border border-blue-100 rounded-2xl">
-                            <History className="w-4 h-4 text-blue-500" />
-                            <span className="text-xs font-bold text-blue-900 uppercase tracking-tight">System Ready to Dispatch</span>
+                        <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 bg-blue-50 border border-blue-100 rounded-xl sm:rounded-2xl">
+                            <History className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500" />
+                            <span className="text-[10px] sm:text-xs font-bold text-blue-900 uppercase tracking-tight">System Ready to Dispatch</span>
                         </div>
                     </div>
 
-                    <div className="grid lg:grid-cols-12 gap-6 sm:gap-8">
-                        {/* Main Configuration - Left */}
-                        <div className="lg:col-span-8 space-y-6 sm:space-y-8">
+                    <div className="w-full max-w-7xl mx-auto overflow-x-hidden">
+                        <div className="grid lg:grid-cols-12 gap-6 sm:gap-8">
+                            {/* Main Configuration - Left */}
+                            <div className="lg:col-span-8 space-y-6 sm:space-y-8 w-full min-w-0">
 
-                            {/* Step 1: Base Configuration */}
-                            <div className="bg-white border border-slate-200/60 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm overflow-hidden">
-                                <div className="p-6 sm:p-8 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
-                                    <div className="flex items-center gap-3 sm:gap-4">
-                                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/10">
-                                            <LayoutPanelTop className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                                        </div>
-                                        <h2 className="text-lg sm:text-xl font-display font-bold text-slate-900">1. Core Assets</h2>
-                                    </div>
-                                    <span className="px-3 py-1 bg-white border border-slate-200 rounded-full text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-tighter sm:tracking-normal">Configuration</span>
-                                </div>
-                                <div className="p-6 sm:p-8 space-y-6 sm:space-y-8">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Template Selection</label>
-                                        <div className="relative group">
-                                            <FileText className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
-                                            <select
-                                                value={selectedTemplate}
-                                                onChange={(e) => setSelectedTemplate(e.target.value)}
-                                                className="w-full pl-11 sm:pl-12 pr-6 py-3.5 sm:py-4 rounded-2xl bg-slate-50 border border-slate-100 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 appearance-none transition-all cursor-pointer"
-                                            >
-                                                <option value="">Choose your application strategy...</option>
-                                                {templates.map((t) => (
-                                                    <option key={t._id} value={t._id}>{t.name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    {selectedTemplateObj && (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 animate-in zoom-in-95 duration-300">
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Your Full Name</label>
-                                                <input
-                                                    type="text"
-                                                    value={variables.your_name}
-                                                    onChange={(e) => setVariables({ ...variables, your_name: e.target.value })}
-                                                    className="w-full px-4 sm:px-5 py-3.5 sm:py-4 rounded-2xl bg-white border border-slate-200 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all placeholder:font-normal"
-                                                    placeholder="Johnathan Doe"
-                                                />
+                                {/* Step 1: Base Configuration */}
+                                <div className="bg-white border border-slate-200/60 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm overflow-hidden">
+                                    <div className="p-4 md:p-6 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
+                                        <div className="flex items-center gap-3 sm:gap-4">
+                                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/10">
+                                                <LayoutPanelTop className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                                             </div>
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Live Portfolio Link (Optional)</label>
-                                                <input
-                                                    type="url"
-                                                    value={variables.portfolio_link}
-                                                    onChange={(e) => setVariables({ ...variables, portfolio_link: e.target.value })}
-                                                    className="w-full px-4 sm:px-5 py-3.5 sm:py-4 rounded-2xl bg-white border border-slate-200 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all placeholder:font-normal"
-                                                    placeholder="https://behance.net/jdoe"
-                                                />
+                                            <h2 className="text-base sm:text-lg md:text-xl font-display font-bold text-slate-900">1. Core Assets</h2>
+                                        </div>
+                                        <span className="px-3 py-1 bg-white border border-slate-200 rounded-full text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-tighter sm:tracking-normal">Configuration</span>
+                                    </div>
+                                    <div className="p-4 md:p-8 space-y-6 sm:space-y-8">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Template Selection</label>
+                                            <div className="relative group">
+                                                <FileText className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+                                                <select
+                                                    value={selectedTemplate}
+                                                    onChange={(e) => setSelectedTemplate(e.target.value)}
+                                                    className="w-full pl-10 sm:pl-12 pr-4 sm:pr-6 py-3 sm:py-3.5 md:py-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs sm:text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 appearance-none transition-all cursor-pointer"
+                                                >
+                                                    <option value="">Choose strategy...</option>
+                                                    {templates.map((t) => (
+                                                        <option key={t._id} value={t._id}>{t.name}</option>
+                                                    ))}
+                                                </select>
                                             </div>
                                         </div>
-                                    )}
-                                </div>
-                            </div>
 
-                            {/* Step 2: Payload Enrichment */}
-                            <div className="bg-white border border-slate-200/60 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm overflow-hidden">
-                                <div className="p-6 sm:p-8 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
-                                    <div className="flex items-center gap-3 sm:gap-4">
-                                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-900 flex items-center justify-center shadow-lg shadow-slate-900/10">
-                                            <Paperclip className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                                        </div>
-                                        <h2 className="text-lg sm:text-xl font-display font-bold text-slate-900">2. Payload Enrichment</h2>
-                                    </div>
-                                    <span className="px-3 py-1 bg-white border border-slate-200 rounded-full text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Collateral</span>
-                                </div>
-                                <div className="p-6 sm:p-8">
-                                    {/* UNIFIED DOCUMENT LIBRARY */}
-                                    <div className="space-y-4">
-                                        {/* Header */}
-                                        <div className="flex items-center justify-between px-1">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                                                <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                                                    Document Library ({documents.length})
-                                                </p>
-                                            </div>
-                                            {selectedDocumentIds.length > 0 && (
-                                                <span className="px-2.5 py-1 rounded-full text-[9px] font-bold uppercase bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20">
-                                                    {selectedDocumentIds.length} Selected
-                                                </span>
-                                            )}
-                                        </div>
-
-                                        {/* Empty State */}
-                                        {documents.length === 0 && (
-                                            <div className="flex flex-col items-center justify-center gap-3 py-12 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[1.5rem]">
-                                                <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm">
-                                                    <File className="w-6 h-6 text-slate-400" />
+                                        {selectedTemplateObj && (
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 animate-in zoom-in-95 duration-300">
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Your Full Name</label>
+                                                    <input
+                                                        type="text"
+                                                        value={variables.your_name}
+                                                        onChange={(e) => setVariables({ ...variables, your_name: e.target.value })}
+                                                        className="w-full px-3 sm:px-4 md:px-5 py-3 sm:py-3.5 md:py-4 rounded-2xl bg-white border border-slate-200 text-xs sm:text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all placeholder:font-normal"
+                                                        placeholder="John Doe"
+                                                    />
                                                 </div>
-                                                <div className="text-center">
-                                                    <p className="text-sm font-bold text-slate-600">No documents yet</p>
-                                                    <p className="text-xs text-slate-400 mt-1">Click "Upload" below to add your first document</p>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Live Portfolio Link (Optional)</label>
+                                                    <input
+                                                        type="url"
+                                                        value={variables.portfolio_link}
+                                                        onChange={(e) => setVariables({ ...variables, portfolio_link: e.target.value })}
+                                                        className="w-full px-3 sm:px-4 md:px-5 py-3 sm:py-3.5 md:py-4 rounded-2xl bg-white border border-slate-200 text-xs sm:text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all placeholder:font-normal"
+                                                        placeholder="Portfolio URL"
+                                                    />
                                                 </div>
                                             </div>
                                         )}
+                                    </div>
+                                </div>
 
-                                        {/* Document List */}
-                                        {documents.length > 0 && (
-                                            <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1 custom-scrollbar">
-                                                {documents.map((document) => {
-                                                    const isSelected = selectedDocumentIds.includes(document._id);
-                                                    return (
-                                                        <div
-                                                            key={document._id}
-                                                            className={cn(
-                                                                "p-3 sm:p-4 rounded-[1.25rem] sm:rounded-[1.5rem] border transition-all group cursor-pointer",
-                                                                isSelected
-                                                                    ? "bg-blue-50 border-blue-300 ring-2 ring-blue-500/20"
-                                                                    : "bg-slate-50 border-slate-200 hover:border-blue-200 hover:bg-white"
-                                                            )}
-                                                            onClick={() => toggleDocumentSelection(document._id)}
-                                                        >
-                                                            <div className="flex items-center justify-between gap-3">
-                                                                <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                                                                    {/* Checkbox */}
-                                                                    <div className={cn(
-                                                                        "w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-all",
-                                                                        isSelected ? "bg-blue-600 border-blue-600" : "bg-white border-slate-300"
-                                                                    )}>
-                                                                        {isSelected && (
-                                                                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                                                            </svg>
-                                                                        )}
-                                                                    </div>
+                                {/* Step 2: Payload Enrichment */}
+                                <div className="bg-white border border-slate-200/60 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm overflow-hidden">
+                                    <div className="p-4 md:p-8 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
+                                        <div className="flex items-center gap-3 sm:gap-4">
+                                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-900 flex items-center justify-center shadow-lg shadow-slate-900/10">
+                                                <Paperclip className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                                            </div>
+                                            <h2 className="text-base sm:text-lg md:text-xl font-display font-bold text-slate-900">2. Payload Enrichment</h2>
+                                        </div>
+                                        <span className="px-3 py-1 bg-white border border-slate-200 rounded-full text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Collateral</span>
+                                    </div>
+                                    <div className="p-4 md:p-8">
+                                        {/* UNIFIED DOCUMENT LIBRARY */}
+                                        <div className="space-y-4">
+                                            {/* Header */}
+                                            <div className="flex items-center justify-between px-1">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                                                    <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                                        Document Library ({documents.length})
+                                                    </p>
+                                                </div>
+                                                {selectedDocumentIds.length > 0 && (
+                                                    <span className="px-2.5 py-1 rounded-full text-[9px] font-bold uppercase bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20">
+                                                        {selectedDocumentIds.length} Selected
+                                                    </span>
+                                                )}
+                                            </div>
 
-                                                                    {/* File Icon */}
-                                                                    <div className={cn(
-                                                                        "w-8 h-8 sm:w-9 sm:h-9 rounded-lg border flex items-center justify-center shadow-sm shrink-0",
-                                                                        isSelected ? "bg-blue-600 border-blue-600" : "bg-white border-slate-200"
-                                                                    )}>
-                                                                        <File className={cn(
-                                                                            "w-4 h-4",
-                                                                            isSelected ? "text-white" : "text-blue-600"
-                                                                        )} />
-                                                                    </div>
+                                            {/* Empty State */}
+                                            {documents.length === 0 && (
+                                                <div className="flex flex-col items-center justify-center gap-3 py-12 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[1.5rem]">
+                                                    <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm">
+                                                        <File className="w-6 h-6 text-slate-400" />
+                                                    </div>
+                                                    <div className="text-center">
+                                                        <p className="text-sm font-bold text-slate-600">No documents yet</p>
+                                                        <p className="text-xs text-slate-400 mt-1">Click "Upload" below to add your first document</p>
+                                                    </div>
+                                                </div>
+                                            )}
 
-                                                                    {/* File Info */}
-                                                                    <div className="flex-1 min-w-0">
-                                                                        <p className={cn(
-                                                                            "text-xs sm:text-sm font-bold truncate",
-                                                                            isSelected ? "text-blue-900" : "text-slate-900"
+                                            {/* Document List */}
+                                            {documents.length > 0 && (
+                                                <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1 custom-scrollbar">
+                                                    {documents.map((document) => {
+                                                        const isSelected = selectedDocumentIds.includes(document._id);
+                                                        return (
+                                                            <div
+                                                                key={document._id}
+                                                                className={cn(
+                                                                    "p-3 sm:p-4 rounded-[1.25rem] sm:rounded-[1.5rem] border transition-all group cursor-pointer",
+                                                                    isSelected
+                                                                        ? "bg-blue-50 border-blue-300 ring-2 ring-blue-500/20"
+                                                                        : "bg-slate-50 border-slate-200 hover:border-blue-200 hover:bg-white"
+                                                                )}
+                                                                onClick={() => toggleDocumentSelection(document._id)}
+                                                            >
+                                                                <div className="flex items-center justify-between gap-3">
+                                                                    <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                                                                        {/* Checkbox */}
+                                                                        <div className={cn(
+                                                                            "w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-all",
+                                                                            isSelected ? "bg-blue-600 border-blue-600" : "bg-white border-slate-300"
                                                                         )}>
-                                                                            {document.filename}
-                                                                        </p>
-                                                                        <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
-                                                                            {document.size ? `${(document.size / 1024).toFixed(1)} KB` : 'Document'}
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
+                                                                            {isSelected && (
+                                                                                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                                                                </svg>
+                                                                            )}
+                                                                        </div>
 
-                                                                {/* Delete Button */}
-                                                                <button
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        handleDeleteDocument(document._id);
-                                                                    }}
-                                                                    className="p-2 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-rose-600 hover:border-rose-300 transition-all opacity-0 group-hover:opacity-100 shrink-0"
-                                                                >
-                                                                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                                                                </button>
+                                                                        {/* File Icon */}
+                                                                        <div className={cn(
+                                                                            "w-8 h-8 sm:w-9 sm:h-9 rounded-lg border flex items-center justify-center shadow-sm shrink-0",
+                                                                            isSelected ? "bg-blue-600 border-blue-600" : "bg-white border-slate-200"
+                                                                        )}>
+                                                                            <File className={cn(
+                                                                                "w-4 h-4",
+                                                                                isSelected ? "text-white" : "text-blue-600"
+                                                                            )} />
+                                                                        </div>
+
+                                                                        {/* File Info */}
+                                                                        <div className="flex-1 min-w-0">
+                                                                            <p className={cn(
+                                                                                "text-xs sm:text-sm font-bold truncate",
+                                                                                isSelected ? "text-blue-900" : "text-slate-900"
+                                                                            )}>
+                                                                                {document.filename}
+                                                                            </p>
+                                                                            <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                                                                                {document.size ? `${(document.size / 1024).toFixed(1)} KB` : 'Document'}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/* Delete Button */}
+                                                                    <button
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            handleDeleteDocument(document._id);
+                                                                        }}
+                                                                        className="p-2 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-rose-600 hover:border-rose-300 transition-all opacity-0 group-hover:opacity-100 shrink-0"
+                                                                    >
+                                                                        <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                                                    </button>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+
+                                            {/* Upload Button */}
+                                            <label className="flex flex-col items-center justify-center gap-2 sm:gap-3 py-6 sm:py-8 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[1.25rem] sm:rounded-[1.5rem] cursor-pointer hover:bg-blue-50/50 hover:border-blue-400/50 transition-all group">
+                                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                                                    {uploadingDocument ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 animate-spin" /> : <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />}
+                                                </div>
+                                                <p className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight">
+                                                    {documents.length > 0 ? 'Add Document' : 'Upload Document'}
+                                                </p>
+                                                <p className="text-[9px] text-slate-400">PDF, DOC, DOCX, TXT, Excel</p>
+                                                <input
+                                                    type="file"
+                                                    accept=".pdf,.doc,.docx,.txt,.xlsx,.xls"
+                                                    onChange={(e) => {
+                                                        if (e.target.files[0]) {
+                                                            handleUploadDocument(e.target.files[0]);
+                                                        }
+                                                    }}
+                                                    className="hidden"
+                                                />
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Step 3: Recruiter Targeting */}
+                                <div className="bg-white border border-slate-200/60 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm overflow-hidden mb-6 sm:mb-12">
+                                    <div className="p-4 md:p-8 border-b border-slate-100 bg-slate-50/30 flex flex-col gap-4">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                            <div className="flex items-center gap-3 sm:gap-4">
+                                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/10">
+                                                    <Users className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                                                </div>
+                                                <h2 className="text-base sm:text-lg md:text-xl font-display font-bold text-slate-900">3. Targeted Leads</h2>
+                                            </div>
+                                            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-hide">
+                                                <button
+                                                    onClick={() => setShowQuickAddHr(true)}
+                                                    className="whitespace-nowrap px-3 sm:px-4 py-2 bg-emerald-600 text-white border border-emerald-600 rounded-xl text-[9px] sm:text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-700 transition-all cursor-pointer flex items-center gap-1.5"
+                                                >
+                                                    <span className="text-lg leading-none">+</span> Quick Add
+                                                </button>
+                                                <button onClick={() => {
+                                                    const ids = filteredHrEmails.map(hr => hr._id);
+                                                    if (selectedHrEmails.length === ids.length && ids.every(id => selectedHrEmails.includes(id))) {
+                                                        setSelectedHrEmails([]);
+                                                    } else {
+                                                        setSelectedHrEmails(ids);
+                                                    }
+                                                }} className="whitespace-nowrap px-3 sm:px-4 py-2 bg-white border border-slate-200 rounded-xl text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest hover:bg-slate-50 transition-all cursor-pointer">
+                                                    {filteredHrEmails.length > 0 && filteredHrEmails.every(hr => selectedHrEmails.includes(hr._id)) ? 'Clear Selection' : 'Select All'}
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* Filter Tabs */}
+                                        <div className="w-full overflow-x-auto">
+                                            <div className="flex flex-nowrap justify-between items-center gap-2 p-1 bg-slate-100 rounded-xl border border-slate-200/50 w-max min-w-full">
+                                                <button
+                                                    onClick={() => setHrFilter('not_contacted')}
+                                                    className={cn(
+                                                        "whitespace-nowrap px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer",
+                                                        hrFilter === 'not_contacted'
+                                                            ? "bg-white shadow-sm text-emerald-600 border border-slate-200/50"
+                                                            : "text-slate-500 hover:text-slate-700"
+                                                    )}
+                                                >
+                                                    Not Sent ({hrEmails.filter(hr => hr.status !== 'contacted').length})
+                                                </button>
+
+                                                <button
+                                                    onClick={() => setHrFilter('contacted')}
+                                                    className={cn(
+                                                        "whitespace-nowrap px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer",
+                                                        hrFilter === 'contacted'
+                                                            ? "bg-white shadow-sm text-blue-600 border border-slate-200/50"
+                                                            : "text-slate-500 hover:text-slate-700"
+                                                    )}
+                                                >
+                                                    Sent ({hrEmails.filter(hr => hr.status === 'contacted').length})
+                                                </button>
+
+                                                <button
+                                                    onClick={() => setHrFilter('all')}
+                                                    className={cn(
+                                                        "whitespace-nowrap px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer",
+                                                        hrFilter === 'all'
+                                                            ? "bg-white shadow-sm text-slate-900 border border-slate-200/50"
+                                                            : "text-slate-500 hover:text-slate-700"
+                                                    )}
+                                                >
+                                                    All ({hrEmails.length})
+                                                </button>
+
+                                            </div>
+                                        </div>
+
+
+                                        {/* Search Input */}
+                                        <div className="relative">
+                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                            <input
+                                                type="text"
+                                                value={hrSearchQuery}
+                                                onChange={(e) => setHrSearchQuery(e.target.value)}
+                                                placeholder="Search contacts..."
+                                                className="w-full pl-10 sm:pl-11 pr-10 sm:pr-4 py-2.5 sm:py-3 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
+                                            />
+                                            {hrSearchQuery && (
+                                                <button
+                                                    onClick={() => setHrSearchQuery('')}
+                                                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all"
+                                                >
+                                                    <X className="w-4 h-4" />
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="p-4 sm:p-8">
+                                        {filteredHrEmails.length === 0 ? (
+                                            <div className="py-8 sm:py-12 flex flex-col items-center justify-center text-center space-y-3">
+                                                <AlertCircle className="w-6 h-6 sm:w-8 sm:h-8 text-slate-300" />
+                                                <p className="text-xs sm:text-sm font-bold text-slate-400 italic">
+                                                    {hrFilter === 'not_contacted' ? 'All contacts have been sent emails!' :
+                                                        hrFilter === 'contacted' ? 'No emails sent yet.' :
+                                                            'No recruitment data available in your vault.'}
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[400px] sm:max-h-[450px] overflow-y-auto pr-1 sm:pr-2 custom-scrollbar">
+                                                {filteredHrEmails.map((hr) => {
+                                                    const isSelected = selectedHrEmails.includes(hr._id);
+                                                    const isSent = hr.status === 'contacted';
+                                                    return (
+                                                        <label key={hr._id} className={cn(
+                                                            "group relative flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-[1.25rem] sm:rounded-[1.5rem] border transition-all cursor-pointer shadow-sm select-none",
+                                                            isSelected ? "bg-blue-600 border-blue-600 ring-4 ring-blue-500/10 shadow-blue-500/20" :
+                                                                isSent ? "bg-slate-50 border-slate-200 hover:border-slate-300" : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-md"
+                                                        )}>
+                                                            <div className={cn(
+                                                                "w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all shrink-0",
+                                                                isSelected ? "bg-white border-white" : "bg-slate-50 border-slate-200 group-hover:border-blue-400"
+                                                            )}>
+                                                                {isSelected && <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />}
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <div className="flex items-center gap-2">
+                                                                    <p className={cn("font-bold text-xs sm:text-sm truncate", isSelected ? "text-white" : "text-slate-900")}>{hr.email || 'no-email@example.com'}</p>
+                                                                    {isSent && !isSelected && (
+                                                                        <span className="px-1.5 py-0.5 bg-blue-100 text-blue-600 text-[8px] sm:text-[9px] font-bold uppercase rounded-full">Sent</span>
+                                                                    )}
+                                                                </div>
+                                                                <p className={cn("text-[9px] sm:text-[10px] font tracking-tight mt-0.5 truncate", isSelected ? "text-blue-300" : "text-slate-500")}>
+                                                                    {hr.company || 'Global Entity'} • {hr.jobRole || 'Engineer'}
+                                                                </p>
+                                                            </div>
+                                                            <input type="checkbox" checked={isSelected} onChange={(e) => {
+                                                                if (isSelected) setSelectedHrEmails(selectedHrEmails.filter(i => i !== hr._id));
+                                                                else setSelectedHrEmails([...selectedHrEmails, hr._id]);
+                                                            }} className="hidden" />
+                                                        </label>
                                                     );
                                                 })}
                                             </div>
                                         )}
-
-                                        {/* Upload Button */}
-                                        <label className="flex flex-col items-center justify-center gap-2 sm:gap-3 py-6 sm:py-8 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[1.25rem] sm:rounded-[1.5rem] cursor-pointer hover:bg-blue-50/50 hover:border-blue-400/50 transition-all group">
-                                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                                                {uploadingDocument ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 animate-spin" /> : <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />}
-                                            </div>
-                                            <p className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight">
-                                                {documents.length > 0 ? 'Add Another Document' : 'Upload Document'}
-                                            </p>
-                                            <p className="text-[9px] text-slate-400">PDF, DOC, DOCX, TXT, Excel</p>
-                                            <input
-                                                type="file"
-                                                accept=".pdf,.doc,.docx,.txt,.xlsx,.xls"
-                                                onChange={(e) => {
-                                                    if (e.target.files[0]) {
-                                                        handleUploadDocument(e.target.files[0]);
-                                                    }
-                                                }}
-                                                className="hidden"
-                                            />
-                                        </label>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Step 3: Recruiter Targeting */}
-                            <div className="bg-white border border-slate-200/60 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm overflow-hidden mb-6 sm:mb-12">
-                                <div className="p-6 sm:p-8 border-b border-slate-100 bg-slate-50/30 flex flex-col gap-4">
-                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                        <div className="flex items-center gap-3 sm:gap-4">
-                                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/10">
-                                                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                            {/* Control Tower - Right */}
+                            <div className="lg:col-span-4 space-y-6 w-full min-w-0">
+                                <div className="lg:sticky lg:top-12 space-y-6">
+
+                                    {/* Deployment Overview */}
+                                    <div className="bg-slate-900 rounded-[2rem] sm:rounded-[2.5rem] p-4 md:p-8 text-white shadow-2xl relative overflow-hidden group">
+                                        <div className="absolute top-0 right-0 p-10 opacity-[0.03] group-hover:rotate-12 transition-transform duration-1000 hidden sm:block">
+                                            <Send className="w-64 h-64" />
+                                        </div>
+                                        <div className="relative z-10 space-y-6 sm:space-y-8 text-sans">
+                                            <div className="space-y-2 text-center sm:text-left">
+                                                <p className="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em]">Deployment Logic</p>
+                                                <h2 className="text-xl sm:text-2xl font-display font-bold tracking-tight">Control Tower</h2>
                                             </div>
-                                            <h2 className="text-lg sm:text-xl font-display font-bold text-slate-900">3. Targeted Leads</h2>
-                                        </div>
-                                        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-hide">
-                                            <button
-                                                onClick={() => setShowQuickAddHr(true)}
-                                                className="whitespace-nowrap px-3 sm:px-4 py-2 bg-emerald-600 text-white border border-emerald-600 rounded-xl text-[9px] sm:text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-700 transition-all cursor-pointer flex items-center gap-1.5"
-                                            >
-                                                <span className="text-lg leading-none">+</span> Quick Add
-                                            </button>
-                                            <button onClick={() => {
-                                                const ids = filteredHrEmails.map(hr => hr._id);
-                                                if (selectedHrEmails.length === ids.length && ids.every(id => selectedHrEmails.includes(id))) {
-                                                    setSelectedHrEmails([]);
-                                                } else {
-                                                    setSelectedHrEmails(ids);
-                                                }
-                                            }} className="whitespace-nowrap px-3 sm:px-4 py-2 bg-white border border-slate-200 rounded-xl text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest hover:bg-slate-50 transition-all cursor-pointer">
-                                                {filteredHrEmails.length > 0 && filteredHrEmails.every(hr => selectedHrEmails.includes(hr._id)) ? 'Clear Selection' : 'Select All'}
-                                            </button>
-                                        </div>
-                                    </div>
 
-                                    {/* Filter Tabs */}
-                                    <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200/50 w-full sm:w-fit overflow-x-auto scrollbar-hide">
-                                        <button
-                                            onClick={() => setHrFilter('not_contacted')}
-                                            className={cn(
-                                                "whitespace-nowrap px-3 sm:px-4 py-2 rounded-lg text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer flex-1 sm:flex-none",
-                                                hrFilter === 'not_contacted' ? "bg-white shadow-sm text-emerald-600 border border-slate-200/50" : "text-slate-500 hover:text-slate-700"
-                                            )}
-                                        >
-                                            Not Sent ({hrEmails.filter(hr => hr.status !== 'contacted').length})
-                                        </button>
-                                        <button
-                                            onClick={() => setHrFilter('contacted')}
-                                            className={cn(
-                                                "whitespace-nowrap px-3 sm:px-4 py-2 rounded-lg text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer flex-1 sm:flex-none",
-                                                hrFilter === 'contacted' ? "bg-white shadow-sm text-blue-600 border border-slate-200/50" : "text-slate-500 hover:text-slate-700"
-                                            )}
-                                        >
-                                            Sent ({hrEmails.filter(hr => hr.status === 'contacted').length})
-                                        </button>
-                                        <button
-                                            onClick={() => setHrFilter('all')}
-                                            className={cn(
-                                                "whitespace-nowrap px-3 sm:px-4 py-2 rounded-lg text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer flex-1 sm:flex-none",
-                                                hrFilter === 'all' ? "bg-white shadow-sm text-slate-900 border border-slate-200/50" : "text-slate-500 hover:text-slate-700"
-                                            )}
-                                        >
-                                            All ({hrEmails.length})
-                                        </button>
-                                    </div>
-
-                                    {/* Search Input */}
-                                    <div className="relative">
-                                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                        <input
-                                            type="text"
-                                            value={hrSearchQuery}
-                                            onChange={(e) => setHrSearchQuery(e.target.value)}
-                                            placeholder="Search by name, company, role, email, or tags..."
-                                            className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-sm font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
-                                        />
-                                        {hrSearchQuery && (
-                                            <button
-                                                onClick={() => setHrSearchQuery('')}
-                                                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all"
-                                            >
-                                                <X className="w-4 h-4" />
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="p-4 sm:p-8">
-                                    {filteredHrEmails.length === 0 ? (
-                                        <div className="py-8 sm:py-12 flex flex-col items-center justify-center text-center space-y-3">
-                                            <AlertCircle className="w-6 h-6 sm:w-8 sm:h-8 text-slate-300" />
-                                            <p className="text-xs sm:text-sm font-bold text-slate-400 italic">
-                                                {hrFilter === 'not_contacted' ? 'All contacts have been sent emails!' :
-                                                    hrFilter === 'contacted' ? 'No emails sent yet.' :
-                                                        'No recruitment data available in your vault.'}
-                                            </p>
-                                        </div>
-                                    ) : (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[400px] sm:max-h-[450px] overflow-y-auto pr-1 sm:pr-2 custom-scrollbar">
-                                            {filteredHrEmails.map((hr) => {
-                                                const isSelected = selectedHrEmails.includes(hr._id);
-                                                const isSent = hr.status === 'contacted';
-                                                return (
-                                                    <label key={hr._id} className={cn(
-                                                        "group relative flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-[1.25rem] sm:rounded-[1.5rem] border transition-all cursor-pointer shadow-sm select-none",
-                                                        isSelected ? "bg-blue-600 border-blue-600 ring-4 ring-blue-500/10 shadow-blue-500/20" :
-                                                            isSent ? "bg-slate-50 border-slate-200 hover:border-slate-300" : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-md"
-                                                    )}>
-                                                        <div className={cn(
-                                                            "w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all shrink-0",
-                                                            isSelected ? "bg-white border-white" : "bg-slate-50 border-slate-200 group-hover:border-blue-400"
-                                                        )}>
-                                                            {isSelected && <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />}
-                                                        </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <div className="flex items-center gap-2">
-                                                                <p className={cn("font-bold text-xs sm:text-sm truncate", isSelected ? "text-white" : "text-slate-900")}>{hr.hrName || 'Lead Identifier'}</p>
-                                                                {isSent && !isSelected && (
-                                                                    <span className="px-1.5 py-0.5 bg-blue-100 text-blue-600 text-[8px] sm:text-[9px] font-bold uppercase rounded-full">Sent</span>
-                                                                )}
-                                                            </div>
-                                                            <p className={cn("text-[9px] sm:text-[10px] font-bold uppercase tracking-tight mt-0.5 truncate", isSelected ? "text-blue-200" : "text-slate-400")}>
-                                                                {hr.company || 'Global Entity'} • {hr.jobRole || 'Engineer'}
-                                                            </p>
-                                                        </div>
-                                                        <input type="checkbox" checked={isSelected} onChange={(e) => {
-                                                            if (isSelected) setSelectedHrEmails(selectedHrEmails.filter(i => i !== hr._id));
-                                                            else setSelectedHrEmails([...selectedHrEmails, hr._id]);
-                                                        }} className="hidden" />
-                                                    </label>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Control Tower - Right */}
-                        <div className="lg:col-span-4 space-y-6">
-                            <div className="lg:sticky lg:top-12 space-y-6">
-
-                                {/* Deployment Overview */}
-                                <div className="bg-slate-900 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-10 opacity-[0.03] group-hover:rotate-12 transition-transform duration-1000 hidden sm:block">
-                                        <Send className="w-64 h-64" />
-                                    </div>
-                                    <div className="relative z-10 space-y-6 sm:space-y-8 text-sans">
-                                        <div className="space-y-2 text-center sm:text-left">
-                                            <p className="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em]">Deployment Logic</p>
-                                            <h2 className="text-xl sm:text-2xl font-display font-bold tracking-tight">Control Tower</h2>
-                                        </div>
-
-                                        <div className="grid grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4">
-                                            <div className="flex items-center justify-between p-3 sm:p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
-                                                <div className="flex items-center gap-2 sm:gap-3">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-                                                    <span className="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest">Active Links</span>
+                                            <div className="grid grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4">
+                                                <div className="flex items-center justify-between p-3 sm:p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
+                                                    <div className="flex items-center gap-2 sm:gap-3">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                                                        <span className="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest">Active Links</span>
+                                                    </div>
+                                                    <span className="text-base sm:text-lg font-display font-bold text-white">{selectedHrEmails.length}</span>
                                                 </div>
-                                                <span className="text-base sm:text-lg font-display font-bold text-white">{selectedHrEmails.length}</span>
-                                            </div>
-                                            <div className="flex items-center justify-between p-3 sm:p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
-                                                <div className="flex items-center gap-2 sm:gap-3">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                                                    <span className="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest">Attachments</span>
+                                                <div className="flex items-center justify-between p-3 sm:p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
+                                                    <div className="flex items-center gap-2 sm:gap-3">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                                                        <span className="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest">Attach Files</span>
+                                                    </div>
+                                                    <span className="text-base sm:text-lg font-display font-bold text-white">{selectedDocumentIds.length}</span>
                                                 </div>
-                                                <span className="text-base sm:text-lg font-display font-bold text-white">{selectedDocumentIds.length}</span>
                                             </div>
-                                        </div>
 
-                                        <div className="space-y-3 pt-4">
-                                            <button
-                                                onClick={handlePreview}
-                                                disabled={!selectedTemplate || (hrEmails.length === 0)}
-                                                className="w-full py-4 rounded-2xl bg-white/10 text-white font-bold text-sm border border-white/20 hover:bg-white/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 group"
-                                            >
-                                                <Eye className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                                                <span>Validate Payload</span>
-                                            </button>
-                                            <button
-                                                onClick={handleSend}
-                                                disabled={sending || !selectedTemplate || selectedHrEmails.length === 0 || !variables.your_name || selectedHrEmails.length > SPAM_LIMITS.MAX_PER_BATCH}
-                                                className="w-full py-5 rounded-2xl bg-blue-600 text-white font-bold text-sm shadow-xl shadow-blue-500/40 hover:bg-blue-500 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-3 overflow-hidden group"
-                                            >
-                                                {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
-                                                <span className="uppercase tracking-widest text-[11px]">
-                                                    {selectedHrEmails.length > SPAM_LIMITS.MAX_PER_BATCH ? 'Limit Exceeded' : 'Initiate Launch'}
+                                            <div className="space-y-3 pt-4">
+                                                <button
+                                                    onClick={handlePreview}
+                                                    disabled={!selectedTemplate || (hrEmails.length === 0)}
+                                                    className="w-full py-4 rounded-2xl bg-white/10 text-white font-bold text-sm border border-white/20 hover:bg-white/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 group"
+                                                >
+                                                    <Eye className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                                                    <span>Validate Payload</span>
+                                                </button>
+                                                <button
+                                                    onClick={handleSend}
+                                                    disabled={sending || !selectedTemplate || selectedHrEmails.length === 0 || !variables.your_name || selectedHrEmails.length > SPAM_LIMITS.MAX_PER_BATCH}
+                                                    className="w-full py-5 rounded-2xl bg-blue-600 text-white font-bold text-sm shadow-xl shadow-blue-500/40 hover:bg-blue-500 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-3 overflow-hidden group"
+                                                >
+                                                    {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
+                                                    <span className="uppercase tracking-widest text-[11px]">
+                                                        {selectedHrEmails.length > SPAM_LIMITS.MAX_PER_BATCH ? 'Limit Exceeded' : 'Initiate Launch'}
+                                                    </span>
+                                                </button>
+                                            </div>
+
+                                            {sending && (
+                                                <div className="p-4 bg-blue-500/10 rounded-2xl border border-blue-500/20 animate-pulse">
+                                                    <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest text-center">Dynamic Pacing Active (3-15s intervals)</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Spam Prevention Caution Panel */}
+                                    <div className="bg-amber-50 border border-amber-200/60 p-4 md:p-8 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm">
+                                        <h3 className="text-xs font-bold text-amber-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                            <ShieldAlert className="w-4 h-4 text-amber-600" />
+                                            Spam Prevention Active
+                                        </h3>
+                                        <div className="space-y-3">
+                                            <div className="flex items-center justify-between p-3 bg-white/60 rounded-xl border border-amber-100">
+                                                <div className="flex items-center gap-2">
+                                                    <Zap className="w-3.5 h-3.5 text-amber-600" />
+                                                    <span className="text-[11px] font-bold text-amber-800 uppercase tracking-wide">Batch Limit</span>
+                                                </div>
+                                                <span className={cn(
+                                                    "text-sm font-bold",
+                                                    selectedHrEmails.length > SPAM_LIMITS.MAX_PER_BATCH ? "text-rose-600" : "text-amber-700"
+                                                )}>
+                                                    {selectedHrEmails.length}/{SPAM_LIMITS.MAX_PER_BATCH}
                                                 </span>
-                                            </button>
+                                            </div>
+                                            <div className="flex items-center justify-between p-3 bg-white/60 rounded-xl border border-amber-100">
+                                                <div className="flex items-center gap-2">
+                                                    <Clock className="w-3.5 h-3.5 text-amber-600" />
+                                                    <span className="text-[11px] font-bold text-amber-800 uppercase tracking-wide">Daily Limit</span>
+                                                </div>
+                                                <span className="text-sm font-bold text-amber-700">{SPAM_LIMITS.MAX_PER_DAY}/day</span>
+                                            </div>
                                         </div>
-
-                                        {sending && (
-                                            <div className="p-4 bg-blue-500/10 rounded-2xl border border-blue-500/20 animate-pulse">
-                                                <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest text-center">Dynamic Pacing Active (3-15s intervals)</p>
+                                        <p className="text-[10px] text-amber-700 mt-4 leading-relaxed font-medium">
+                                            <strong>Why?</strong> Sending too many emails at once triggers Gmail's spam detection. We use dynamic delays (3-15s) and batch limits to protect your account.
+                                        </p>
+                                        {selectedHrEmails.length > SPAM_LIMITS.MAX_PER_BATCH && (
+                                            <div className="mt-4 p-3 bg-rose-100 border border-rose-200 rounded-xl">
+                                                <p className="text-[11px] text-rose-700 font-bold">
+                                                    ⚠️ Selection exceeds limit! Reduce to {SPAM_LIMITS.MAX_PER_BATCH} or fewer.
+                                                </p>
                                             </div>
                                         )}
                                     </div>
-                                </div>
 
-                                {/* Spam Prevention Caution Panel */}
-                                <div className="bg-amber-50 border border-amber-200/60 p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm">
-                                    <h3 className="text-xs font-bold text-amber-900 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                        <ShieldAlert className="w-4 h-4 text-amber-600" />
-                                        Spam Prevention Active
-                                    </h3>
-                                    <div className="space-y-3">
-                                        <div className="flex items-center justify-between p-3 bg-white/60 rounded-xl border border-amber-100">
-                                            <div className="flex items-center gap-2">
-                                                <Zap className="w-3.5 h-3.5 text-amber-600" />
-                                                <span className="text-[11px] font-bold text-amber-800 uppercase tracking-wide">Batch Limit</span>
-                                            </div>
-                                            <span className={cn(
-                                                "text-sm font-bold",
-                                                selectedHrEmails.length > SPAM_LIMITS.MAX_PER_BATCH ? "text-rose-600" : "text-amber-700"
-                                            )}>
-                                                {selectedHrEmails.length}/{SPAM_LIMITS.MAX_PER_BATCH}
-                                            </span>
-                                        </div>
-                                        <div className="flex items-center justify-between p-3 bg-white/60 rounded-xl border border-amber-100">
-                                            <div className="flex items-center gap-2">
-                                                <Clock className="w-3.5 h-3.5 text-amber-600" />
-                                                <span className="text-[11px] font-bold text-amber-800 uppercase tracking-wide">Daily Limit</span>
-                                            </div>
-                                            <span className="text-sm font-bold text-amber-700">{SPAM_LIMITS.MAX_PER_DAY}/day</span>
+                                    {/* Security Panel */}
+                                    <div className="bg-white border border-slate-200/60 p-4 md:p-8 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm">
+                                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
+                                            <CheckCircle className="w-4 h-4 text-emerald-500" />
+                                            Safety Compliance
+                                        </h3>
+                                        <div className="space-y-4">
+                                            {[
+                                                { icon: Mail, label: 'Individual Dispatch', desc: 'No CC/BCC leakages' },
+                                                { icon: Clock, label: 'Dynamic Pacing', desc: '3-15s adaptive delays' },
+                                                { icon: Info, label: 'Audit Logging', desc: 'Full traceability of records' }
+                                            ].map((item, i) => (
+                                                <div key={i} className="flex gap-3 sm:gap-4">
+                                                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0">
+                                                        <item.icon className="w-4 h-4 text-slate-400" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-bold text-slate-800">{item.label}</p>
+                                                        <p className="text-[10px] sm:text-[11px] font-medium text-slate-400 mt-0.5">{item.desc}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
-                                    <p className="text-[10px] text-amber-700 mt-4 leading-relaxed font-medium">
-                                        <strong>Why?</strong> Sending too many emails at once triggers Gmail's spam detection. We use dynamic delays (3-15s) and batch limits to protect your account.
-                                    </p>
-                                    {selectedHrEmails.length > SPAM_LIMITS.MAX_PER_BATCH && (
-                                        <div className="mt-4 p-3 bg-rose-100 border border-rose-200 rounded-xl">
-                                            <p className="text-[11px] text-rose-700 font-bold">
-                                                ⚠️ Selection exceeds limit! Reduce to {SPAM_LIMITS.MAX_PER_BATCH} or fewer.
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
 
-                                {/* Security Panel */}
-                                <div className="bg-white border border-slate-200/60 p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm">
-                                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
-                                        <CheckCircle className="w-4 h-4 text-emerald-500" />
-                                        Safety Compliance
-                                    </h3>
-                                    <div className="space-y-4">
-                                        {[
-                                            { icon: Mail, label: 'Individual Dispatch', desc: 'No CC/BCC leakages' },
-                                            { icon: Clock, label: 'Dynamic Pacing', desc: '3-15s adaptive delays' },
-                                            { icon: Info, label: 'Audit Logging', desc: 'Full traceability of records' }
-                                        ].map((item, i) => (
-                                            <div key={i} className="flex gap-3 sm:gap-4">
-                                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0">
-                                                    <item.icon className="w-4 h-4 text-slate-400" />
-                                                </div>
-                                                <div>
-                                                    <p className="text-sm font-bold text-slate-800">{item.label}</p>
-                                                    <p className="text-[10px] sm:text-[11px] font-medium text-slate-400 mt-0.5">{item.desc}</p>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>

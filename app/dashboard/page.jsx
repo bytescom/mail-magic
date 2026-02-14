@@ -98,7 +98,7 @@ export default function DashboardPage() {
     return (
         <ProtectedRoute>
             <DashboardLayout>
-                <div className="space-y-10 animate-[fadeIn_0.5s_ease-out]">
+                <main className="w-full max-w-7xl mx-auto overflow-x-hidden">
                     {/* Header Greeting & CTAs */}
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div className="space-y-1">
@@ -149,7 +149,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Main Content Sections */}
-                    <div className="grid lg:grid-cols-7 gap-6 lg:gap-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 lg:gap-8 w-full max-w-full overflow-x-hidden">
                         {/* Recent Activity List */}
                         <div className="lg:col-span-4 space-y-4 lg:space-y-5 text-sans">
                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-1 sm:px-2">
@@ -267,7 +267,7 @@ export default function DashboardPage() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </main>
             </DashboardLayout>
         </ProtectedRoute>
     );
