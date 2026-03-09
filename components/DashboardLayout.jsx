@@ -20,18 +20,31 @@ import {
     Clock,
     Sparkles,
     Shield,
+    BarChart3,
+    FileSearch,
+    Activity,
+    BookOpen,
+    BriefcaseBusiness,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 
 const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Templates', href: '/templates', icon: FileText },
-    { name: 'HR Emails', href: '/hr-emails', icon: Users },
-    { name: 'Send Emails', href: '/send', icon: Send },
-    { name: 'Logs', href: '/logs', icon: ListChecks },
-    { name: 'Settings', href: '/settings', icon: Settings },
+    // Core
+    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, group: 'Core' },
+    { name: 'Analytics', href: '/analytics', icon: Activity, group: 'Core' },
+    // Outreach
+    { name: 'Send Emails', href: '/send', icon: Send, group: 'Outreach' },
+    { name: 'Applications', href: '/applications', icon: BriefcaseBusiness, group: 'Outreach' },
+    { name: 'Follow-Ups', href: '/follow-ups', icon: Clock, group: 'Outreach' },
+    // Library
+    { name: 'Templates', href: '/templates', icon: FileText, group: 'Library' },
+    { name: 'HR Emails', href: '/hr-emails', icon: Users, group: 'Library' },
+    { name: 'Career Tools', href: '/career-tools', icon: Sparkles, group: 'Library' },
+    // System
+    { name: 'Logs', href: '/logs', icon: ListChecks, group: 'System' },
+    { name: 'Settings', href: '/settings', icon: Settings, group: 'System' },
 ];
 
 export default function DashboardLayout({ children }) {
@@ -178,24 +191,33 @@ export default function DashboardLayout({ children }) {
                     </div>
 
                     {/* Navigation Section */}
-                    <nav className="flex-1 px-4 py-8 space-y-1.5 overflow-y-auto">
-                        <p className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Main Menu</p>
-                        {navigation.map((item) => {
-                            const isActive = pathname === item.href;
+                    <nav className="flex-1 px-4 py-6 overflow-y-auto">
+                        {['Core', 'Outreach', 'Library', 'System'].map((group) => {
+                            const groupItems = navigation.filter(item => item.group === group);
                             return (
-                                <Link
-                                    key={item.name}
-                                    href={item.href}
-                                    className={cn(
-                                        'flex items-center gap-3.5 px-4 py-3 rounded-2xl text-[13px] font-bold transition-all duration-200 active:scale-[0.97] active:bg-blue-100/50',
-                                        isActive
-                                            ? 'bg-blue-50 text-blue-600 shadow-sm border border-blue-100/50'
-                                            : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 group'
-                                    )}
-                                >
-                                    <item.icon className={cn('w-5 h-5', isActive ? 'text-blue-600' : 'text-slate-400 transition-colors group-hover:text-slate-600 group-active:text-slate-700')} />
-                                    {item.name}
-                                </Link>
+                                <div key={group} className="mb-5">
+                                    <p className="px-3 text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1.5">{group}</p>
+                                    <div className="space-y-0.5">
+                                        {groupItems.map((item) => {
+                                            const isActive = pathname === item.href;
+                                            return (
+                                                <Link
+                                                    key={item.name}
+                                                    href={item.href}
+                                                    className={cn(
+                                                        'flex items-center gap-3.5 px-4 py-2.5 rounded-2xl text-[13px] font-bold transition-all duration-200 active:scale-[0.97] active:bg-blue-100/50',
+                                                        isActive
+                                                            ? 'bg-blue-50 text-blue-600 shadow-sm border border-blue-100/50'
+                                                            : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 group'
+                                                    )}
+                                                >
+                                                    <item.icon className={cn('w-4.5 h-4.5 shrink-0', isActive ? 'text-blue-600' : 'text-slate-400 transition-colors group-hover:text-slate-600')} style={{ width: '18px', height: '18px' }} />
+                                                    {item.name}
+                                                </Link>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                             );
                         })}
                     </nav>
@@ -254,24 +276,34 @@ export default function DashboardLayout({ children }) {
                                 <X className="w-6 h-6" />
                             </button>
                         </div>
-                        <div className="flex-1 space-y-1.5">
-                            {navigation.map((item) => {
-                                const isActive = pathname === item.href;
+                        <div className="flex-1 overflow-y-auto space-y-4">
+                            {['Core', 'Outreach', 'Library', 'System'].map((group) => {
+                                const groupItems = navigation.filter(item => item.group === group);
                                 return (
-                                    <Link
-                                        key={item.name}
-                                        href={item.href}
-                                        onClick={() => setSidebarOpen(false)}
-                                        className={cn(
-                                            'flex items-center gap-4 px-4 py-4 rounded-2xl text-sm font-bold transition-all active:scale-95 active:bg-blue-100/30',
-                                            isActive
-                                                ? 'bg-blue-50 text-blue-600 border border-blue-100/50 shadow-sm'
-                                                : 'text-slate-500 hover:bg-slate-50'
-                                        )}
-                                    >
-                                        <item.icon className={cn('w-5 h-5', isActive ? 'text-blue-600' : 'text-slate-400')} />
-                                        {item.name}
-                                    </Link>
+                                    <div key={group}>
+                                        <p className="px-3 text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1.5">{group}</p>
+                                        <div className="space-y-0.5">
+                                            {groupItems.map((item) => {
+                                                const isActive = pathname === item.href;
+                                                return (
+                                                    <Link
+                                                        key={item.name}
+                                                        href={item.href}
+                                                        onClick={() => setSidebarOpen(false)}
+                                                        className={cn(
+                                                            'flex items-center gap-4 px-4 py-3 rounded-2xl text-sm font-bold transition-all active:scale-95 active:bg-blue-100/30',
+                                                            isActive
+                                                                ? 'bg-blue-50 text-blue-600 border border-blue-100/50 shadow-sm'
+                                                                : 'text-slate-500 hover:bg-slate-50'
+                                                        )}
+                                                    >
+                                                        <item.icon style={{ width: '18px', height: '18px' }} className={cn('shrink-0', isActive ? 'text-blue-600' : 'text-slate-400')} />
+                                                        {item.name}
+                                                    </Link>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
                                 );
                             })}
                         </div>

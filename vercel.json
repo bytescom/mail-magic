@@ -1,0 +1,12 @@
+{
+    "crons": [
+        {
+            "path": "/api/cron/follow-up?secret=mm_cron_secret_2026_mailmagic",
+            "schedule": "30 3 * * *"
+        },
+        {
+            "path": "/api/reply-checker?secret=mm_cron_secret_2026_mailmagic",
+            "schedule": "*/30 * * * *"
+        }
+    ]
+}

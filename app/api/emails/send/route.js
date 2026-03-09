@@ -6,6 +6,7 @@ import EmailTemplate from '@/models/EmailTemplate';
 import HrEmail from '@/models/HrEmail';
 import User from '@/models/User';
 import Notification from '@/models/Notification';
+import Application from '@/models/Application';
 import GmailService from '@/lib/gmail';
 import { replaceVariables } from '@/lib/utils';
 import { NextResponse } from 'next/server';
@@ -302,6 +303,33 @@ export async function POST(request) {
                     hrEmail.lastContacted = new Date();
                     hrEmail.status = 'contacted';
                     await hrEmail.save();
+
+                    // ============================================
+                    // CREATE APPLICATION TRACKING RECORD
+                    // ============================================
+                    try {
+                        const followUpDate = new Date();
+                        followUpDate.setDate(followUpDate.getDate() + 4); // Follow up in 4 days
+
+                        await Application.create({
+                            userId: session.user.id,
+                            companyName: hrEmail.company || '',
+                            role: hrEmail.jobRole || '',
+                            hrName: hrEmail.hrName || '',
+                            hrEmail: hrEmail.email,
+                            emailLogId: log._id,
+                            hrEmailId: hrEmail._id,
+                            gmailThreadId: result.threadId || null,
+                            lastEmailId: result.messageId || null,
+                            status: 'sent',
+                            followUpDate,
+                            followUpCount: 0,
+                            lastActionDate: new Date(),
+                        });
+                        console.log('✅ Application record created for:', hrEmail.email);
+                    } catch (appError) {
+                        console.error('⚠️ Failed to create Application record (non-fatal):', appError.message);
+                    }
                 } else {
                     results.failed.push({
                         email: hrEmail.email,
