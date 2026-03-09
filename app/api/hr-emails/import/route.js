@@ -23,6 +23,12 @@ export async function POST(request) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
+        // 🔒 SECURITY: Limit file size to 5MB to prevent DoS via large uploads
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+        if (file.size > MAX_FILE_SIZE) {
+            return NextResponse.json({ error: 'File too large. Maximum size is 5MB.' }, { status: 400 });
+        }
+
         const fileName = file.name.toLowerCase();
         let parsedData = [];
 
@@ -57,6 +63,14 @@ export async function POST(request) {
             parsedData = result.data;
         } else {
             return NextResponse.json({ error: 'Invalid file type. Please upload CSV or Excel file.' }, { status: 400 });
+        }
+
+        // 🔒 SECURITY: Cap row count to prevent CPU exhaustion
+        const MAX_ROWS = 1000;
+        if (parsedData.length > MAX_ROWS) {
+            return NextResponse.json({
+                error: `File contains too many rows (${parsedData.length}). Maximum allowed is ${MAX_ROWS} contacts per import.`
+            }, { status: 400 });
         }
 
         await dbConnect();

@@ -1,4 +1,5 @@
 import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Notification from '@/models/Notification';
@@ -10,7 +11,12 @@ import User from '@/models/User';
  */
 export async function POST(request) {
     try {
-        const session = await getServerSession();
+        // 🔒 SECURITY: Seed route is only for development/testing. Block in production.
+        if (process.env.NODE_ENV === 'production') {
+            return NextResponse.json({ error: 'Not found' }, { status: 404 });
+        }
+
+        const session = await getServerSession(authOptions);
 
         if (!session || !session.user?.email) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

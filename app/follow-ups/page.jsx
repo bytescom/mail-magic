@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -27,6 +27,9 @@ import {
     ChevronRight,
     Mail,
     Eye,
+    MessageCircle,
+    ShieldAlert,
+    Info,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import Link from 'next/link';
@@ -41,6 +44,42 @@ export default function FollowUpsPage() {
     const [editingFollowUp, setEditingFollowUp] = useState(null);
     const [editForm, setEditForm] = useState({ subject: '', message: '' });
     const [generatingFollowUps, setGeneratingFollowUps] = useState(false);
+
+    // Two-click delete state
+    // pendingDeleteId = the follow-up ID armed for single delete (null = idle)
+    // pendingDeleteAll = true means the global delete is armed
+    const [pendingDeleteId, setPendingDeleteId] = useState(null);
+    const [pendingDeleteAll, setPendingDeleteAll] = useState(false);
+    const deleteTimerRef = useRef(null);
+
+    // Auto-reset the armed state after 3 seconds of inactivity
+    const armDelete = useCallback((id) => {
+        // Clear any existing timer
+        if (deleteTimerRef.current) clearTimeout(deleteTimerRef.current);
+        setPendingDeleteId(id);
+        setPendingDeleteAll(false);
+        deleteTimerRef.current = setTimeout(() => {
+            setPendingDeleteId(null);
+        }, 3000);
+    }, []);
+
+    const armDeleteAll = useCallback(() => {
+        if (deleteTimerRef.current) clearTimeout(deleteTimerRef.current);
+        setPendingDeleteAll(true);
+        setPendingDeleteId(null);
+        deleteTimerRef.current = setTimeout(() => {
+            setPendingDeleteAll(false);
+        }, 3000);
+    }, []);
+
+    const resetDelete = useCallback(() => {
+        if (deleteTimerRef.current) clearTimeout(deleteTimerRef.current);
+        setPendingDeleteId(null);
+        setPendingDeleteAll(false);
+    }, []);
+
+    // Cleanup timer on unmount
+    useEffect(() => () => { if (deleteTimerRef.current) clearTimeout(deleteTimerRef.current); }, []);
 
     useEffect(() => {
         if (session) {
@@ -116,20 +155,51 @@ export default function FollowUpsPage() {
         }
     };
 
-    const deleteFollowUp = async (followUpId) => {
-        try {
-            const response = await fetch(`/api/follow-ups?id=${followUpId}`, {
-                method: 'DELETE',
-            });
-            if (response.ok) {
-                toast.success('Follow-up deleted');
-                fetchFollowUps();
-            } else {
+    // ── Single delete — two-click confirmation ───────────────────────────────
+    const handleDeleteClick = async (followUpId) => {
+        if (pendingDeleteId === followUpId) {
+            // Second click — execute
+            resetDelete();
+            try {
+                const response = await fetch(`/api/follow-ups?id=${followUpId}`, { method: 'DELETE' });
+                if (response.ok) {
+                    toast.success('Follow-up deleted');
+                    fetchFollowUps();
+                } else {
+                    toast.error('Failed to delete follow-up');
+                }
+            } catch (error) {
+                console.error('Error deleting follow-up:', error);
                 toast.error('Failed to delete follow-up');
             }
-        } catch (error) {
-            console.error('Error deleting follow-up:', error);
-            toast.error('Failed to delete follow-up');
+        } else {
+            // First click — arm
+            armDelete(followUpId);
+        }
+    };
+
+    // ── Bulk delete all — two-click confirmation ─────────────────────────────
+    const handleDeleteAllClick = async () => {
+        if (pendingDeleteAll) {
+            // Second click — execute
+            resetDelete();
+            try {
+                const statusParam = filter !== 'all' ? `&status=${filter}` : '';
+                const response = await fetch(`/api/follow-ups?all=true${statusParam}`, { method: 'DELETE' });
+                if (response.ok) {
+                    const data = await response.json();
+                    toast.success(`Deleted ${data.deleted} follow-up${data.deleted !== 1 ? 's' : ''}`);
+                    fetchFollowUps();
+                } else {
+                    toast.error('Failed to delete follow-ups');
+                }
+            } catch (error) {
+                console.error('Error deleting all follow-ups:', error);
+                toast.error('Failed to delete follow-ups');
+            }
+        } else {
+            // First click — arm
+            armDeleteAll();
         }
     };
 
@@ -164,6 +234,13 @@ export default function FollowUpsPage() {
         return `In ${days} days`;
     };
 
+    // Detect if the application linked to this follow-up has already received a reply
+    const hasHrReplied = (followUp) => {
+        // The follow-up's emailLog status of 'replied'/'interview'/'rejected' indicates HR replied
+        const repliedStatuses = ['replied', 'interview', 'rejected'];
+        return repliedStatuses.includes(followUp.emailLogId?.status);
+    };
+
     if (loading && followUps.length === 0) {
         return (
             <ProtectedRoute>
@@ -191,22 +268,51 @@ export default function FollowUpsPage() {
                                     Follow-Up Manager
                                 </h1>
                                 <p className="text-slate-500 max-w-lg text-xs sm:text-sm leading-relaxed font-sans">
-                                    Stay top of mind with recruiters. Never miss a follow-up opportunity.
+                                    Gentle reminders for applications with no reply yet. Never follow up on a conversation already in progress.
                                 </p>
                             </div>
 
-                            <button
-                                onClick={autoGenerateFollowUps}
-                                disabled={generatingFollowUps}
-                                className="bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-[0_10px_20px_-5px_rgba(37,99,235,0.25)] flex items-center justify-center sm:justify-start gap-2 group font-sans cursor-pointer disabled:opacity-50 self-start"
-                            >
-                                {generatingFollowUps ? (
-                                    <RefreshCw className="w-4 h-4 animate-spin" />
-                                ) : (
-                                    <Sparkles className="w-4 h-4" />
+                            <div className="flex items-center gap-3 flex-wrap self-start">
+                                {/* Delete All — two-click confirmation */}
+                                {followUps.length > 0 && (
+                                    <button
+                                        onClick={handleDeleteAllClick}
+                                        className={cn(
+                                            "font-semibold px-4 py-2.5 rounded-xl text-sm transition-all active:scale-95 flex items-center gap-2 cursor-pointer border",
+                                            pendingDeleteAll
+                                                ? "bg-rose-600 text-white border-rose-700 animate-pulse shadow-lg shadow-rose-500/30 hover:bg-rose-700"
+                                                : "bg-white text-rose-500 border-rose-200 hover:bg-rose-50 hover:border-rose-300"
+                                        )}
+                                        title={pendingDeleteAll ? "Click again to confirm — deletes all visible follow-ups" : "Delete all follow-ups in current view"}
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                        {pendingDeleteAll ? "Confirm Delete All?" : `Delete All (${filter === 'all' ? counts.total : counts[filter] || 0})`}
+                                    </button>
                                 )}
-                                <span>Auto-Generate Follow-Ups</span>
-                            </button>
+
+                                {/* Auto-Generate */}
+                                <button
+                                    onClick={autoGenerateFollowUps}
+                                    disabled={generatingFollowUps}
+                                    className="bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-[0_10px_20px_-5px_rgba(37,99,235,0.25)] flex items-center gap-2 font-sans cursor-pointer disabled:opacity-50"
+                                >
+                                    {generatingFollowUps ? (
+                                        <RefreshCw className="w-4 h-4 animate-spin" />
+                                    ) : (
+                                        <Sparkles className="w-4 h-4" />
+                                    )}
+                                    <span>Auto-Generate</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Follow-up policy info banner */}
+                        <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-100 rounded-2xl">
+                            <Info className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                            <div className="text-sm text-blue-800 leading-relaxed">
+                                <strong>Smart Follow-Up Policy:</strong> Follow-ups are only sent when HR has <em>not replied</em> after 7+ days. If HR has replied, the follow-up is automatically cancelled — use the{' '}
+                                <strong>Reply button</strong> in Applications instead.
+                            </div>
                         </div>
 
                         {/* Status Cards */}
@@ -216,6 +322,7 @@ export default function FollowUpsPage() {
                                 { label: 'Overdue', value: counts.overdue, icon: AlertTriangle, color: 'text-rose-600', bg: 'bg-rose-50' },
                                 { label: 'Completed', value: counts.sent, icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
                                 { label: 'Skipped', value: counts.skipped, icon: SkipForward, color: 'text-slate-500', bg: 'bg-slate-50' },
+
                             ].map((stat) => (
                                 <div
                                     key={stat.label}
@@ -284,31 +391,46 @@ export default function FollowUpsPage() {
                             <div className="space-y-4">
                                 {followUps.map((followUp) => {
                                     const overdue = followUp.status === 'pending' && isOverdue(followUp.scheduledDate);
+                                    const replied = hasHrReplied(followUp);
 
                                     return (
                                         <div
                                             key={followUp._id}
                                             className={cn(
                                                 "bg-white border rounded-2xl lg:rounded-3xl shadow-sm overflow-hidden transition-all hover:shadow-md",
-                                                overdue ? "border-rose-200 bg-rose-50/20" : "border-slate-200/60",
+                                                replied ? "border-violet-200 bg-violet-50/20" :
+                                                    overdue ? "border-rose-200 bg-rose-50/20" : "border-slate-200/60",
                                                 followUp.status === 'sent' && "opacity-60",
                                                 followUp.status === 'skipped' && "opacity-40"
                                             )}
                                         >
+                                            {/* HR Replied Warning Banner */}
+                                            {replied && followUp.status === 'pending' && (
+                                                <div className="flex items-center gap-2.5 px-5 py-3 bg-violet-100/70 border-b border-violet-200">
+                                                    <ShieldAlert className="w-4 h-4 text-violet-600 shrink-0" />
+                                                    <p className="text-xs font-semibold text-violet-800">
+                                                        HR has already replied to this application. Sending a follow-up now may be unnecessary or annoying.
+                                                        Use the <strong>Reply</strong> button in Applications to respond instead.
+                                                    </p>
+                                                </div>
+                                            )}
+
                                             <div className="p-4 sm:p-6">
                                                 <div className="flex flex-col sm:flex-row items-start gap-4">
                                                     {/* Status Indicator */}
                                                     <div className={cn(
                                                         "w-11 h-11 rounded-2xl flex items-center justify-center shrink-0",
-                                                        overdue ? "bg-rose-100" :
-                                                            followUp.status === 'sent' ? "bg-emerald-100" :
-                                                                followUp.status === 'skipped' ? "bg-slate-100" :
-                                                                    "bg-amber-100"
+                                                        replied ? "bg-violet-100" :
+                                                            overdue ? "bg-rose-100" :
+                                                                followUp.status === 'sent' ? "bg-emerald-100" :
+                                                                    followUp.status === 'skipped' ? "bg-slate-100" :
+                                                                        "bg-amber-100"
                                                     )}>
-                                                        {overdue ? <AlertTriangle className="w-5 h-5 text-rose-600" /> :
-                                                            followUp.status === 'sent' ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> :
-                                                                followUp.status === 'skipped' ? <SkipForward className="w-5 h-5 text-slate-500" /> :
-                                                                    <Clock className="w-5 h-5 text-amber-600" />
+                                                        {replied ? <MessageCircle className="w-5 h-5 text-violet-600" /> :
+                                                            overdue ? <AlertTriangle className="w-5 h-5 text-rose-600" /> :
+                                                                followUp.status === 'sent' ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> :
+                                                                    followUp.status === 'skipped' ? <SkipForward className="w-5 h-5 text-slate-500" /> :
+                                                                        <Clock className="w-5 h-5 text-amber-600" />
                                                         }
                                                     </div>
 
@@ -317,6 +439,11 @@ export default function FollowUpsPage() {
                                                         <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                                                             <h4 className="text-sm font-bold text-slate-900 truncate flex-1">{followUp.recipient}</h4>
                                                             <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                                                                {replied && (
+                                                                    <span className="px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-tight bg-violet-100 text-violet-700">
+                                                                        HR Replied
+                                                                    </span>
+                                                                )}
                                                                 <span className={cn(
                                                                     "px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-tight",
                                                                     overdue ? "bg-rose-100 text-rose-700" :
@@ -361,35 +488,104 @@ export default function FollowUpsPage() {
                                                     {/* Actions */}
                                                     {followUp.status === 'pending' && (
                                                         <div className="flex items-center gap-2 shrink-0 flex-wrap sm:flex-nowrap">
-                                                            <button
-                                                                onClick={() => updateFollowUp(followUp._id, { status: 'sent' })}
-                                                                className="px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-bold uppercase tracking-tight hover:bg-blue-700 transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 shadow-md shadow-blue-500/20"
-                                                            >
-                                                                <Send className="w-3.5 h-3.5" />
-                                                                Mark Sent
-                                                            </button>
-                                                            <button
-                                                                onClick={() => openEditModal(followUp)}
-                                                                className="p-2 bg-slate-50 text-slate-500 rounded-xl hover:bg-slate-100 transition-all cursor-pointer border border-slate-200"
-                                                                title="Edit message"
-                                                            >
-                                                                <Edit3 className="w-4 h-4" />
-                                                            </button>
-                                                            <button
-                                                                onClick={() => updateFollowUp(followUp._id, { snoozeDays: 3 })}
-                                                                className="p-2 bg-slate-50 text-slate-500 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all cursor-pointer border border-slate-200"
-                                                                title="Snooze 3 days"
-                                                            >
-                                                                <Timer className="w-4 h-4" />
-                                                            </button>
-                                                            <button
-                                                                onClick={() => updateFollowUp(followUp._id, { status: 'skipped' })}
-                                                                className="p-2 bg-slate-50 text-slate-500 rounded-xl hover:bg-rose-50 hover:text-rose-600 transition-all cursor-pointer border border-slate-200"
-                                                                title="Skip this follow-up"
-                                                            >
-                                                                <SkipForward className="w-4 h-4" />
-                                                            </button>
+                                                            {replied ? (
+                                                                /* If HR replied — show a disabled send + suggestion to use Reply instead */
+                                                                <>
+                                                                    <button
+                                                                        disabled
+                                                                        title="HR has already replied — send a Reply instead from Applications"
+                                                                        className="px-4 py-2 bg-slate-100 text-slate-400 rounded-xl text-[10px] font-bold uppercase tracking-tight cursor-not-allowed flex items-center gap-1.5 border border-slate-200"
+                                                                    >
+                                                                        <Send className="w-3.5 h-3.5" />
+                                                                        Blocked · HR Replied
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => updateFollowUp(followUp._id, { status: 'skipped' })}
+                                                                        className="p-2 bg-slate-50 text-slate-500 rounded-xl hover:bg-rose-50 hover:text-rose-600 transition-all cursor-pointer border border-slate-200"
+                                                                        title="Skip this follow-up"
+                                                                    >
+                                                                        <SkipForward className="w-4 h-4" />
+                                                                    </button>
+                                                                    {/* Individual Delete — two clicks */}
+                                                                    <button
+                                                                        onClick={() => handleDeleteClick(followUp._id)}
+                                                                        className={cn(
+                                                                            "p-2 rounded-xl transition-all cursor-pointer border text-xs font-bold flex items-center gap-1",
+                                                                            pendingDeleteId === followUp._id
+                                                                                ? "bg-rose-600 text-white border-rose-700 animate-pulse"
+                                                                                : "bg-slate-50 text-slate-400 border-slate-200 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200"
+                                                                        )}
+                                                                        title={pendingDeleteId === followUp._id ? "Click again to confirm delete" : "Delete this follow-up"}
+                                                                    >
+                                                                        <Trash2 className="w-4 h-4" />
+                                                                        {pendingDeleteId === followUp._id && <span className="text-[9px] uppercase tracking-tight">Confirm?</span>}
+                                                                    </button>
+                                                                </>
+                                                            ) : (
+                                                                /* Normal pending — show all actions */
+                                                                <>
+                                                                    <button
+                                                                        onClick={() => updateFollowUp(followUp._id, { status: 'sent' })}
+                                                                        className="px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-bold uppercase tracking-tight hover:bg-blue-700 transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 shadow-md shadow-blue-500/20"
+                                                                    >
+                                                                        <Send className="w-3.5 h-3.5" />
+                                                                        Mark Sent
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => openEditModal(followUp)}
+                                                                        className="p-2 bg-slate-50 text-slate-500 rounded-xl hover:bg-slate-100 transition-all cursor-pointer border border-slate-200"
+                                                                        title="Edit message"
+                                                                    >
+                                                                        <Edit3 className="w-4 h-4" />
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => updateFollowUp(followUp._id, { snoozeDays: 3 })}
+                                                                        className="p-2 bg-slate-50 text-slate-500 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all cursor-pointer border border-slate-200"
+                                                                        title="Snooze 3 days"
+                                                                    >
+                                                                        <Timer className="w-4 h-4" />
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => updateFollowUp(followUp._id, { status: 'skipped' })}
+                                                                        className="p-2 bg-slate-50 text-slate-500 rounded-xl hover:bg-slate-100 hover:text-slate-600 transition-all cursor-pointer border border-slate-200"
+                                                                        title="Skip this follow-up"
+                                                                    >
+                                                                        <SkipForward className="w-4 h-4" />
+                                                                    </button>
+                                                                    {/* Individual Delete — two clicks */}
+                                                                    <button
+                                                                        onClick={() => handleDeleteClick(followUp._id)}
+                                                                        className={cn(
+                                                                            "p-2 rounded-xl transition-all cursor-pointer border text-xs font-bold flex items-center gap-1",
+                                                                            pendingDeleteId === followUp._id
+                                                                                ? "bg-rose-600 text-white border-rose-700 animate-pulse"
+                                                                                : "bg-slate-50 text-slate-400 border-slate-200 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200"
+                                                                        )}
+                                                                        title={pendingDeleteId === followUp._id ? "Click again to confirm delete" : "Delete this follow-up"}
+                                                                    >
+                                                                        <Trash2 className="w-4 h-4" />
+                                                                        {pendingDeleteId === followUp._id && <span className="text-[9px] uppercase tracking-tight">Confirm?</span>}
+                                                                    </button>
+                                                                </>
+                                                            )}
                                                         </div>
+                                                    )}
+
+                                                    {/* Delete button visible on all non-pending cards too */}
+                                                    {followUp.status !== 'pending' && (
+                                                        <button
+                                                            onClick={() => handleDeleteClick(followUp._id)}
+                                                            className={cn(
+                                                                "shrink-0 p-2 rounded-xl transition-all cursor-pointer border flex items-center gap-1 text-xs font-bold",
+                                                                pendingDeleteId === followUp._id
+                                                                    ? "bg-rose-600 text-white border-rose-700 animate-pulse"
+                                                                    : "bg-slate-50 text-slate-300 border-slate-200 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200"
+                                                            )}
+                                                            title={pendingDeleteId === followUp._id ? "Click again to confirm delete" : "Delete this follow-up"}
+                                                        >
+                                                            <Trash2 className="w-4 h-4" />
+                                                            {pendingDeleteId === followUp._id && <span className="text-[9px] uppercase tracking-tight">Confirm?</span>}
+                                                        </button>
                                                     )}
                                                 </div>
                                             </div>

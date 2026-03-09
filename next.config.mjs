@@ -38,9 +38,46 @@ const nextConfig = {
     optimizePackageImports: ['lucide-react', 'sonner'], // Tree-shake these packages
   },
 
-  // Headers for better caching and security
+  // Headers for security and caching
   async headers() {
     return [
+      // ── Security headers for ALL routes ──────────────────────────
+      {
+        source: '/(.*)',
+        headers: [
+          // Prevent clickjacking
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          // Prevent MIME type sniffing
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          // Limit referrer information leakage
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          // Restrict browser features
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+          // Enforce HTTPS (1 year, include subdomains)
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains',
+          },
+          // Prevent XSS
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+        ],
+      },
+      // ── Long-lived cache for static assets ───────────────────────
       {
         source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif)',
         headers: [

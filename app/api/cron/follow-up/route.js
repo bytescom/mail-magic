@@ -17,11 +17,17 @@ import { NextResponse } from 'next/server';
  */
 export async function GET(request) {
     try {
-        // Validate cron secret
-        const { searchParams } = new URL(request.url);
-        const secret = searchParams.get('secret');
+        // Validate cron secret via Authorization header (Vercel standard pattern)
+        // Vercel sends: Authorization: Bearer <CRON_SECRET>
+        const authHeader = request.headers.get('authorization');
+        const expectedSecret = process.env.CRON_SECRET;
 
-        if (secret !== process.env.CRON_SECRET) {
+        if (!expectedSecret) {
+            console.error('❌ CRON_SECRET env variable is not set');
+            return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
+        }
+
+        if (authHeader !== `Bearer ${expectedSecret}`) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 

@@ -5,6 +5,7 @@ import Application from '@/models/Application';
 import EmailLog from '@/models/EmailLog';
 import User from '@/models/User';
 import GmailService from '@/lib/gmail';
+import { classifyReply } from '@/lib/classify';
 import { NextResponse } from 'next/server';
 
 /**
@@ -19,10 +20,10 @@ import { NextResponse } from 'next/server';
  */
 export async function POST(request) {
     try {
-        // Support both authenticated user calls AND cron job calls (with secret)
-        const { searchParams } = new URL(request.url);
-        const cronSecret = searchParams.get('secret');
-        const isCronJob = cronSecret === process.env.CRON_SECRET;
+        // Support both authenticated user calls AND cron job calls (with Authorization header)
+        const authHeader = request.headers.get('authorization');
+        const expectedSecret = process.env.CRON_SECRET;
+        const isCronJob = expectedSecret && authHeader === `Bearer ${expectedSecret}`;
 
         let userId;
 
@@ -137,25 +138,14 @@ async function processUser(userId) {
                 sentAt: new Date(),
             });
 
-            // AI Classify the reply
+            // AI Classify the reply (direct function call — no HTTP round-trip)
             let replyType = 'neutral';
             let confidence = 0.5;
 
             try {
-                const classifyRes = await fetch(
-                    `${process.env.NEXTAUTH_URL}/api/ai-classify`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ emailBody: bodyPreview }),
-                    }
-                );
-
-                if (classifyRes.ok) {
-                    const classification = await classifyRes.json();
-                    replyType = classification.replyType || 'neutral';
-                    confidence = classification.confidenceScore || 0.5;
-                }
+                const classification = classifyReply(bodyPreview || '');
+                replyType = classification.replyType || 'neutral';
+                confidence = classification.confidenceScore || 0.5;
             } catch (classifyErr) {
                 console.warn('AI classification failed (non-fatal):', classifyErr.message);
             }

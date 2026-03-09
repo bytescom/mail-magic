@@ -481,11 +481,42 @@ export default function DashboardLayout({ children }) {
                 </header>
 
                 {/* Page Content */}
-                <main className="flex-1 p-4 sm:p-6 lg:p-12 pt-20 sm:pt-24 lg:pt-12">
+                <main className="flex-1 p-4 sm:p-6 lg:p-12 pt-20 sm:pt-24 lg:pt-12 pb-24 lg:pb-12 overflow-x-hidden">
                     <div className="max-w-7xl mx-auto">
                         {children}
                     </div>
                 </main>
+
+                {/* ── Mobile Bottom Tab Bar ────────────────────────── */}
+                <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-100 flex items-center justify-around px-1 safe-bottom" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+                    {[
+                        { href: '/dashboard', icon: LayoutDashboard, label: 'Home' },
+                        { href: '/send', icon: Send, label: 'Send' },
+                        { href: '/applications', icon: BriefcaseBusiness, label: 'Apps' },
+                        { href: '/follow-ups', icon: Clock, label: 'Follow-ups' },
+                        { href: '/settings', icon: Settings, label: 'More' },
+                    ].map(({ href, icon: Icon, label }) => {
+                        const active = pathname === href;
+                        return (
+                            <Link
+                                key={href}
+                                href={href}
+                                className={cn(
+                                    'flex flex-col items-center gap-0.5 py-2.5 px-3 rounded-2xl transition-all duration-150 min-w-[52px] relative',
+                                    active ? 'text-blue-600' : 'text-slate-400 active:scale-90'
+                                )}
+                            >
+                                {active && (
+                                    <span className="absolute -top-px left-1/2 -translate-x-1/2 w-8 h-0.5 bg-blue-600 rounded-full" />
+                                )}
+                                <Icon className={cn('transition-all duration-150', active ? 'w-5 h-5 drop-shadow-sm' : 'w-5 h-5')} />
+                                <span className={cn('text-[9px] font-bold uppercase tracking-wide leading-none', active ? 'text-blue-600' : 'text-slate-400')}>
+                                    {label}
+                                </span>
+                            </Link>
+                        );
+                    })}
+                </nav>
             </div>
         </div>
     );

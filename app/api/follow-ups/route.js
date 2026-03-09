@@ -170,7 +170,7 @@ export async function PATCH(request) {
     }
 }
 
-// DELETE - Delete a follow-up
+// DELETE - Delete a single follow-up OR bulk delete all (with optional status filter)
 export async function DELETE(request) {
     try {
         const session = await getServerSession(authOptions);
@@ -182,7 +182,25 @@ export async function DELETE(request) {
 
         const { searchParams } = new URL(request.url);
         const followUpId = searchParams.get('id');
+        const deleteAll = searchParams.get('all') === 'true';
+        const statusFilter = searchParams.get('status'); // optional: only delete this status
 
+        // ── BULK DELETE ──────────────────────────────────────────────
+        if (deleteAll) {
+            const query = { userId: session.user.id };
+            if (statusFilter && statusFilter !== 'all') {
+                query.status = statusFilter;
+            }
+
+            const result = await FollowUp.deleteMany(query);
+
+            return NextResponse.json({
+                success: true,
+                deleted: result.deletedCount,
+            });
+        }
+
+        // ── SINGLE DELETE ─────────────────────────────────────────────
         if (!followUpId) {
             return NextResponse.json({ error: 'Follow-up ID is required' }, { status: 400 });
         }
@@ -196,7 +214,7 @@ export async function DELETE(request) {
             return NextResponse.json({ error: 'Follow-up not found' }, { status: 404 });
         }
 
-        return NextResponse.json({ success: true });
+        return NextResponse.json({ success: true, deleted: 1 });
     } catch (error) {
         console.error('Error deleting follow-up:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
