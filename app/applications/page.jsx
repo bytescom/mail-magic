@@ -299,10 +299,10 @@ function ReplyModal({ app, onClose, onSent }) {
                         {app.lastReplyPreview && (
                             <div className="mt-4 p-3 bg-white border border-slate-200 rounded-xl">
                                 <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1">
-                                    <MessageCircle className="w-3 h-3" /> HR's Reply
+                                    <MessageCircle className="w-3 h-3" /> HR&apos;s Reply
                                 </p>
                                 <p className="text-xs text-slate-600 leading-relaxed line-clamp-6 italic">
-                                    "{app.lastReplyPreview}"
+                                    &quot;{app.lastReplyPreview}&quot;
                                 </p>
                             </div>
                         )}
@@ -439,6 +439,7 @@ export default function ApplicationsPage() {
 
     useEffect(() => {
         fetchApplications();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleCheckReplies = async () => {

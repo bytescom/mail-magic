@@ -58,7 +58,7 @@ export default function TermsPage() {
                             </p>
                             <ul className="list-disc pl-5 text-slate-600 space-y-2 font-medium">
                                 <li>Send malicious content, software, or tracking scripts.</li>
-                                <li>Circumvent Google's rate limits or security policies.</li>
+                                <li>Circumvent Google&apos;s rate limits or security policies.</li>
                                 <li>Collect or harvest sensitive data from recruiter responses.</li>
                             </ul>
                         </section>

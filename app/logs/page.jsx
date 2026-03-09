@@ -19,6 +19,7 @@ function LogsPageContent() {
 
     useEffect(() => {
         fetchLogs();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filter]);
 
     // Handle logId from URL query parameter
@@ -222,7 +223,7 @@ function LogsPageContent() {
 
                                             <div className="py-3 border-y border-slate-50">
                                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Subject Header</p>
-                                                <p className="text-xs font-medium text-slate-600 line-clamp-2 leading-relaxed italic">"{log.subject}"</p>
+                                                <p className="text-xs font-medium text-slate-600 line-clamp-2 leading-relaxed italic">&quot;{log.subject}&quot;</p>
                                             </div>
 
                                             <div className="flex items-center justify-between">
@@ -285,7 +286,7 @@ function LogsPageContent() {
                                                         </td>
                                                         <td className="px-8 py-6">
                                                             <div className="max-w-[150px] xl:max-w-md">
-                                                                <p className="text-sm font-medium text-slate-600 truncate italic">"{log.subject}"</p>
+                                                                <p className="text-sm font-medium text-slate-600 truncate italic">&quot;{log.subject}&quot;</p>
                                                                 <div className="mt-1.5 px-2 py-0.5 rounded-md bg-slate-50 text-[9px] font-bold text-slate-400 uppercase tracking-tight w-fit">
                                                                     {log.templateId?.name || 'Manual Dispatch'}
                                                                 </div>

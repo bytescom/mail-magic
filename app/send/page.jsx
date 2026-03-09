@@ -445,7 +445,7 @@ export default function SendEmailsPage() {
                                                     </div>
                                                     <div className="text-center">
                                                         <p className="text-sm font-bold text-slate-600">No documents yet</p>
-                                                        <p className="text-xs text-slate-400 mt-1">Click "Upload" below to add your first document</p>
+                                                        <p className="text-xs text-slate-400 mt-1">Click &quot;Upload&quot; below to add your first document</p>
                                                     </div>
                                                 </div>
                                             )}
@@ -779,7 +779,7 @@ export default function SendEmailsPage() {
                                             </div>
                                         </div>
                                         <p className="text-[10px] text-amber-700 mt-4 leading-relaxed font-medium">
-                                            <strong>Why?</strong> Sending too many emails at once triggers Gmail's spam detection. We use dynamic delays (3-15s) and batch limits to protect your account.
+                                            <strong>Why?</strong> Sending too many emails at once triggers Gmail&apos;s spam detection. We use dynamic delays (3&#8209;15s) and batch limits to protect your account.
                                         </p>
                                         {selectedHrEmails.length > SPAM_LIMITS.MAX_PER_BATCH && (
                                             <div className="mt-4 p-3 bg-rose-100 border border-rose-200 rounded-xl">

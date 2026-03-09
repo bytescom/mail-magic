@@ -48,6 +48,7 @@ export default function SettingsPage() {
 
     useEffect(() => {
         if (session?.user) fetchUserSettings();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
 
     const fetchUserSettings = async () => {
@@ -283,7 +284,7 @@ export default function SettingsPage() {
                                 <div className="space-y-2">
                                     <h4 className="text-sm font-bold text-amber-900">Gmail OAuth Token</h4>
                                     <p className="text-xs text-amber-700 leading-relaxed font-medium">
-                                        Your Gmail access is managed through Google's secure OAuth protocol. We never store your password.
+                                        Your Gmail access is managed through Google&apos;s secure OAuth protocol. We never store your password.
                                         Tokens are automatically refreshed and encrypted at rest.
                                     </p>
                                     <div className="flex items-center gap-3 pt-1 flex-wrap">

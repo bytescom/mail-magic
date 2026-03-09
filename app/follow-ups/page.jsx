@@ -85,6 +85,7 @@ export default function FollowUpsPage() {
         if (session) {
             fetchFollowUps();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session, filter]);
 
     const fetchFollowUps = async () => {
@@ -384,7 +385,7 @@ export default function FollowUpsPage() {
                                     className="bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl text-sm inline-flex items-center gap-2 hover:bg-blue-700 transition-all active:scale-95 shadow-lg shadow-blue-500/20 cursor-pointer disabled:opacity-50"
                                 >
                                     <Sparkles className="w-4 h-4" />
-                                    Generate Follow-Ups
+                                    Generate Follow&#8209;Ups
                                 </button>
                             </div>
                         ) : (
@@ -481,7 +482,7 @@ export default function FollowUpsPage() {
                                                         </div>
 
                                                         <p className="text-xs text-slate-500 italic truncate">
-                                                            "{followUp.subject}"
+                                                            &quot;{followUp.subject}&quot;
                                                         </p>
                                                     </div>
 

@@ -198,7 +198,7 @@ export default function TokenDiagnostics() {
                             <ul className="space-y-2 sm:space-y-3 text-xs sm:text-sm text-blue-800 leading-relaxed">
                                 <li className="flex gap-2"><span className="shrink-0">•</span><span><strong>304 Status in Production?</strong> Check if your environment variables (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXTAUTH_URL) are correctly set in your hosting provider.</span></li>
                                 <li className="flex gap-2"><span className="shrink-0">•</span><span><strong>Missing Refresh Token?</strong> Sign out completely and sign in again to get a new refresh token.</span></li>
-                                <li className="flex gap-2"><span className="shrink-0">•</span><span><strong>Token Expired?</strong> Click "Run Token Diagnostics" - it will attempt to auto-refresh your token.</span></li>
+                                <li className="flex gap-2"><span className="shrink-0">•</span><span><strong>Token Expired?</strong> Click &quot;Run Token Diagnostics&quot; - it will attempt to auto-refresh your token.</span></li>
                                 <li className="flex gap-2"><span className="shrink-0">•</span><span><strong>Still Not Working?</strong> Revoke access in your Google Account settings, then sign in again.</span></li>
                             </ul>
                         </div>

@@ -31,7 +31,7 @@ export default function ContactPage() {
                         </div>
                         <h1 className="text-4xl md:text-6xl font-display font-bold text-slate-900 tracking-tight">Contact Support</h1>
                         <p className="text-slate-500 font-medium max-w-xl mx-auto leading-relaxed text-lg">
-                            Whether you need technical assistance or want to suggest a new automation feature, we're here to help.
+                            Whether you need technical assistance or want to suggest a new automation feature, we&apos;re here to help.
                         </p>
                     </div>
 

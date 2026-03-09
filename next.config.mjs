@@ -6,9 +6,6 @@ const nextConfig = {
   // Optimize React in production
   reactStrictMode: true,
 
-  // Optimize production bundle
-  swcMinify: true,
-
   // Production source maps (disable for faster builds)
   productionBrowserSourceMaps: false,
 

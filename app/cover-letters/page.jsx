@@ -61,6 +61,7 @@ export default function CoverLettersPage() {
 
     useEffect(() => {
         if (session) fetchTemplates();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
 
     const fetchTemplates = async (category) => {

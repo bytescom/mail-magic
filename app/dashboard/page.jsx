@@ -156,7 +156,7 @@ export default function DashboardPage() {
                                 <p className="text-slate-500 max-w-lg text-xs sm:text-sm leading-relaxed">
                                     {pipeline.total > 0
                                         ? <>Tracking <span className="text-slate-900 font-semibold">{pipeline.total}</span> applications · <span className="text-emerald-600 font-semibold">{pipeline.interview}</span> interview{pipeline.interview !== 1 ? 's' : ''} · <span className="text-teal-600 font-semibold">{pipeline.replyRate}%</span> reply rate</>
-                                        : <>You've sent <span className="text-slate-900 font-semibold">{stats?.stats?.weekSent || 0}</span> applications this week. Keep the momentum going!</>
+                                        : <>You&apos;ve sent <span className="text-slate-900 font-semibold">{stats?.stats?.weekSent || 0}</span> applications this week. Keep the momentum going!</>
                                     }
                                 </p>
                             </div>

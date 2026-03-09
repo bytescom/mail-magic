@@ -148,7 +148,7 @@ function HomePageContent() {
                                 <div className="text-left space-y-1">
                                     <h4 className="text-sm font-bold text-slate-900 group-hover:text-emerald-700 group-active:text-emerald-800 transition-colors">Secure OAuth Architecture</h4>
                                     <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                                        MailMagic operates under Google's secure OAuth protocol. You maintain absolute control over your Gmail permissions.
+                                        MailMagic operates under Google&apos;s secure OAuth protocol. You maintain absolute control over your Gmail permissions.
                                         <Link href="/privacy" className="ml-1 text-blue-600 font-bold hover:underline active:opacity-70">Compliance Details →</Link>
                                     </p>
                                 </div>

@@ -37,7 +37,6 @@ const ApplicationSchema = new mongoose.Schema(
         // Gmail tracking
         gmailThreadId: {
             type: String,
-            index: true,
         },
         lastEmailId: {
             type: String,

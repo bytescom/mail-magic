@@ -101,6 +101,7 @@ export default function CareerToolsPage() {
             fetchRoles();
             fetchTemplates();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
 
     // Resume functions
@@ -385,7 +386,7 @@ export default function CareerToolsPage() {
                                             </div>
                                             <p className="font-display font-bold text-xl text-slate-900 mb-2">Ready to Optimize</p>
                                             <p className="text-sm text-slate-500 max-w-sm mx-auto font-medium leading-relaxed">
-                                                Paste your resume on the left and hit analyze. We'll check keyword coverage, ATS compatibility, and give you targeted improvement tips.
+                                                Paste your resume on the left and hit analyze. We&apos;ll check keyword coverage, ATS compatibility, and give you targeted improvement tips.
                                             </p>
                                         </div>
                                     )}

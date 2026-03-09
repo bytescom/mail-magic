@@ -2,31 +2,24 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export default function ProtectedRoute({ children }) {
     const { data: session, status } = useSession();
     const router = useRouter();
-    const [isChecking, setIsChecking] = useState(true);
+
+    // Derived — no useState needed
+    const isChecking = status === 'loading';
 
     useEffect(() => {
-        // Only redirect after we've confirmed the status is unauthenticated
-        // Wait for status to not be 'loading' before making any redirect decisions
-        if (status === 'loading') {
-            return; // Still loading, don't do anything yet
-        }
-
+        if (status === 'loading') return;
         if (status === 'unauthenticated') {
-            console.log('ProtectedRoute: User is not authenticated, redirecting to home...');
             router.replace('/');
-        } else if (status === 'authenticated') {
-            console.log('ProtectedRoute: User is authenticated');
-            setIsChecking(false);
         }
     }, [status, router]);
 
     // Show loading while status is being determined
-    if (status === 'loading' || isChecking) {
+    if (isChecking) {
         return (
             <div className="min-h-screen bg-background flex items-center justify-center">
                 <div className="text-center">
