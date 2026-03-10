@@ -44,6 +44,7 @@ export default function FollowUpsPage() {
     const [editingFollowUp, setEditingFollowUp] = useState(null);
     const [editForm, setEditForm] = useState({ subject: '', message: '' });
     const [generatingFollowUps, setGeneratingFollowUps] = useState(false);
+    const [sendingFollowUpId, setSendingFollowUpId] = useState(null);
 
     // Two-click delete state
     // pendingDeleteId = the follow-up ID armed for single delete (null = idle)
@@ -129,6 +130,31 @@ export default function FollowUpsPage() {
             toast.error('Failed to generate follow-ups');
         } finally {
             setGeneratingFollowUps(false);
+        }
+    };
+
+    const sendFollowUp = async (followUpId) => {
+        try {
+            setSendingFollowUpId(followUpId);
+            const response = await fetch('/api/follow-ups/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ followUpId }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                toast.success('Follow-up email sent successfully!');
+                fetchFollowUps();
+            } else if (data.limitReached) {
+                toast.error(data.error);
+            } else {
+                toast.error(data.error || 'Failed to send follow-up');
+            }
+        } catch (error) {
+            console.error('Error sending follow-up:', error);
+            toast.error('Failed to send follow-up');
+        } finally {
+            setSendingFollowUpId(null);
         }
     };
 
@@ -311,8 +337,9 @@ export default function FollowUpsPage() {
                         <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-100 rounded-2xl">
                             <Info className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
                             <div className="text-sm text-blue-800 leading-relaxed">
-                                <strong>Smart Follow-Up Policy:</strong> Follow-ups are only sent when HR has <em>not replied</em> after 7+ days. If HR has replied, the follow-up is automatically cancelled — use the{' '}
-                                <strong>Reply button</strong> in Applications instead.
+                                <strong>Manual Follow-Ups Only:</strong> Click <strong>Send Now</strong> on any pending follow-up to send it via Gmail instantly.
+                                Follow-ups are limited per application — configure the limit in{' '}
+                                <strong>Settings → Max Follow-Ups</strong>. If HR has already replied, use the <strong>Reply</strong> button in Applications instead.
                             </div>
                         </div>
 
@@ -526,11 +553,16 @@ export default function FollowUpsPage() {
                                                                 /* Normal pending — show all actions */
                                                                 <>
                                                                     <button
-                                                                        onClick={() => updateFollowUp(followUp._id, { status: 'sent' })}
-                                                                        className="px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-bold uppercase tracking-tight hover:bg-blue-700 transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 shadow-md shadow-blue-500/20"
+                                                                        onClick={() => sendFollowUp(followUp._id)}
+                                                                        disabled={sendingFollowUpId === followUp._id}
+                                                                        className="px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-bold uppercase tracking-tight hover:bg-blue-700 transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 shadow-md shadow-blue-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
                                                                     >
-                                                                        <Send className="w-3.5 h-3.5" />
-                                                                        Mark Sent
+                                                                        {sendingFollowUpId === followUp._id ? (
+                                                                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                                                        ) : (
+                                                                            <Send className="w-3.5 h-3.5" />
+                                                                        )}
+                                                                        {sendingFollowUpId === followUp._id ? 'Sending...' : 'Send Now'}
                                                                     </button>
                                                                     <button
                                                                         onClick={() => openEditModal(followUp)}

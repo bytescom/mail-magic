@@ -39,7 +39,7 @@ export default function SettingsPage() {
         portfolioLink: '',
         yourName: '',
         followUpDays: 7,
-        maxFollowUps: 2,
+        maxFollowUps: 1,
         notifyOnReply: true,
         notifyOnInterview: true,
         notifyFollowUpDue: true,
@@ -235,7 +235,7 @@ export default function SettingsPage() {
                                 <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 border border-amber-100">
                                     <Info className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
                                     <p className="text-xs text-amber-700 font-medium leading-relaxed">
-                                        These settings apply to the automatic cron follow-up system. Manual follow-ups in the Follow-Ups page are not affected.
+                                        <strong>Max Follow-Ups</strong> limits how many times you can click <strong>Send Now</strong> per application. Set to 1 to allow only one follow-up email per application, or increase for more flexibility.
                                     </p>
                                 </div>
                             </div>

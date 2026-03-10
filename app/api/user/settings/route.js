@@ -25,6 +25,7 @@ export async function GET() {
             theme: user.settings?.theme || 'light',
             portfolioLink: user.portfolioLink || '',
             yourName: user.name || '',
+            maxFollowUps: user.settings?.maxFollowUps ?? 1,
         });
     } catch (error) {
         console.error('Error fetching settings:', error);
@@ -41,7 +42,7 @@ export async function POST(request) {
         }
 
         const body = await request.json();
-        const { emailDelay, autoAttachResume, theme, portfolioLink, yourName } = body;
+        const { emailDelay, autoAttachResume, theme, portfolioLink, yourName, maxFollowUps } = body;
 
         await dbConnect();
 
@@ -51,6 +52,7 @@ export async function POST(request) {
             'settings.theme': theme,
             'portfolioLink': portfolioLink,
             'name': yourName,
+            'settings.maxFollowUps': maxFollowUps ?? 1,
             updatedAt: new Date(),
         };
 
