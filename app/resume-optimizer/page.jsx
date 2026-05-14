@@ -146,7 +146,7 @@ export default function ResumeOptimizerPage() {
 
                             {/* Left: Input Panel */}
                             <div className="lg:col-span-5 space-y-4">
-                                <div className="bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                <div className="bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                     <div className="p-5 sm:p-6 border-b border-slate-100">
                                         <h3 className="font-display font-bold text-lg text-slate-900 tracking-tight">Your Resume</h3>
                                         <p className="text-xs text-slate-400 font-medium mt-1 font-sans">Paste your resume content below</p>
@@ -157,7 +157,7 @@ export default function ResumeOptimizerPage() {
                                             <select
                                                 value={targetRole}
                                                 onChange={(e) => setTargetRole(e.target.value)}
-                                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-sans text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition-all appearance-none cursor-pointer"
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm font-sans text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition-all appearance-none cursor-pointer"
                                             >
                                                 {roles.map(role => (
                                                     <option key={role} value={role}>{role}</option>
@@ -171,7 +171,7 @@ export default function ResumeOptimizerPage() {
                                                 value={resumeText}
                                                 onChange={(e) => setResumeText(e.target.value)}
                                                 placeholder="Paste your entire resume here — include all sections (summary, experience, education, skills, projects, etc.)..."
-                                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-sans text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition-all resize-none"
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm font-sans text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition-all resize-none"
                                                 rows={16}
                                             />
                                             <p className="text-[10px] text-slate-400 font-medium mt-1.5 font-sans">
@@ -182,7 +182,7 @@ export default function ResumeOptimizerPage() {
                                         <button
                                             onClick={handleAnalyze}
                                             disabled={analyzing || !resumeText.trim()}
-                                            className="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl text-sm transition-all active:scale-[0.98] hover:bg-blue-700 shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer font-sans"
+                                            className="w-full bg-blue-600 text-white font-bold py-3.5 rounded-lg text-sm transition-all active:scale-[0.98] hover:bg-blue-700 shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer font-sans"
                                         >
                                             {analyzing ? (
                                                 <>
@@ -203,8 +203,8 @@ export default function ResumeOptimizerPage() {
                             {/* Right: Results Panel */}
                             <div className="lg:col-span-7 space-y-5">
                                 {!analysis && !analyzing && (
-                                    <div className="bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] p-12 sm:p-16 text-center">
-                                        <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-slate-100 shadow-inner">
+                                    <div className="bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] p-12 sm:p-16 text-center">
+                                        <div className="w-20 h-20 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-6 border border-slate-100 shadow-inner">
                                             <FileSearch className="w-8 h-8 text-slate-300" />
                                         </div>
                                         <p className="font-display font-bold text-xl text-slate-900 mb-2">Ready to Optimize</p>
@@ -215,7 +215,7 @@ export default function ResumeOptimizerPage() {
                                 )}
 
                                 {analyzing && (
-                                    <div className="bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] p-16 text-center">
+                                    <div className="bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] p-16 text-center">
                                         <div className="w-12 h-12 border-3 border-slate-200 border-t-blue-500 rounded-full animate-spin mx-auto mb-6" />
                                         <p className="font-display font-bold text-lg text-slate-900 mb-1">Scanning your resume...</p>
                                         <p className="text-sm text-slate-500 font-medium">Checking keywords, ATS patterns, and content quality</p>
@@ -225,7 +225,7 @@ export default function ResumeOptimizerPage() {
                                 {analysis && (
                                     <>
                                         {/* Overall Score */}
-                                        <div className="bg-slate-900 rounded-2xl lg:rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-2xl shadow-slate-900/20">
+                                        <div className="bg-slate-900 rounded-xl lg:rounded-xl p-6 sm:p-8 text-white relative overflow-hidden shadow-2xl shadow-slate-900/20">
                                             <div className="flex items-center gap-6 sm:gap-8">
                                                 <div className="relative shrink-0">
                                                     <svg className="w-28 h-28 sm:w-32 sm:h-32 -rotate-90" viewBox="0 0 120 120">
@@ -262,7 +262,7 @@ export default function ResumeOptimizerPage() {
                                                             { label: 'Content', value: `${analysis.contentQuality.score}%` },
                                                             { label: 'ATS', value: `${analysis.atsCompatibility.score}%` },
                                                         ].map(m => (
-                                                            <div key={m.label} className="bg-white/5 rounded-xl p-2.5 text-center border border-white/5">
+                                                            <div key={m.label} className="bg-white/5 rounded-lg p-2.5 text-center border border-white/5">
                                                                 <p className="text-[8px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-wider">{m.label}</p>
                                                                 <p className="text-sm sm:text-base font-bold mt-0.5">{m.value}</p>
                                                             </div>
@@ -274,9 +274,9 @@ export default function ResumeOptimizerPage() {
 
                                         {/* Improvement Tips */}
                                         {analysis.tips.length > 0 && (
-                                            <div className="bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                            <div className="bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                                 <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center gap-3">
-                                                    <div className="p-2.5 bg-amber-50 rounded-xl">
+                                                    <div className="p-2.5 bg-amber-50 rounded-lg">
                                                         <Lightbulb className="w-5 h-5 text-amber-600" />
                                                     </div>
                                                     <div>
@@ -314,7 +314,7 @@ export default function ResumeOptimizerPage() {
 
                                         {/* Keywords Analysis */}
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                                            <div className="bg-white border border-slate-200/60 rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                            <div className="bg-white border border-slate-200/60 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                                 <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center gap-2">
                                                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                                                     <h4 className="font-bold text-sm text-slate-900">Keywords Found ({analysis.keywords.found.length})</h4>
@@ -341,7 +341,7 @@ export default function ResumeOptimizerPage() {
                                                 </div>
                                             </div>
 
-                                            <div className="bg-white border border-slate-200/60 rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                            <div className="bg-white border border-slate-200/60 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                                 <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center gap-2">
                                                     <XCircle className="w-4 h-4 text-rose-500" />
                                                     <h4 className="font-bold text-sm text-slate-900">Missing Keywords ({analysis.keywords.missing.length})</h4>
@@ -369,7 +369,7 @@ export default function ResumeOptimizerPage() {
                                         {/* Sections + ATS Warnings */}
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                                             {/* Sections Checklist */}
-                                            <div className="bg-white border border-slate-200/60 rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                            <div className="bg-white border border-slate-200/60 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                                 <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center gap-2">
                                                     <BookOpen className="w-4 h-4 text-blue-600" />
                                                     <h4 className="font-bold text-sm text-slate-900">Section Checklist</h4>
@@ -394,7 +394,7 @@ export default function ResumeOptimizerPage() {
                                             </div>
 
                                             {/* ATS Warnings */}
-                                            <div className="bg-white border border-slate-200/60 rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                            <div className="bg-white border border-slate-200/60 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                                 <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center gap-2">
                                                     <Shield className="w-4 h-4 text-violet-600" />
                                                     <h4 className="font-bold text-sm text-slate-900">ATS Compatibility</h4>
@@ -403,7 +403,7 @@ export default function ResumeOptimizerPage() {
                                                     {analysis.atsCompatibility.warnings.length > 0 ? (
                                                         <div className="space-y-3">
                                                             {analysis.atsCompatibility.warnings.map((w, i) => (
-                                                                <div key={i} className={cn("flex items-start gap-2.5 p-3 rounded-xl",
+                                                                <div key={i} className={cn("flex items-start gap-2.5 p-3 rounded-lg",
                                                                     w.severity === 'high' ? "bg-rose-50" : w.severity === 'medium' ? "bg-amber-50" : "bg-blue-50"
                                                                 )}>
                                                                     <AlertTriangle className={cn("w-4 h-4 shrink-0 mt-0.5",
@@ -425,32 +425,32 @@ export default function ResumeOptimizerPage() {
                                         </div>
 
                                         {/* Content Quality */}
-                                        <div className="bg-white border border-slate-200/60 rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                        <div className="bg-white border border-slate-200/60 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                             <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center gap-2">
                                                 <Award className="w-4 h-4 text-amber-600" />
                                                 <h4 className="font-bold text-sm text-slate-900">Content Quality</h4>
                                             </div>
                                             <div className="p-4 sm:p-5">
                                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                                    <div className="bg-slate-50 rounded-xl p-3 text-center">
+                                                    <div className="bg-slate-50 rounded-lg p-3 text-center">
                                                         <p className="text-lg font-display font-bold text-slate-900">{analysis.contentQuality.wordCount}</p>
                                                         <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Words</p>
                                                     </div>
-                                                    <div className="bg-slate-50 rounded-xl p-3 text-center">
+                                                    <div className="bg-slate-50 rounded-lg p-3 text-center">
                                                         <p className="text-lg font-display font-bold text-emerald-600">{analysis.contentQuality.strongVerbsFound.length}</p>
                                                         <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Action Verbs</p>
                                                     </div>
-                                                    <div className="bg-slate-50 rounded-xl p-3 text-center">
+                                                    <div className="bg-slate-50 rounded-lg p-3 text-center">
                                                         <p className="text-lg font-display font-bold text-blue-600">{analysis.contentQuality.quantifiedCount}</p>
                                                         <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Metrics</p>
                                                     </div>
-                                                    <div className="bg-slate-50 rounded-xl p-3 text-center">
+                                                    <div className="bg-slate-50 rounded-lg p-3 text-center">
                                                         <p className="text-lg font-display font-bold text-violet-600">{analysis.contentQuality.bulletRatio}%</p>
                                                         <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Bullet Use</p>
                                                     </div>
                                                 </div>
                                                 <div className={cn(
-                                                    "mt-4 p-3 rounded-xl text-xs font-medium",
+                                                    "mt-4 p-3 rounded-lg text-xs font-medium",
                                                     analysis.contentQuality.lengthAssessment.status === 'optimal' ? "bg-emerald-50 text-emerald-700" :
                                                         analysis.contentQuality.lengthAssessment.status === 'short' || analysis.contentQuality.lengthAssessment.status === 'long' ? "bg-amber-50 text-amber-700" :
                                                             "bg-rose-50 text-rose-700"
@@ -458,7 +458,7 @@ export default function ResumeOptimizerPage() {
                                                     {analysis.contentQuality.lengthAssessment.message}
                                                 </div>
                                                 {analysis.contentQuality.weakVerbsFound.length > 0 && (
-                                                    <div className="mt-3 p-3 bg-orange-50 rounded-xl">
+                                                    <div className="mt-3 p-3 bg-orange-50 rounded-lg">
                                                         <p className="text-xs font-bold text-orange-700 mb-1">Weak phrases detected:</p>
                                                         <div className="flex flex-wrap gap-1">
                                                             {analysis.contentQuality.weakVerbsFound.map((v, i) => (

@@ -192,7 +192,7 @@ export default function CoverLettersPage() {
                             </div>
                             <button
                                 onClick={() => setShowCreate(true)}
-                                className="bg-blue-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-lg shadow-blue-500/20 flex items-center gap-2 cursor-pointer font-sans self-start sm:self-auto"
+                                className="bg-blue-600 text-white font-bold px-5 py-2.5 rounded-lg text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-lg shadow-blue-500/20 flex items-center gap-2 cursor-pointer font-sans self-start sm:self-auto"
                             >
                                 <Plus className="w-4 h-4" />
                                 Create Template
@@ -210,7 +210,7 @@ export default function CoverLettersPage() {
                                         key={cat}
                                         onClick={() => handleCategoryChange(cat)}
                                         className={cn(
-                                            "px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border cursor-pointer",
+                                            "px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all border cursor-pointer",
                                             isActive
                                                 ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20"
                                                 : "bg-white text-slate-600 border-slate-200/60 hover:border-slate-300 hover:bg-slate-50"
@@ -236,9 +236,9 @@ export default function CoverLettersPage() {
                                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                                     {/* Template Info */}
                                     <div className="lg:col-span-4 space-y-4">
-                                        <div className="bg-white border border-slate-200/60 rounded-2xl p-5 sm:p-6 shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+                                        <div className="bg-white border border-slate-200/60 rounded-xl p-5 sm:p-6 shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
                                             <div className="flex items-start gap-3 mb-4">
-                                                <div className={cn("p-2.5 rounded-xl", CATEGORY_META[selectedTemplate.category]?.bg || 'bg-slate-50')}>
+                                                <div className={cn("p-2.5 rounded-lg", CATEGORY_META[selectedTemplate.category]?.bg || 'bg-slate-50')}>
                                                     {(() => {
                                                         const IconComp = CATEGORY_META[selectedTemplate.category]?.icon || FileText;
                                                         return <IconComp className={cn("w-5 h-5", CATEGORY_META[selectedTemplate.category]?.color || 'text-slate-600')} />;
@@ -272,7 +272,7 @@ export default function CoverLettersPage() {
 
                                         {/* Variables */}
                                         {selectedTemplate.variables?.length > 0 && (
-                                            <div className="bg-white border border-slate-200/60 rounded-2xl p-5 sm:p-6 shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+                                            <div className="bg-white border border-slate-200/60 rounded-xl p-5 sm:p-6 shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
                                                 <h4 className="font-bold text-sm text-slate-900 mb-3">Personalize Variables</h4>
                                                 <div className="space-y-3">
                                                     {selectedTemplate.variables.map(v => (
@@ -296,7 +296,7 @@ export default function CoverLettersPage() {
                                         <div className="flex gap-3">
                                             <button
                                                 onClick={() => handleCopy(selectedTemplate)}
-                                                className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl text-sm transition-all active:scale-[0.98] hover:bg-blue-700 shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer font-sans"
+                                                className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg text-sm transition-all active:scale-[0.98] hover:bg-blue-700 shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer font-sans"
                                             >
                                                 {copiedId === selectedTemplate._id ? (
                                                     <><Check className="w-4 h-4" /> Copied!</>
@@ -307,7 +307,7 @@ export default function CoverLettersPage() {
                                             {!selectedTemplate.isSystem && (
                                                 <button
                                                     onClick={() => handleDelete(selectedTemplate._id)}
-                                                    className="p-3 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-100 transition-all cursor-pointer"
+                                                    className="p-3 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-100 transition-all cursor-pointer"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
@@ -316,7 +316,7 @@ export default function CoverLettersPage() {
                                     </div>
 
                                     {/* Preview */}
-                                    <div className="lg:col-span-8 bg-white border border-slate-200/60 rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                    <div className="lg:col-span-8 bg-white border border-slate-200/60 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                         <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center gap-2">
                                             <Eye className="w-4 h-4 text-slate-400" />
                                             <h4 className="font-bold text-sm text-slate-900">Live Preview</h4>
@@ -340,11 +340,11 @@ export default function CoverLettersPage() {
                                     return (
                                         <div
                                             key={template._id}
-                                            className="bg-white border border-slate-200/60 rounded-2xl p-5 sm:p-6 shadow-[0_2px_4px_rgba(0,0,0,0.02)] hover:shadow-lg hover:border-slate-300/80 transition-all group cursor-pointer"
+                                            className="bg-white border border-slate-200/60 rounded-xl p-5 sm:p-6 shadow-[0_2px_4px_rgba(0,0,0,0.02)] hover:shadow-lg hover:border-slate-300/80 transition-all group cursor-pointer"
                                             onClick={() => { setSelectedTemplate(template); setVariableValues({}); }}
                                         >
                                             <div className="flex items-start gap-3 mb-3">
-                                                <div className={cn("p-2.5 rounded-xl transition-transform group-hover:scale-110", meta.bg)}>
+                                                <div className={cn("p-2.5 rounded-lg transition-transform group-hover:scale-110", meta.bg)}>
                                                     <IconComp className={cn("w-5 h-5", meta.color)} />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
@@ -378,7 +378,7 @@ export default function CoverLettersPage() {
                                 })}
 
                                 {templates.length === 0 && (
-                                    <div className="sm:col-span-2 lg:col-span-3 bg-white border border-slate-200/60 rounded-2xl p-16 text-center">
+                                    <div className="sm:col-span-2 lg:col-span-3 bg-white border border-slate-200/60 rounded-xl p-16 text-center">
                                         <FileText className="w-12 h-12 text-slate-200 mx-auto mb-4" />
                                         <p className="font-display font-bold text-lg text-slate-900">No templates in this category</p>
                                         <p className="text-sm text-slate-500 mt-2 font-medium">Try another category or create your own template</p>
@@ -390,13 +390,13 @@ export default function CoverLettersPage() {
                         {/* Create Modal */}
                         {showCreate && (
                             <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-                                <div className="bg-white rounded-2xl lg:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
+                                <div className="bg-white rounded-xl lg:rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
                                     <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10 rounded-t-2xl lg:rounded-t-3xl">
                                         <div>
                                             <h3 className="font-display font-bold text-xl text-slate-900 tracking-tight">Create Template</h3>
                                             <p className="text-xs text-slate-400 font-medium mt-0.5">Use {'{variable_name}'} for personalization fields</p>
                                         </div>
-                                        <button onClick={() => setShowCreate(false)} className="p-2 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer">
+                                        <button onClick={() => setShowCreate(false)} className="p-2 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer">
                                             <X className="w-5 h-5 text-slate-400" />
                                         </button>
                                     </div>
@@ -409,7 +409,7 @@ export default function CoverLettersPage() {
                                                     value={newTemplate.title}
                                                     onChange={(e) => setNewTemplate(p => ({ ...p, title: e.target.value }))}
                                                     placeholder="e.g., My SWE Cover Letter"
-                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 font-sans"
+                                                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 font-sans"
                                                 />
                                             </div>
                                             <div>
@@ -419,7 +419,7 @@ export default function CoverLettersPage() {
                                                     value={newTemplate.targetRole}
                                                     onChange={(e) => setNewTemplate(p => ({ ...p, targetRole: e.target.value }))}
                                                     placeholder="e.g., Software Engineer"
-                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 font-sans"
+                                                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 font-sans"
                                                 />
                                             </div>
                                         </div>
@@ -430,7 +430,7 @@ export default function CoverLettersPage() {
                                                 <select
                                                     value={newTemplate.category}
                                                     onChange={(e) => setNewTemplate(p => ({ ...p, category: e.target.value }))}
-                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/30 font-sans appearance-none cursor-pointer"
+                                                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/30 font-sans appearance-none cursor-pointer"
                                                 >
                                                     {Object.entries(CATEGORY_META).filter(([k]) => k !== 'all').map(([key, val]) => (
                                                         <option key={key} value={key}>{val.label}</option>
@@ -444,7 +444,7 @@ export default function CoverLettersPage() {
                                                     value={newTemplate.description}
                                                     onChange={(e) => setNewTemplate(p => ({ ...p, description: e.target.value }))}
                                                     placeholder="Brief description..."
-                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 font-sans"
+                                                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 font-sans"
                                                 />
                                             </div>
                                         </div>
@@ -455,7 +455,7 @@ export default function CoverLettersPage() {
                                                 value={newTemplate.content}
                                                 onChange={(e) => setNewTemplate(p => ({ ...p, content: e.target.value }))}
                                                 placeholder={`Dear Hiring Manager,\n\nI am writing to apply for the {role} position at {company}...\n\nBest regards,\n{name}`}
-                                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 font-sans resize-none"
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 font-sans resize-none"
                                                 rows={12}
                                             />
                                         </div>
@@ -463,14 +463,14 @@ export default function CoverLettersPage() {
                                         <div className="flex gap-3 pt-2">
                                             <button
                                                 onClick={() => setShowCreate(false)}
-                                                className="flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-xl text-sm hover:bg-slate-200 transition-all cursor-pointer font-sans"
+                                                className="flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-lg text-sm hover:bg-slate-200 transition-all cursor-pointer font-sans"
                                             >
                                                 Cancel
                                             </button>
                                             <button
                                                 onClick={handleCreate}
                                                 disabled={creating}
-                                                className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer font-sans"
+                                                className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer font-sans"
                                             >
                                                 {creating ? (
                                                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

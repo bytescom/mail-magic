@@ -140,7 +140,7 @@ export default function SettingsPage() {
                                             type="text"
                                             value={formData.yourName}
                                             onChange={e => set('yourName', e.target.value)}
-                                            className="w-full pl-12 pr-6 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all"
+                                            className="w-full pl-12 pr-6 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all"
                                             placeholder="Your full name"
                                         />
                                     </InputWithIcon>
@@ -151,7 +151,7 @@ export default function SettingsPage() {
                                             type="url"
                                             value={formData.portfolioLink}
                                             onChange={e => set('portfolioLink', e.target.value)}
-                                            className="w-full pl-12 pr-6 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all"
+                                            className="w-full pl-12 pr-6 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all"
                                             placeholder="https://yourportfolio.com"
                                         />
                                     </InputWithIcon>
@@ -168,7 +168,7 @@ export default function SettingsPage() {
                                     value={formData.autoAttachResume}
                                     onChange={v => set('autoAttachResume', v)}
                                 />
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-100">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-xl bg-slate-50 border border-slate-100">
                                     <div className="space-y-0.5">
                                         <h4 className="text-sm font-bold text-slate-900">Email Dispatch Interval</h4>
                                         <p className="text-xs text-slate-500 font-medium leading-relaxed max-w-sm">
@@ -183,7 +183,7 @@ export default function SettingsPage() {
                                             step="500"
                                             value={formData.emailDelay}
                                             onChange={e => set('emailDelay', parseInt(e.target.value))}
-                                            className="w-28 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-sm font-bold text-center focus:outline-none focus:ring-4 focus:ring-blue-500/5"
+                                            className="w-28 px-4 py-2.5 rounded-lg bg-white border border-slate-200 text-sm font-bold text-center focus:outline-none focus:ring-4 focus:ring-blue-500/5"
                                         />
                                         <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">ms</span>
                                     </div>
@@ -195,7 +195,7 @@ export default function SettingsPage() {
                         <Section icon={<Clock className="w-5 h-5 text-white" />} color="bg-amber-500" title="Follow-Up Behavior">
                             <div className="space-y-4">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+                                    <div className="p-5 rounded-xl bg-slate-50 border border-slate-100 space-y-2">
                                         <div className="flex items-center gap-2 mb-1">
                                             <Calendar className="w-4 h-4 text-amber-500" />
                                             <h4 className="text-sm font-bold text-slate-900">Days Until Follow-Up</h4>
@@ -208,12 +208,12 @@ export default function SettingsPage() {
                                                 max="30"
                                                 value={formData.followUpDays}
                                                 onChange={e => set('followUpDays', parseInt(e.target.value))}
-                                                className="w-20 px-3 py-2 rounded-xl bg-white border border-slate-200 text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                                                className="w-20 px-3 py-2 rounded-lg bg-white border border-slate-200 text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                                             />
                                             <span className="text-xs font-bold text-slate-400 uppercase">days</span>
                                         </div>
                                     </div>
-                                    <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+                                    <div className="p-5 rounded-xl bg-slate-50 border border-slate-100 space-y-2">
                                         <div className="flex items-center gap-2 mb-1">
                                             <RefreshCw className="w-4 h-4 text-amber-500" />
                                             <h4 className="text-sm font-bold text-slate-900">Max Follow-Ups Per App</h4>
@@ -226,13 +226,13 @@ export default function SettingsPage() {
                                                 max="5"
                                                 value={formData.maxFollowUps}
                                                 onChange={e => set('maxFollowUps', parseInt(e.target.value))}
-                                                className="w-20 px-3 py-2 rounded-xl bg-white border border-slate-200 text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                                                className="w-20 px-3 py-2 rounded-lg bg-white border border-slate-200 text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                                             />
                                             <span className="text-xs font-bold text-slate-400 uppercase">max</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 border border-amber-100">
+                                <div className="flex items-start gap-3 p-4 rounded-lg bg-amber-50 border border-amber-100">
                                     <Info className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
                                     <p className="text-xs text-amber-700 font-medium leading-relaxed">
                                         <strong>Max Follow-Ups</strong> limits how many times you can click <strong>Send Now</strong> per application. Set to 1 to allow only one follow-up email per application, or increase for more flexibility.
@@ -277,8 +277,8 @@ export default function SettingsPage() {
 
                         {/* ── 5. Security ────────────────────────────────── */}
                         <Section icon={<Shield className="w-5 h-5 text-white" />} color="bg-slate-800" title="Security">
-                            <div className="p-5 rounded-2xl bg-amber-50 border border-amber-100 flex items-start gap-4">
-                                <div className="p-2.5 rounded-xl bg-white shadow-sm shrink-0">
+                            <div className="p-5 rounded-xl bg-amber-50 border border-amber-100 flex items-start gap-4">
+                                <div className="p-2.5 rounded-lg bg-white shadow-sm shrink-0">
                                     <Lock className="w-5 h-5 text-amber-600" />
                                 </div>
                                 <div className="space-y-2">
@@ -304,7 +304,7 @@ export default function SettingsPage() {
                             <button
                                 type="submit"
                                 disabled={saving}
-                                className="px-8 py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-xl shadow-blue-500/20 hover:bg-blue-700 transition-all active:scale-[0.98] flex items-center gap-3 cursor-pointer disabled:opacity-60"
+                                className="px-8 py-4 bg-blue-600 text-white font-bold rounded-xl shadow-xl shadow-blue-500/20 hover:bg-blue-700 transition-all active:scale-[0.98] flex items-center gap-3 cursor-pointer disabled:opacity-60"
                             >
                                 {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                                 <span className="uppercase tracking-widest text-[11px]">Save Changes</span>
@@ -321,9 +321,9 @@ export default function SettingsPage() {
 
 function Section({ icon, color, title, children }) {
     return (
-        <div className="bg-white border border-slate-200/60 rounded-[2rem] shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-200/60 rounded-xl shadow-sm overflow-hidden">
             <div className={cn('px-6 py-4 border-b border-slate-100 bg-slate-50/30 flex items-center gap-3')}>
-                <div className={cn('w-9 h-9 rounded-xl flex items-center justify-center shadow-sm', color)}>
+                <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center shadow-sm', color)}>
                     {icon}
                 </div>
                 <h2 className="text-base font-display font-bold text-slate-900">{title}</h2>
@@ -353,7 +353,7 @@ function InputWithIcon({ icon, children }) {
 
 function ToggleRow({ title, description, icon, value, onChange }) {
     return (
-        <div className="flex items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+        <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100">
             <div className="flex items-start gap-3 flex-1 min-w-0">
                 {icon && (
                     <div className="mt-0.5 shrink-0">{icon}</div>

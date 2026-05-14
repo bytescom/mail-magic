@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import DashboardLayout from '@/components/DashboardLayout';
-import { ListChecks, CheckCircle2, XCircle, Filter, Download, ArrowRight, Clock, User2, Mail, Building2, Search, X, Eye, FileText, Info, History } from 'lucide-react';
+import { ListChecks, CheckCircle2, XCircle, Filter, Download, ArrowRight, Clock, User2, Mail, Building2, Search, X, Eye, FileText, Info, History, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatDate, getStatusBadgeClass, cn } from '@/lib/utils';
 
@@ -16,6 +16,8 @@ function LogsPageContent() {
     const [filter, setFilter] = useState('all');
     const [selectedLog, setSelectedLog] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 10;
 
     useEffect(() => {
         fetchLogs();
@@ -86,6 +88,9 @@ function LogsPageContent() {
         (log.hrEmailId?.company && log.hrEmailId.company.toLowerCase().includes(searchQuery.toLowerCase()))
     );
 
+    const totalPages = Math.ceil(filteredLogs.length / ITEMS_PER_PAGE);
+    const paginatedLogs = filteredLogs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
     const stats = {
         total: logs.length,
         sent: logs.filter((l) => l.status === 'sent').length,
@@ -125,7 +130,7 @@ function LogsPageContent() {
                             <button
                                 onClick={exportLogs}
                                 disabled={logs.length === 0}
-                                className="bg-slate-900 text-white font-bold px-6 py-3 rounded-2xl text-sm transition-all active:scale-95 hover:bg-slate-800 shadow-xl shadow-slate-900/10 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
+                                className="bg-slate-900 text-white font-bold px-6 py-3 rounded-xl text-sm transition-all active:scale-95 hover:bg-slate-800 shadow-xl shadow-slate-900/10 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
                             >
                                 <Download className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
                                 <span>Export Audit Trail</span>
@@ -139,8 +144,8 @@ function LogsPageContent() {
                                 { label: 'Successful Delivery', value: stats.sent, icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
                                 { label: 'Delivery Failures', value: stats.failed, icon: XCircle, color: 'text-rose-600', bg: 'bg-rose-50' },
                             ].map((stat, i) => (
-                                <div key={i} className="bg-white border border-slate-200/60 p-6 rounded-[2rem] shadow-sm flex items-center gap-5 group transition-all hover:shadow-md hover:border-slate-300">
-                                    <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110", stat.bg)}>
+                                <div key={i} className="bg-white border border-slate-200/60 p-6 rounded-xl shadow-sm flex items-center gap-5 group transition-all hover:shadow-md hover:border-slate-300">
+                                    <div className={cn("w-14 h-14 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110", stat.bg)}>
                                         <stat.icon className={cn("w-6 h-6", stat.color)} />
                                     </div>
                                     <div>
@@ -152,7 +157,7 @@ function LogsPageContent() {
                         </div>
 
                         {/* Sophisticated Filter & Search */}
-                        <div className="bg-white border border-slate-200/60 p-4 rounded-3xl shadow-sm space-y-4">
+                        <div className="bg-white border border-slate-200/60 p-4 rounded-xl shadow-sm space-y-4">
                             <div className="flex flex-col lg:flex-row items-center gap-4">
                                 <div className="relative flex-1 w-full group">
                                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
@@ -161,17 +166,17 @@ function LogsPageContent() {
                                         placeholder="Search logs..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all font-medium"
+                                        className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all font-medium"
                                     />
                                 </div>
 
-                                <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl border border-slate-200/50 w-full lg:w-auto">
+                                <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200/50 w-full lg:w-auto">
                                     {['all', 'sent', 'failed'].map((s) => (
                                         <button
                                             key={s}
                                             onClick={() => setFilter(s)}
                                             className={cn(
-                                                "flex-1 lg:flex-none px-6 py-2 rounded-xl text-xs font-bold transition-all uppercase tracking-widest",
+                                                "flex-1 lg:flex-none px-6 py-2 rounded-lg text-xs font-bold transition-all uppercase tracking-widest",
                                                 filter === s
                                                     ? "bg-white text-blue-600 shadow-sm border border-slate-200/50"
                                                     : "text-slate-400 hover:text-slate-600"
@@ -186,8 +191,8 @@ function LogsPageContent() {
 
                         {/* Records Area */}
                         {filteredLogs.length === 0 ? (
-                            <div className="bg-white border border-slate-200/60 border-dashed rounded-[3rem] py-24 text-center px-6">
-                                <div className="w-24 h-24 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-8 border border-slate-100 shadow-inner">
+                            <div className="bg-white border border-slate-200/60 border-dashed rounded-xl py-24 text-center px-6">
+                                <div className="w-24 h-24 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-8 border border-slate-100 shadow-inner">
                                     <ListChecks className="w-10 h-10 text-slate-200" />
                                 </div>
                                 <h3 className="text-2xl font-display font-bold text-slate-900 mb-3">
@@ -198,138 +203,123 @@ function LogsPageContent() {
                                 </p>
                             </div>
                         ) : (
-                            <div className="space-y-6">
-                                {/* Mobile Card View */}
-                                <div className="grid grid-cols-1 gap-4 lg:hidden">
-                                    {filteredLogs.map((log) => (
-                                        <div key={log._id} className="bg-white border border-slate-200/60 p-6 rounded-[2rem] shadow-sm space-y-4">
-                                            <div className="flex items-start justify-between">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center border border-slate-200/50">
-                                                        <User2 className="w-5 h-5 text-slate-400" />
-                                                    </div>
-                                                    <div className="min-w-0">
-                                                        <p className="font-display font-bold text-slate-900 text-base truncate">{log.hrEmailId?.hrName || 'System Lead'}</p>
-                                                        <p className="text-xs font-medium text-slate-500 truncate">{log.recipient}</p>
-                                                    </div>
-                                                </div>
-                                                <div className={cn(
-                                                    "px-2.5 py-1 rounded-lg font-bold text-[9px] uppercase tracking-wider",
-                                                    log.status === 'sent' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                                                )}>
-                                                    {log.status === 'sent' ? 'Sent' : 'Fail'}
-                                                </div>
-                                            </div>
-
-                                            <div className="py-3 border-y border-slate-50">
-                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Subject Header</p>
-                                                <p className="text-xs font-medium text-slate-600 line-clamp-2 leading-relaxed italic">&quot;{log.subject}&quot;</p>
-                                            </div>
-
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex items-center gap-2">
-                                                    <Clock className="w-3.5 h-3.5 text-slate-300" />
-                                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">
-                                                        {new Date(log.createdAt).toLocaleDateString()} • {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                    </p>
-                                                </div>
-                                                <button
-                                                    onClick={() => setSelectedLog(log)}
-                                                    className="p-2.5 rounded-xl bg-slate-50 text-slate-400 hover:text-blue-600 transition-all border border-slate-200/60"
-                                                >
-                                                    <Eye className="w-4 h-4" />
-                                                </button>
-                                            </div>
+                            <section aria-label="Activity Log" className='border border-slate-200/60 bg-white shadow-sm rounded-xl flex flex-col mb-12'>
+                                <article>
+                                    <div className="flex items-end justify-between px-6 lg:px-8 pt-6 lg:pt-8 mb-4 lg:mb-5">
+                                        <div>
+                                            <h3 className="text-2xl font-display font-bold text-slate-900 mb-1">Transmission Log</h3>
+                                            <p className="text-sm text-slate-500 font-medium">All recent emails, follow-ups, and notifications.</p>
                                         </div>
-                                    ))}
-                                </div>
+                                        <button className="text-sm font-semibold text-slate-900 hover:text-blue-600 transition-colors">See all</button>
+                                    </div>
 
-                                {/* Desktop Table View */}
-                                <div className="hidden lg:block bg-white border border-slate-200/60 rounded-[2.5rem] shadow-sm overflow-hidden mb-12">
-                                    <div className="overflow-x-auto">
-                                        <table className="w-full text-left font-sans text-sans">
-                                            <thead>
-                                                <tr className="border-b border-slate-100 bg-slate-50/50">
-                                                    <th className="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Timestamp</th>
-                                                    <th className="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Communications Lead</th>
-                                                    <th className="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Subject Line</th>
-                                                    <th className="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Status</th>
-                                                    <th className="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest text-right">Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody className="divide-y divide-slate-100">
-                                                {filteredLogs.map((log, index) => (
-                                                    <tr
-                                                        key={log._id}
-                                                        className="hover:bg-slate-50/80 transition-all group animate-in slide-in-from-left-2 duration-500 fill-mode-both"
-                                                        style={{ animationDelay: `${index * 20}ms` }}
-                                                    >
-                                                        <td className="px-8 py-6 whitespace-nowrap">
-                                                            <div className="space-y-1">
-                                                                <p className="text-sm font-bold text-slate-900">{new Date(log.createdAt).toLocaleDateString()}</p>
-                                                                <p className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1.5">
-                                                                    <Clock className="w-3 h-3" />
-                                                                    {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    {/* Column Headers */}
+                                    <div className="hidden sm:grid grid-cols-[0.5fr_1.5fr_3fr_1fr_1fr_0.5fr] gap-0 px-6 lg:px-12 pb-2 border-b border-slate-100 bg-slate-50/50">
+                                        <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">#</span>
+                                        <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">Lead</span>
+                                        <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">Subject Line</span>
+                                        <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">Status</span>
+                                        <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase text-right">Timestamp</span>
+                                        <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase text-right">Actions</span>
+                                    </div>
+
+                                    <div className="flex flex-col gap-1 px-4 lg:px-6 py-4">
+                                        {paginatedLogs.map((log, idx) => {
+                                            const originalIdx = (currentPage - 1) * ITEMS_PER_PAGE + idx + 1;
+                                            return (
+                                                <div key={log._id} className="flex flex-col gap-0 border border-slate-200/60 rounded-lg hover:bg-slate-50/80 transition-colors group">
+                                                    <div className="grid grid-cols-1 sm:grid-cols-[0.5fr_1.5fr_3fr_1fr_1fr_0.5fr] gap-0 items-center px-4 py-4">
+                                                        {/* Number */}
+                                                        <div className="hidden sm:flex items-center">
+                                                            <span className="text-sm font-bold text-slate-400">{originalIdx}</span>
+                                                        </div>
+                                                        
+                                                        {/* Lead */}
+                                                        <div className="flex items-center gap-3 min-w-0 pr-4">
+                                                            <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0">
+                                                                <User2 className="w-5 h-5 text-slate-400" />
+                                                            </div>
+                                                            <div className="min-w-0 flex flex-col justify-center">
+                                                                <p className="text-sm font-bold text-slate-900 truncate flex items-center gap-1.5">
+                                                                    {log.hrEmailId?.company || log.hrEmailId?.hrName || 'Direct Dispatch'}
+                                                                    {log.hrEmailId?.jobRole && (
+                                                                        <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider bg-slate-100 px-1.5 py-0.5 rounded-md">
+                                                                            {log.hrEmailId.jobRole}
+                                                                        </span>
+                                                                    )}
                                                                 </p>
+                                                                <p className="text-xs text-slate-500 font-medium truncate mt-0.5">{log.recipient}</p>
                                                             </div>
-                                                        </td>
-                                                        <td className="px-8 py-6">
-                                                            <div className="flex items-center gap-4">
-                                                                <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
-                                                                    <User2 className="w-4 h-4 text-slate-400" />
-                                                                </div>
-                                                                <div className="min-w-0 max-w-[150px]">
-                                                                    <p className="text-sm font-bold text-slate-900 truncate">{log.hrEmailId?.hrName || 'System Lead'}</p>
-                                                                    <p className="text-xs font-medium text-slate-500 truncate">{log.recipient}</p>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="px-8 py-6">
-                                                            <div className="max-w-[150px] xl:max-w-md">
-                                                                <p className="text-sm font-medium text-slate-600 truncate italic">&quot;{log.subject}&quot;</p>
-                                                                <div className="mt-1.5 px-2 py-0.5 rounded-md bg-slate-50 text-[9px] font-bold text-slate-400 uppercase tracking-tight w-fit">
-                                                                    {log.templateId?.name || 'Manual Dispatch'}
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="px-8 py-6">
+                                                        </div>
+
+                                                        {/* Subject */}
+                                                        <div className="hidden sm:flex flex-col justify-center min-w-0 pr-4">
+                                                            <p className="text-sm font-medium text-slate-600 truncate italic">&quot;{log.subject}&quot;</p>
+                                                            <p className="text-[10px] text-slate-400 font-medium mt-0.5">{log.templateId?.name || 'Manual Dispatch'}</p>
+                                                        </div>
+
+                                                        {/* Status */}
+                                                        <div className="hidden sm:flex items-center gap-2">
                                                             <div className={cn(
-                                                                "inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border font-bold text-[10px] uppercase tracking-wider whitespace-nowrap",
-                                                                log.status === 'sent'
-                                                                    ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                                                                    : "bg-rose-50 text-rose-600 border-rose-100"
+                                                                "flex items-center gap-2",
+                                                                log.status === 'sent' ? "text-emerald-600" : "text-rose-600"
                                                             )}>
-                                                                <div className={cn("h-1.5 w-1.5 rounded-full", log.status === 'sent' ? "bg-emerald-500" : "bg-rose-500")} />
-                                                                {log.status === 'sent' ? 'Delivered' : 'Failed'}
+                                                                <div className={cn("w-2 h-2 rounded-full shrink-0", log.status === 'sent' ? "bg-emerald-500" : "bg-rose-500")} />
+                                                                <span className="text-sm font-semibold capitalize">{log.status === 'sent' ? 'Delivered' : 'Failed'}</span>
                                                             </div>
-                                                        </td>
-                                                        <td className="px-8 py-6 text-right">
+                                                        </div>
+
+                                                        {/* Timestamp */}
+                                                        <div className="hidden sm:flex flex-col items-end pr-4">
+                                                            <span className="text-sm font-bold text-slate-900">{new Date(log.createdAt).toLocaleDateString()}</span>
+                                                            <span className="text-[10px] text-slate-400 font-medium mt-0.5">{new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                                        </div>
+
+                                                        {/* Actions */}
+                                                        <div className="hidden sm:flex items-center justify-end">
                                                             <button
                                                                 onClick={() => setSelectedLog(log)}
-                                                                className="p-2.5 rounded-xl bg-white text-slate-400 hover:text-blue-600 hover:shadow-md transition-all border border-slate-200/60 opacity-0 group-hover:opacity-100 translate-x-3 group-hover:translate-x-0"
+                                                                className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
                                                                 title="Inspect Payload"
                                                             >
-                                                                <Eye className="w-4 h-4" />
+                                                                <Eye className="w-4 h-4 cursor-pointer" />
                                                             </button>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
-                                </div>
-                            </div>
+
+                                    {/* Footer Pagination */}
+                                    <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100 bg-slate-50/50 rounded-b-xl mt-auto">
+                                        <p className="text-xs font-medium text-slate-500">
+                                            {filteredLogs.length > 0 ? (
+                                                <>Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredLogs.length)} of {filteredLogs.length} Logs</>
+                                            ) : (
+                                                <>No Logs</>
+                                            )}
+                                        </p>
+                                        {totalPages > 1 && (
+                                            <div className="flex gap-2">
+                                                <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} className="p-1.5 rounded-lg bg-white border border-slate-200/60 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors shadow-sm"><ChevronLeft size={16} /></button>
+                                                <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)} className="p-1.5 rounded-lg bg-white border border-slate-200/60 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors shadow-sm"><ChevronRight size={16} /></button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </article>
+                            </section>
                         )}
 
                         {/* Detail Inspector Modal */}
                         {selectedLog && (
                             <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 text-sans">
                                 <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setSelectedLog(null)} />
-                                <div className="bg-white max-w-full rounded-[2.5rem] shadow-2xl relative z-10 animate-in slide-in-from-bottom-5 duration-500 flex flex-col max-h-[90vh] overflow-hidden">
-                                    <div className="p-4 md:p-8 border-b border-slate-100 flex items-center justify-between bg-white relative">
+                                <div className="bg-white w-full max-w-4xl rounded-xl shadow-2xl relative z-10 animate-in slide-in-from-bottom-5 duration-500 flex flex-col max-h-[90vh] overflow-hidden">
+                                    <div className="p-4 md:p-8 border-b border-slate-100 flex items-center justify-between bg-white relative shrink-0">
                                         <div className="flex items-center gap-4">
                                             <div className={cn(
-                                                "w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm",
+                                                "w-12 h-12 rounded-xl flex items-center justify-center shadow-sm",
                                                 selectedLog.status === 'sent' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                                             )}>
                                                 {selectedLog.status === 'sent' ? <CheckCircle2 className="w-6 h-6" /> : <XCircle className="w-6 h-6" />}
@@ -341,7 +331,7 @@ function LogsPageContent() {
                                         </div>
                                         <button
                                             onClick={() => setSelectedLog(null)}
-                                            className="p-2.5 rounded-xl text-slate-400 hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100"
+                                            className="p-2.5 rounded-lg text-slate-400 hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100"
                                         >
                                             <X className="w-5 h-5" />
                                         </button>
@@ -356,14 +346,14 @@ function LogsPageContent() {
                                                         <Mail className="w-3.5 h-3.5" />
                                                         Recipient Email
                                                     </p>
-                                                    <p className="text-sm font-semibold text-slate-900 bg-slate-50 px-4 py-3 rounded-xl border border-slate-100">{selectedLog.recipient}</p>
+                                                    <p className="text-sm font-semibold text-slate-900 bg-slate-50 px-4 py-3 rounded-lg border border-slate-100">{selectedLog.recipient}</p>
                                                 </div>
                                                 <div className="space-y-1">
                                                     <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-2">
                                                         <Clock className="w-3.5 h-3.5" />
                                                         Transmission Time
                                                     </p>
-                                                    <p className="text-sm font-semibold text-slate-900 bg-slate-50 px-4 py-3 rounded-xl border border-slate-100">{formatDate(selectedLog.createdAt)}</p>
+                                                    <p className="text-sm font-semibold text-slate-900 bg-slate-50 px-4 py-3 rounded-lg border border-slate-100">{formatDate(selectedLog.createdAt)}</p>
                                                 </div>
                                             </div>
                                             <div className="space-y-6">
@@ -372,7 +362,7 @@ function LogsPageContent() {
                                                         <Building2 className="w-3.5 h-3.5" />
                                                         Organizational Context
                                                     </p>
-                                                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1">
+                                                    <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 space-y-1">
                                                         <p className="text-sm font-bold text-slate-900 truncate">{selectedLog.hrEmailId?.company || 'N/A'}</p>
                                                         <p className="text-[11px] font-medium text-slate-500 uppercase tracking-tighter italic">{selectedLog.hrEmailId?.jobRole || 'No role defined'}</p>
                                                     </div>
@@ -382,14 +372,14 @@ function LogsPageContent() {
                                                         <FileText className="w-3.5 h-3.5" />
                                                         Template Asset
                                                     </p>
-                                                    <p className="text-sm font-semibold text-slate-900 bg-slate-50 px-4 py-3 rounded-xl border border-slate-100">{selectedLog.templateId?.name || 'Custom Dispatch'}</p>
+                                                    <p className="text-sm font-semibold text-slate-900 bg-slate-50 px-4 py-3 rounded-lg border border-slate-100">{selectedLog.templateId?.name || 'Custom Dispatch'}</p>
                                                 </div>
                                             </div>
                                         </div>
 
                                         {/* Email Content */}
                                         <div className="space-y-4">
-                                            <div className="p-4 md:p-8 rounded-[2rem] bg-slate-50 border border-slate-200/60 shadow-inner relative overflow-hidden group">
+                                            <div className="p-4 md:p-8 rounded-xl bg-slate-50 border border-slate-200/60 shadow-inner relative overflow-hidden group">
                                                 <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <div className="px-3 py-1 rounded-full bg-white/80 backdrop-blur-sm text-[10px] font-bold text-slate-400 uppercase shadow-sm">Verified Payload</div>
                                                 </div>
@@ -405,8 +395,8 @@ function LogsPageContent() {
 
                                         {/* Error State */}
                                         {selectedLog.status === 'failed' && (
-                                            <div className="p-6 rounded-2xl bg-rose-50 border border-rose-100 flex gap-4">
-                                                <div className="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center shrink-0">
+                                            <div className="p-6 rounded-xl bg-rose-50 border border-rose-100 flex gap-4">
+                                                <div className="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center shrink-0">
                                                     <Info className="w-5 h-5 text-rose-600" />
                                                 </div>
                                                 <div>
@@ -423,10 +413,10 @@ function LogsPageContent() {
                                         </div>
                                     </div>
 
-                                    <div className="p-4 md:p-8 bg-white border-t border-slate-100">
+                                    <div className="p-4 md:p-8 bg-white border-t border-slate-100 shrink-0">
                                         <button
                                             onClick={() => setSelectedLog(null)}
-                                            className="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl text-sm transition-all active:scale-95 hover:bg-slate-800 shadow-xl shadow-slate-900/10"
+                                            className="w-full bg-slate-900 text-white font-bold py-4 rounded-xl text-sm transition-all active:scale-95 hover:bg-slate-800 shadow-xl shadow-slate-900/10 cursor-pointer"
                                         >
                                             Acknowledge & Close
                                         </button>

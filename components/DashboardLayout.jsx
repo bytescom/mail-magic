@@ -181,7 +181,7 @@ export default function DashboardLayout({ children }) {
                     {/* Logo Section */}
                     <div className="h-20 px-7 flex items-center border-b border-slate-50">
                         <Link href="/dashboard" className="flex items-center gap-3 group">
-                            <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center transition-transform group-hover:scale-110 duration-300 shadow-lg shadow-blue-200 overflow-hidden">
+                            <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center transition-transform group-hover:scale-110 duration-300 shadow-lg shadow-blue-200 overflow-hidden">
                                 <img src="/icon.png" alt="MailMagic Logo" className="w-8 h-8 text-white" />
                             </div>
                             <span className="font-display font-bold text-xl tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
@@ -205,7 +205,7 @@ export default function DashboardLayout({ children }) {
                                                     key={item.name}
                                                     href={item.href}
                                                     className={cn(
-                                                        'flex items-center gap-3.5 px-4 py-2.5 rounded-2xl text-[13px] font-bold transition-all duration-200 active:scale-[0.97] active:bg-blue-100/50',
+                                                        'flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all duration-200 active:scale-[0.97] active:bg-blue-100/50',
                                                         isActive
                                                             ? 'bg-blue-50 text-blue-600 shadow-sm border border-blue-100/50'
                                                             : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 group'
@@ -224,14 +224,14 @@ export default function DashboardLayout({ children }) {
 
                     {/* Sidebar Footer / Upgrade Card */}
                     <div className="p-5 mt-auto border-t border-slate-50">
-                        <div className="bg-slate-900 rounded-2xl p-5 relative overflow-hidden group shadow-xl">
+                        <div className="bg-slate-900 rounded-xl p-5 relative overflow-hidden group shadow-xl">
                             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:rotate-12 transition-transform duration-500">
                                 <Plus className="w-16 h-16 text-white" />
                             </div>
                             <div className="relative z-10 space-y-3">
                                 <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Premium</p>
                                 <p className="text-xs font-bold text-white leading-relaxed">Unlock unlimited templates and smarter analytics.</p>
-                                <button className="w-full text-xs font-bold py-2.5 bg-white rounded-xl text-slate-900 hover:bg-slate-100 transition-all active:scale-95 cursor-pointer">
+                                <button className="w-full text-xs font-bold py-2.5 bg-white rounded-lg text-slate-900 hover:bg-slate-100 transition-all active:scale-95 cursor-pointer">
                                     Upgrade Now
                                 </button>
                             </div>
@@ -242,7 +242,7 @@ export default function DashboardLayout({ children }) {
 
             {/* Mobile Header */}
             <header className="lg:hidden fixed top-0 w-full z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/60 px-5 h-16 flex items-center justify-between">
-                <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2 text-slate-500 hover:text-slate-900 active:bg-slate-100 active:scale-90 rounded-xl transition-all cursor-pointer">
+                <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2 text-slate-500 hover:text-slate-900 active:bg-slate-100 active:scale-90 rounded-lg transition-all cursor-pointer">
                     <Menu className="w-6 h-6" />
                 </button>
                 <div className="flex items-center gap-2">
@@ -254,7 +254,7 @@ export default function DashboardLayout({ children }) {
                 <div className="flex items-center gap-3">
                     <img
                         src={session?.user?.image || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'}
-                        className="w-8 h-8 rounded-xl border border-slate-200 shadow-sm"
+                        className="w-8 h-8 rounded-lg border border-slate-200 shadow-sm"
                         alt=""
                     />
                 </div>
@@ -291,7 +291,7 @@ export default function DashboardLayout({ children }) {
                                                         href={item.href}
                                                         onClick={() => setSidebarOpen(false)}
                                                         className={cn(
-                                                            'flex items-center gap-4 px-4 py-3 rounded-2xl text-sm font-bold transition-all active:scale-95 active:bg-blue-100/30',
+                                                            'flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 active:bg-blue-100/30',
                                                             isActive
                                                                 ? 'bg-blue-50 text-blue-600 border border-blue-100/50 shadow-sm'
                                                                 : 'text-slate-500 hover:bg-slate-50'
@@ -309,7 +309,7 @@ export default function DashboardLayout({ children }) {
                         </div>
                         <button
                             onClick={() => signOut({ callbackUrl: '/' })}
-                            className="mt-6 flex items-center gap-4 px-4 py-4 rounded-2xl text-sm font-bold text-rose-600 hover:bg-rose-50 active:bg-rose-100 active:scale-95 transition-all cursor-pointer"
+                            className="mt-6 flex items-center gap-4 px-4 py-4 rounded-xl text-sm font-bold text-rose-600 hover:bg-rose-50 active:bg-rose-100 active:scale-95 transition-all cursor-pointer"
                         >
                             <LogOut className="w-5 h-5" />
                             Sign Out
@@ -333,7 +333,7 @@ export default function DashboardLayout({ children }) {
                             <button
                                 onClick={() => setNotificationsOpen(!notificationsOpen)}
                                 className={cn(
-                                    "p-2.5 rounded-xl transition-all group relative cursor-pointer",
+                                    "p-2.5 rounded-lg transition-all group relative cursor-pointer",
                                     notificationsOpen ? "bg-blue-50 text-blue-600 shadow-inner" : "text-slate-400 hover:text-slate-900 hover:bg-slate-50"
                                 )}
                             >
@@ -347,7 +347,7 @@ export default function DashboardLayout({ children }) {
                             {notificationsOpen && (
                                 <>
                                     <div className="fixed inset-0 z-40" onClick={() => setNotificationsOpen(false)} />
-                                    <div className="absolute top-full right-0 mt-4 w-96 bg-white rounded-[2rem] shadow-2xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <div className="absolute top-full right-0 mt-4 w-96 bg-white rounded-xl shadow-2xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
                                         <div className="p-6 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
                                             <h3 className="text-sm font-bold text-slate-900">Notifications</h3>
                                             {unreadCount > 0 && (
@@ -364,7 +364,7 @@ export default function DashboardLayout({ children }) {
                                                 </div>
                                             ) : notifications.length === 0 ? (
                                                 <div className="p-12 text-center">
-                                                    <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                                    <div className="w-16 h-16 bg-slate-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                                                         <Bell className="w-8 h-8 text-slate-300" />
                                                     </div>
                                                     <p className="text-sm font-bold text-slate-900 mb-1">All caught up!</p>
@@ -395,7 +395,7 @@ export default function DashboardLayout({ children }) {
                                                             )}
                                                         >
                                                             <div className="flex gap-4 active:scale-[0.98] transition-transform">
-                                                                <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-sm", style.bg)}>
+                                                                <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-sm", style.bg)}>
                                                                     <NotifIcon className={cn("w-5 h-5", style.color)} />
                                                                 </div>
                                                                 <div className="flex-1 space-y-1">
@@ -444,7 +444,7 @@ export default function DashboardLayout({ children }) {
                             <button
                                 onClick={() => router.push('/settings')}
                                 className={cn(
-                                    "p-2.5 rounded-xl transition-all cursor-pointer active:scale-90",
+                                    "p-2.5 rounded-lg transition-all cursor-pointer active:scale-90",
                                     pathname === '/settings' ? "bg-blue-50 text-blue-600 shadow-inner" : "text-slate-400 hover:text-slate-900 hover:bg-slate-50"
                                 )}
                             >
@@ -464,14 +464,14 @@ export default function DashboardLayout({ children }) {
                             <div className="relative">
                                 <img
                                     src={session?.user?.image || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'}
-                                    className="w-10 h-10 rounded-2xl ring-4 ring-slate-50 object-cover shadow-sm group-hover:shadow-md transition-all duration-300"
+                                    className="w-10 h-10 rounded-xl ring-4 ring-slate-50 object-cover shadow-sm group-hover:shadow-md transition-all duration-300"
                                     alt=""
                                 />
                                 <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white" />
                             </div>
                             <button
                                 onClick={() => signOut({ callbackUrl: '/' })}
-                                className="ml-2 p-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all cursor-pointer"
+                                className="ml-2 p-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all cursor-pointer"
                                 title="Sign out"
                             >
                                 <LogOut className="w-5 h-5" />
@@ -502,7 +502,7 @@ export default function DashboardLayout({ children }) {
                                 key={href}
                                 href={href}
                                 className={cn(
-                                    'flex flex-col items-center gap-0.5 py-2.5 px-3 rounded-2xl transition-all duration-150 min-w-[52px] relative',
+                                    'flex flex-col items-center gap-0.5 py-2.5 px-3 rounded-xl transition-all duration-150 min-w-[52px] relative',
                                     active ? 'text-blue-600' : 'text-slate-400 active:scale-90'
                                 )}
                             >

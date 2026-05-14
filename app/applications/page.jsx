@@ -8,7 +8,7 @@ import {
     CheckCircle2, XCircle, Calendar, MessageCircle, Inbox,
     TrendingUp, AlertCircle, Filter, Search, X, Pencil,
     Loader2, Sparkles, SendHorizontal, BarChart3, ArrowUpRight,
-    BriefcaseBusiness, Zap, Reply, ChevronRight, FileText,
+    BriefcaseBusiness, Zap, Reply, ChevronRight, ChevronLeft, FileText,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -250,12 +250,12 @@ function ReplyModal({ app, onClose, onSent }) {
                 className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-200"
                 onClick={onClose}
             />
-            <div className="bg-white max-w-3xl w-full rounded-[2.5rem] shadow-2xl relative z-10 animate-in slide-in-from-bottom-6 duration-400 flex flex-col max-h-[92vh] overflow-hidden">
+            <div className="bg-white max-w-3xl w-full rounded-xl shadow-2xl relative z-10 animate-in slide-in-from-bottom-6 duration-400 flex flex-col max-h-[92vh] overflow-hidden">
 
                 {/* Header */}
                 <div className="p-6 sm:p-8 border-b border-slate-100 flex items-center justify-between shrink-0">
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                        <div className="w-12 h-12 rounded-xl bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
                             <Reply className="w-6 h-6 text-white" />
                         </div>
                         <div>
@@ -267,7 +267,7 @@ function ReplyModal({ app, onClose, onSent }) {
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2.5 rounded-xl text-slate-400 hover:bg-slate-100 transition-all cursor-pointer"
+                        className="p-2.5 rounded-lg text-slate-400 hover:bg-slate-100 transition-all cursor-pointer"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -285,7 +285,7 @@ function ReplyModal({ app, onClose, onSent }) {
                                 key={tpl.id}
                                 onClick={() => selectTemplate(tpl)}
                                 className={cn(
-                                    'w-full text-left px-3 py-3 rounded-xl text-xs font-semibold transition-all cursor-pointer',
+                                    'w-full text-left px-3 py-3 rounded-lg text-xs font-semibold transition-all cursor-pointer',
                                     selectedTemplate === tpl.id
                                         ? 'bg-blue-600 text-white shadow-md'
                                         : 'text-slate-600 hover:bg-white hover:shadow-sm border border-transparent hover:border-slate-200'
@@ -297,7 +297,7 @@ function ReplyModal({ app, onClose, onSent }) {
 
                         {/* Reply preview */}
                         {app.lastReplyPreview && (
-                            <div className="mt-4 p-3 bg-white border border-slate-200 rounded-xl">
+                            <div className="mt-4 p-3 bg-white border border-slate-200 rounded-lg">
                                 <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1">
                                     <MessageCircle className="w-3 h-3" /> HR&apos;s Reply
                                 </p>
@@ -312,7 +312,7 @@ function ReplyModal({ app, onClose, onSent }) {
                     <div className="flex-1 flex flex-col overflow-hidden min-h-0">
                         <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-5">
                             {!selectedTemplate && (
-                                <div className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-100 rounded-xl">
+                                <div className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-100 rounded-lg">
                                     <ChevronRight className="w-4 h-4 text-amber-500 shrink-0" />
                                     <p className="text-xs text-amber-700 font-medium">
                                         Pick a template from the left, or write a custom reply below.
@@ -321,7 +321,7 @@ function ReplyModal({ app, onClose, onSent }) {
                             )}
 
                             {/* To field */}
-                            <div className="flex items-center gap-3 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl">
+                            <div className="flex items-center gap-3 px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg">
                                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest shrink-0">To</span>
                                 <span className="text-sm text-slate-700 font-medium">{app.hrEmail}</span>
                                 {app.gmailThreadId && (
@@ -344,7 +344,7 @@ function ReplyModal({ app, onClose, onSent }) {
                                     value={subject}
                                     onChange={e => setSubject(e.target.value)}
                                     placeholder="Subject line..."
-                                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-400 transition-all placeholder:text-slate-300 placeholder:font-normal"
+                                    className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-400 transition-all placeholder:text-slate-300 placeholder:font-normal"
                                 />
                             </div>
 
@@ -356,7 +356,7 @@ function ReplyModal({ app, onClose, onSent }) {
                                     onChange={e => setBody(e.target.value)}
                                     rows={12}
                                     placeholder="Write your reply here... Remember to add your name at the bottom."
-                                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium leading-relaxed focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-400 transition-all resize-none placeholder:text-slate-300 placeholder:font-normal"
+                                    className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-sm font-medium leading-relaxed focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-400 transition-all resize-none placeholder:text-slate-300 placeholder:font-normal"
                                 />
                                 <p className="text-[10px] text-slate-400 ml-1">
                                     {body.length} characters · Remember to add your name at the end
@@ -368,7 +368,7 @@ function ReplyModal({ app, onClose, onSent }) {
                         <div className="p-6 sm:p-8 border-t border-slate-100 flex items-center gap-3 shrink-0 bg-white">
                             <button
                                 onClick={onClose}
-                                className="px-6 py-3 bg-slate-100 text-slate-600 font-bold rounded-xl text-sm hover:bg-slate-200 transition-all active:scale-95 cursor-pointer"
+                                className="px-6 py-3 bg-slate-100 text-slate-600 font-bold rounded-lg text-sm hover:bg-slate-200 transition-all active:scale-95 cursor-pointer"
                             >
                                 Cancel
                             </button>
@@ -376,7 +376,7 @@ function ReplyModal({ app, onClose, onSent }) {
                                 onClick={handleSend}
                                 disabled={sending || !body.trim() || !app.gmailThreadId}
                                 className={cn(
-                                    "flex-1 flex items-center justify-center gap-2 px-6 py-3 font-bold rounded-xl text-sm transition-all active:scale-95 cursor-pointer shadow-lg",
+                                    "flex-1 flex items-center justify-center gap-2 px-6 py-3 font-bold rounded-lg text-sm transition-all active:scale-95 cursor-pointer shadow-lg",
                                     sending || !body.trim() || !app.gmailThreadId
                                         ? "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
                                         : "bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/20"
@@ -418,6 +418,8 @@ export default function ApplicationsPage() {
     const [editingApp, setEditingApp] = useState(null);
     const [expandedApp, setExpandedApp] = useState(null);
     const [replyModalApp, setReplyModalApp] = useState(null); // App to reply to
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 10;
 
     const fetchApplications = useCallback(async (filter = statusFilter) => {
         try {
@@ -530,6 +532,9 @@ export default function ApplicationsPage() {
         );
     });
 
+    const totalPages = Math.ceil(filteredApps.length / ITEMS_PER_PAGE);
+    const paginatedApps = filteredApps.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
     const formatDate = (date) => {
         if (!date) return '—';
         return new Date(date).toLocaleDateString('en-IN', {
@@ -576,7 +581,7 @@ export default function ApplicationsPage() {
                         <button
                             onClick={handleCheckReplies}
                             disabled={checkingReplies}
-                            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-all active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-blue-500/20 cursor-pointer"
+                            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-lg hover:bg-blue-700 transition-all active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-blue-500/20 cursor-pointer"
                         >
                             {checkingReplies
                                 ? <Loader2 className="w-4 h-4 animate-spin" />
@@ -595,7 +600,7 @@ export default function ApplicationsPage() {
                             { label: 'Interviews', value: stats.interview || 0, icon: CheckCircle2, color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
                             { label: 'Rejected', value: stats.rejected || 0, icon: XCircle, color: 'text-rose-700 bg-rose-50 border-rose-200' },
                         ].map(({ label, value, icon: Icon, color }) => (
-                            <div key={label} className={cn('border rounded-2xl p-4 flex flex-col gap-2', color)}>
+                            <div key={label} className={cn('border rounded-xl p-4 flex flex-col gap-2', color)}>
                                 <Icon className="w-4 h-4 opacity-60" />
                                 <span className="text-2xl font-bold">{value}</span>
                                 <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">{label}</span>
@@ -605,7 +610,7 @@ export default function ApplicationsPage() {
 
                     {/* Pending follow-up alert */}
                     {stats.pendingFollowUp > 0 && (
-                        <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl">
+                        <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
                             <AlertCircle className="w-5 h-5 text-amber-500 shrink-0" />
                             <p className="text-sm font-medium text-amber-800">
                                 <strong>{stats.pendingFollowUp}</strong> application{stats.pendingFollowUp > 1 ? 's' : ''} overdue for follow-up.
@@ -618,7 +623,7 @@ export default function ApplicationsPage() {
                     <div className="flex flex-col gap-3">
                         {/* Scroll-scrollable status strip */}
                         <div className="overflow-x-auto pb-0.5 -mx-0.5 px-0.5">
-                            <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl border border-slate-200 w-max min-w-full sm:w-auto">
+                            <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-lg border border-slate-200 w-max min-w-full sm:w-auto">
                                 {ALL_STATUSES.map(s => (
                                     <button
                                         key={s}
@@ -647,7 +652,7 @@ export default function ApplicationsPage() {
                                 value={searchQuery}
                                 onChange={e => setSearchQuery(e.target.value)}
                                 placeholder="Search company, role, HR..."
-                                className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                                className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
                             />
                             {searchQuery && (
                                 <button
@@ -661,14 +666,14 @@ export default function ApplicationsPage() {
                     </div>
 
                     {/* ── Applications List ─────────────────────────────── */}
-                    <div className="bg-white border border-slate-200/60 rounded-[2rem] shadow-sm overflow-hidden">
+                    <section aria-label="Activity Log" className='border border-slate-200/60 bg-white shadow-sm rounded-xl flex flex-col mb-12'>
                         {loading ? (
                             <div className="flex items-center justify-center py-20">
                                 <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
                             </div>
                         ) : filteredApps.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
-                                <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center">
+                                <div className="w-14 h-14 rounded-xl bg-slate-100 flex items-center justify-center">
                                     <BriefcaseBusiness className="w-7 h-7 text-slate-400" />
                                 </div>
                                 <div>
@@ -681,126 +686,188 @@ export default function ApplicationsPage() {
                                 </div>
                             </div>
                         ) : (
-                            <>
-                                {/* ── Mobile Card List (hidden on md+) ── */}
-                                <div className="md:hidden divide-y divide-slate-50">
-                                    {filteredApps.map(app => {
+                            <article>
+                                <div className="flex items-end justify-between px-6 lg:px-8 pt-6 lg:pt-8 mb-4 lg:mb-5">
+                                    <div>
+                                        <h3 className="text-2xl font-display font-bold text-slate-900 mb-1">Activity Log</h3>
+                                        <p className="text-sm text-slate-500 font-medium">All recent applications, follow-ups, and interviews.</p>
+                                    </div>
+                                    <button className="text-sm font-semibold text-slate-900 hover:text-blue-600 transition-colors">See all</button>
+                                </div>
+
+                                {/* Column Headers */}
+                                <div className="hidden sm:grid grid-cols-[0.5fr_2fr_1.5fr_1fr_1fr_0.5fr] gap-0 px-6 lg:px-12 pb-2 border-b border-slate-100 bg-slate-50/50">
+                                    <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">#</span>
+                                    <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">Company</span>
+                                    <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">Role</span>
+                                    <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">Status</span>
+                                    <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase text-right">Reply</span>
+                                    <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase text-right">Actions</span>
+                                </div>
+
+                                <div className="flex flex-col gap-1 px-4 lg:px-6 py-4">
+                                    {paginatedApps.map((app, idx) => {
+                                        const originalIdx = (currentPage - 1) * ITEMS_PER_PAGE + idx + 1;
                                         const statusCfg = STATUS_CONFIG[app.status] || STATUS_CONFIG.sent;
-                                        const StatusIcon = statusCfg.icon;
                                         const replyTypeCfg = app.replyType ? REPLY_TYPE_CONFIG[app.replyType] : null;
                                         const stale = isStale(app);
                                         const isExpanded = expandedApp === app._id;
                                         const showReplyBtn = canReply(app);
+
                                         return (
-                                            <div key={app._id} className={cn('p-4 transition-colors', stale && 'bg-amber-50/30')}>
-                                                {/* Card header */}
-                                                <div
-                                                    className="flex items-center gap-3 cursor-pointer"
+                                            <div key={app._id} className="flex flex-col gap-0 border border-slate-200/60 rounded-lg hover:bg-slate-50/80 transition-colors">
+                                                <div 
+                                                    className="grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1.5fr_1fr_1fr_0.5fr] gap-0 items-center px-4 py-4 cursor-pointer"
                                                     onClick={() => setExpandedApp(isExpanded ? null : app._id)}
                                                 >
-                                                    <div className="w-10 h-10 rounded-xl bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center shrink-0 text-slate-600 font-bold text-sm">
-                                                        {(app.companyName || '?')[0].toUpperCase()}
+                                                    {/* Number */}
+                                                    <div className="hidden sm:flex items-center">
+                                                        <span className="text-sm font-bold text-slate-400">{originalIdx}</span>
                                                     </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className="flex items-center gap-2 flex-wrap">
-                                                            <p className="font-bold text-slate-900 text-sm truncate">
-                                                                {app.companyName || <span className="text-slate-400 italic">No Company</span>}
-                                                            </p>
-                                                            {stale && <span className="text-[9px] bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded-full font-bold uppercase">Stale</span>}
+                                                    
+                                                    {/* Company */}
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0">
+                                                            <span className="font-extrabold text-slate-600 text-base">{(app.companyName || '?')[0].toUpperCase()}</span>
                                                         </div>
-                                                        <p className="text-xs text-slate-400 truncate">{app.role || '—'} · {app.hrName || app.hrEmail}</p>
+                                                        <div className="min-w-0">
+                                                            <p className="text-sm font-bold text-slate-900 truncate">
+                                                                {app.companyName || <span className="italic text-slate-400">No Company</span>}
+                                                                {stale && <span className="ml-2 text-[9px] bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded-full font-bold uppercase">Stale</span>}
+                                                            </p>
+                                                            <p className="text-xs text-slate-500 font-medium truncate">{app.hrEmail}</p>
+                                                        </div>
                                                     </div>
-                                                    <div className="flex items-center gap-2 shrink-0">
-                                                        <span className={cn('inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border cursor-pointer hover:opacity-80', statusCfg.color)}
-                                                            onClick={e => { e.stopPropagation(); setEditingApp({ id: app._id, field: 'status' }); }}
+
+                                                    {/* Role */}
+                                                    <div className="hidden sm:flex items-center min-w-0 pr-4">
+                                                        <p className="text-sm font-medium text-slate-600 truncate">{app.role || '—'}</p>
+                                                    </div>
+
+                                                    {/* Status */}
+                                                    <div className="hidden sm:flex items-center gap-2" onClick={e => e.stopPropagation()}>
+                                                        {editingApp?.id === app._id && editingApp?.field === 'status' ? (
+                                                            <select
+                                                                autoFocus
+                                                                defaultValue={app.status}
+                                                                onChange={e => handleStatusChange(app._id, e.target.value)}
+                                                                onBlur={() => setEditingApp(null)}
+                                                                className="text-xs border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                                                            >
+                                                                {Object.keys(STATUS_CONFIG).map(s => (
+                                                                    <option key={s} value={s}>{STATUS_CONFIG[s].label}</option>
+                                                                ))}
+                                                            </select>
+                                                        ) : (
+                                                            <div 
+                                                                className="flex items-center gap-2 cursor-pointer hover:opacity-80"
+                                                                onClick={() => setEditingApp({ id: app._id, field: 'status' })}
+                                                            >
+                                                                <div className={cn("w-2 h-2 rounded-full shrink-0", statusCfg.dot)} />
+                                                                <span className="text-sm font-medium text-slate-600 capitalize">{statusCfg.label}</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Reply + Date */}
+                                                    <div className="hidden sm:flex flex-col items-end">
+                                                        <span className="text-sm font-bold text-slate-900 capitalize">{replyTypeCfg ? replyTypeCfg.label : '—'}</span>
+                                                        <span className="text-[10px] text-slate-400 font-medium mt-0.5">{formatDate(app.createdAt)}</span>
+                                                    </div>
+
+                                                    {/* Actions */}
+                                                    <div className="hidden sm:flex items-center justify-end gap-2">
+                                                        {showReplyBtn && (
+                                                            <button
+                                                                onClick={(e) => { e.stopPropagation(); setReplyModalApp(app); }}
+                                                                className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                                title="Reply"
+                                                            >
+                                                                <Reply className="w-4 h-4" />
+                                                            </button>
+                                                        )}
+                                                        <button
+                                                            className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
                                                         >
-                                                            <span className={cn('w-1.5 h-1.5 rounded-full', statusCfg.dot)} />
-                                                            {statusCfg.label}
-                                                        </span>
-                                                        <ChevronDown className={cn('w-4 h-4 text-slate-300 transition-transform', isExpanded && 'rotate-180')} />
+                                                            <ChevronDown className={cn("w-4 h-4 transition-transform", isExpanded && "rotate-180")} />
+                                                        </button>
                                                     </div>
                                                 </div>
 
-                                                {/* Status edit dropdown */}
-                                                {editingApp?.id === app._id && editingApp?.field === 'status' && (
-                                                    <div className="mt-3 px-1">
-                                                        <select
-                                                            autoFocus
-                                                            defaultValue={app.status}
-                                                            onChange={e => handleStatusChange(app._id, e.target.value)}
-                                                            onBlur={() => setEditingApp(null)}
-                                                            className="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/20 bg-white"
-                                                        >
-                                                            {Object.keys(STATUS_CONFIG).map(s => (
-                                                                <option key={s} value={s}>{STATUS_CONFIG[s].label}</option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
-                                                )}
-
-                                                {/* Expanded detail */}
+                                                {/* Expanded Area */}
                                                 {isExpanded && (
-                                                    <div className="mt-3 space-y-3">
-                                                        {/* Reply type badge */}
-                                                        {replyTypeCfg && (
-                                                            <span className={cn('inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border', replyTypeCfg.color)}>
-                                                                <Sparkles className="w-2.5 h-2.5" />
-                                                                {replyTypeCfg.label}
-                                                            </span>
-                                                        )}
-                                                        {/* HR reply preview */}
-                                                        {app.lastReplyPreview && (
-                                                            <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center gap-1">
-                                                                    <MessageCircle className="w-3 h-3" /> HR Reply
-                                                                </p>
-                                                                <p className="text-xs text-slate-600 leading-relaxed line-clamp-3">{app.lastReplyPreview}</p>
-                                                            </div>
-                                                        )}
-                                                        {/* Notes */}
-                                                        <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center gap-1">
-                                                                <Pencil className="w-3 h-3" /> Notes
-                                                            </p>
-                                                            {editingApp?.id === app._id && editingApp?.field === 'notes' ? (
-                                                                <div className="space-y-1">
-                                                                    <textarea autoFocus defaultValue={app.notes} rows={3}
-                                                                        className="w-full text-sm border border-slate-200 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none bg-white"
-                                                                        onBlur={e => handleNotesChange(app._id, e.target.value)}
-                                                                    />
-                                                                    <p className="text-[10px] text-slate-400">Click outside to save</p>
+                                                    <div className="border-t border-slate-100 bg-slate-50 px-6 py-5 rounded-b-lg">
+                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                                            {app.lastReplyPreview && (
+                                                                <div className="p-4 bg-white border border-slate-200/60 rounded-xl shadow-sm">
+                                                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                                                                        <MessageCircle className="w-3 h-3" /> Latest Reply from HR
+                                                                    </p>
+                                                                    <p className="text-sm text-slate-600 leading-relaxed line-clamp-4 font-medium">
+                                                                        {app.lastReplyPreview}
+                                                                    </p>
+                                                                    {showReplyBtn && (
+                                                                        <button
+                                                                            onClick={() => setReplyModalApp(app)}
+                                                                            className="mt-3 flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                                                                        >
+                                                                            <Reply className="w-3.5 h-3.5" />
+                                                                            Reply to this message →
+                                                                        </button>
+                                                                    )}
                                                                 </div>
-                                                            ) : (
-                                                                <p className="text-xs text-slate-600 cursor-pointer hover:text-slate-800 min-h-[32px]"
-                                                                    onClick={() => setEditingApp({ id: app._id, field: 'notes' })}>
-                                                                    {app.notes || <span className="text-slate-300 italic">Tap to add notes...</span>}
+                                                            )}
+
+                                                            <div className="p-4 bg-white border border-slate-200/60 rounded-xl shadow-sm">
+                                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                                                                    <Pencil className="w-3 h-3" /> Notes
                                                                 </p>
-                                                            )}
-                                                        </div>
-                                                        {/* Meta chips + actions */}
-                                                        <div className="flex flex-wrap gap-2">
-                                                            <div className="flex items-center gap-1.5 text-xs text-slate-500 bg-white border border-slate-200 rounded-xl px-2.5 py-1.5">
-                                                                <Mail className="w-3 h-3 text-slate-400" />
-                                                                <span className="truncate max-w-[160px]">{app.hrEmail}</span>
+                                                                {editingApp?.id === app._id && editingApp?.field === 'notes' ? (
+                                                                    <div className="space-y-2">
+                                                                        <textarea
+                                                                            autoFocus
+                                                                            defaultValue={app.notes}
+                                                                            rows={3}
+                                                                            className="w-full text-[13px] font-medium border border-slate-200 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none"
+                                                                            onBlur={e => handleNotesChange(app._id, e.target.value)}
+                                                                        />
+                                                                        <p className="text-[10px] text-slate-400">Click outside to save</p>
+                                                                    </div>
+                                                                ) : (
+                                                                    <p
+                                                                        className="text-[13px] font-medium text-[#555] cursor-pointer hover:text-slate-800 min-h-[40px]"
+                                                                        onClick={() => setEditingApp({ id: app._id, field: 'notes' })}
+                                                                    >
+                                                                        {app.notes || <span className="text-slate-300 italic">Click to add notes...</span>}
+                                                                    </p>
+                                                                )}
                                                             </div>
-                                                            <div className="flex items-center gap-1.5 text-xs text-slate-500 bg-white border border-slate-200 rounded-xl px-2.5 py-1.5">
-                                                                <Calendar className="w-3 h-3 text-slate-400" />
-                                                                {formatDate(app.createdAt)}
-                                                            </div>
-                                                            {showReplyBtn && (
+
+                                                            <div className="flex flex-wrap gap-3 md:col-span-2">
+                                                                <div className="flex items-center gap-2 text-[12px] font-medium text-slate-500 bg-white border border-slate-200 rounded-lg px-3 py-2">
+                                                                    <Mail className="w-3.5 h-3.5 text-slate-400" />
+                                                                    {app.hrEmail}
+                                                                </div>
+                                                                {app.gmailThreadId && (
+                                                                    <div className="flex items-center gap-2 text-[12px] font-medium text-slate-500 bg-white border border-slate-200 rounded-lg px-3 py-2">
+                                                                        <Zap className="w-3.5 h-3.5 text-blue-400" />
+                                                                        Thread tracked
+                                                                    </div>
+                                                                )}
+                                                                {app.followUpDate && (app.status === 'sent' || app.status === 'follow-up-sent') && (
+                                                                    <div className="flex items-center gap-2 text-[12px] font-medium text-slate-500 bg-white border border-slate-200 rounded-lg px-3 py-2">
+                                                                        <RefreshCw className="w-3.5 h-3.5 text-purple-400" />
+                                                                        Next follow-up: {formatDate(app.followUpDate)}
+                                                                    </div>
+                                                                )}
                                                                 <button
-                                                                    onClick={() => setReplyModalApp(app)}
-                                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-[10px] font-bold rounded-xl hover:bg-blue-700 transition-all active:scale-95 cursor-pointer"
+                                                                    onClick={() => handleDelete(app._id)}
+                                                                    className="ml-auto flex items-center gap-1.5 text-xs font-semibold text-rose-500 hover:text-rose-700 bg-rose-50 border border-rose-100 rounded-lg px-3 py-2 hover:bg-rose-100 transition-all"
                                                                 >
-                                                                    <Reply className="w-3 h-3" /> Reply
+                                                                    <XCircle className="w-3.5 h-3.5" />
+                                                                    Remove Record
                                                                 </button>
-                                                            )}
-                                                            <button
-                                                                onClick={() => handleDelete(app._id)}
-                                                                className="ml-auto flex items-center gap-1.5 text-xs text-rose-500 hover:text-rose-700 bg-rose-50 border border-rose-100 rounded-xl px-2.5 py-1.5 hover:bg-rose-100 transition-all"
-                                                            >
-                                                                <XCircle className="w-3 h-3" /> Remove
-                                                            </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 )}
@@ -809,247 +876,25 @@ export default function ApplicationsPage() {
                                     })}
                                 </div>
 
-                                {/* ── Desktop Table (hidden below md) ── */}
-                                <div className="hidden md:block overflow-x-auto">
-                                    <table className="w-full">
-                                        <thead>
-                                            <tr className="border-b border-slate-100 bg-slate-50/70">
-                                                <th className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest px-6 py-4">Company &amp; Role</th>
-                                                <th className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 py-4 hidden md:table-cell">HR Contact</th>
-                                                <th className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 py-4">Status</th>
-                                                <th className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 py-4 hidden lg:table-cell">Reply</th>
-                                                <th className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 py-4 hidden lg:table-cell">Sent</th>
-                                                <th className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 py-4 hidden xl:table-cell">Follow-up</th>
-                                                <th className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 py-4">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-slate-50">
-                                            {filteredApps.map(app => {
-                                                const statusCfg = STATUS_CONFIG[app.status] || STATUS_CONFIG.sent;
-                                                const StatusIcon = statusCfg.icon;
-                                                const replyTypeCfg = app.replyType ? REPLY_TYPE_CONFIG[app.replyType] : null;
-                                                const stale = isStale(app);
-                                                const isExpanded = expandedApp === app._id;
-                                                const showReplyBtn = canReply(app);
-
-                                                return (
-                                                    <>
-                                                        <tr
-                                                            key={app._id}
-                                                            className={cn(
-                                                                'group hover:bg-slate-50/80 transition-colors cursor-pointer',
-                                                                stale && 'bg-amber-50/30'
-                                                            )}
-                                                            onClick={() => setExpandedApp(isExpanded ? null : app._id)}
-                                                        >
-                                                            {/* Company & Role */}
-                                                            <td className="px-6 py-4">
-                                                                <div className="flex items-center gap-3">
-                                                                    <div className="w-9 h-9 rounded-xl bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center shrink-0 text-slate-600 font-bold text-sm">
-                                                                        {(app.companyName || '?')[0].toUpperCase()}
-                                                                    </div>
-                                                                    <div>
-                                                                        <p className="font-bold text-slate-900 text-sm">
-                                                                            {app.companyName || <span className="text-slate-400 italic">No Company</span>}
-                                                                            {stale && <span className="ml-2 text-[9px] bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded-full font-bold uppercase">Stale</span>}
-                                                                        </p>
-                                                                        <p className="text-xs text-slate-500 mt-0.5">{app.role || '—'}</p>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-
-                                                            {/* HR Contact */}
-                                                            <td className="px-4 py-4 hidden md:table-cell">
-                                                                <p className="text-sm font-medium text-slate-700">{app.hrName || '—'}</p>
-                                                                <p className="text-xs text-slate-400 truncate max-w-[160px]">{app.hrEmail}</p>
-                                                            </td>
-
-                                                            {/* Status */}
-                                                            <td className="px-4 py-4">
-                                                                {editingApp?.id === app._id && editingApp?.field === 'status' ? (
-                                                                    <select
-                                                                        autoFocus
-                                                                        defaultValue={app.status}
-                                                                        onChange={e => handleStatusChange(app._id, e.target.value)}
-                                                                        onBlur={() => setEditingApp(null)}
-                                                                        className="text-xs border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                                                                        onClick={e => e.stopPropagation()}
-                                                                    >
-                                                                        {Object.keys(STATUS_CONFIG).map(s => (
-                                                                            <option key={s} value={s}>{STATUS_CONFIG[s].label}</option>
-                                                                        ))}
-                                                                    </select>
-                                                                ) : (
-                                                                    <span
-                                                                        className={cn(
-                                                                            'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border cursor-pointer hover:opacity-80 transition-opacity',
-                                                                            statusCfg.color
-                                                                        )}
-                                                                        onClick={e => {
-                                                                            e.stopPropagation();
-                                                                            setEditingApp({ id: app._id, field: 'status' });
-                                                                        }}
-                                                                        title="Click to change status"
-                                                                    >
-                                                                        <span className={cn('w-1.5 h-1.5 rounded-full', statusCfg.dot)} />
-                                                                        {statusCfg.label}
-                                                                    </span>
-                                                                )}
-                                                            </td>
-
-                                                            {/* Reply Type */}
-                                                            <td className="px-4 py-4 hidden lg:table-cell">
-                                                                {replyTypeCfg ? (
-                                                                    <span className={cn('inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border', replyTypeCfg.color)}>
-                                                                        <Sparkles className="w-2.5 h-2.5" />
-                                                                        {replyTypeCfg.label}
-                                                                    </span>
-                                                                ) : (
-                                                                    <span className="text-xs text-slate-300">—</span>
-                                                                )}
-                                                            </td>
-
-                                                            {/* Sent date */}
-                                                            <td className="px-4 py-4 hidden lg:table-cell">
-                                                                <p className="text-xs text-slate-500">{formatDate(app.createdAt)}</p>
-                                                                <p className="text-[10px] text-slate-400">{daysAgo(app.createdAt)}</p>
-                                                            </td>
-
-                                                            {/* Follow-up date */}
-                                                            <td className="px-4 py-4 hidden xl:table-cell">
-                                                                {app.followUpDate && (app.status === 'sent' || app.status === 'follow-up-sent') ? (
-                                                                    <div>
-                                                                        <p className="text-xs text-slate-500">{formatDate(app.followUpDate)}</p>
-                                                                        <p className="text-[10px] text-purple-500 font-medium">#{app.followUpCount + 1}</p>
-                                                                    </div>
-                                                                ) : (
-                                                                    <span className="text-xs text-slate-300">—</span>
-                                                                )}
-                                                            </td>
-
-                                                            {/* Actions Column */}
-                                                            <td className="px-4 py-4">
-                                                                <div className="flex items-center gap-2">
-                                                                    {showReplyBtn && (
-                                                                        <button
-                                                                            onClick={e => {
-                                                                                e.stopPropagation();
-                                                                                setReplyModalApp(app);
-                                                                            }}
-                                                                            className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-[10px] font-bold rounded-lg hover:bg-blue-700 transition-all active:scale-95 shadow-sm shadow-blue-500/20 cursor-pointer uppercase tracking-wide"
-                                                                            title="Reply to HR's email"
-                                                                        >
-                                                                            <Reply className="w-3 h-3" />
-                                                                            Reply
-                                                                        </button>
-                                                                    )}
-                                                                    <button
-                                                                        onClick={e => { e.stopPropagation(); setExpandedApp(isExpanded ? null : app._id); }}
-                                                                        className="p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all"
-                                                                    >
-                                                                        <ChevronDown className={cn('w-4 h-4 transition-transform', isExpanded && 'rotate-180')} />
-                                                                    </button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-
-                                                        {/* Expanded Detail Row */}
-                                                        {isExpanded && (
-                                                            <tr key={`${app._id}-detail`} className="bg-slate-50/60">
-                                                                <td colSpan={7} className="px-6 py-5">
-                                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                                                        {/* Reply preview */}
-                                                                        {app.lastReplyPreview && (
-                                                                            <div className="p-4 bg-white border border-slate-200 rounded-2xl">
-                                                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                                                                                    <MessageCircle className="w-3 h-3" /> Latest Reply from HR
-                                                                                </p>
-                                                                                <p className="text-sm text-slate-600 leading-relaxed line-clamp-4">
-                                                                                    {app.lastReplyPreview}
-                                                                                </p>
-                                                                                {showReplyBtn && (
-                                                                                    <button
-                                                                                        onClick={() => setReplyModalApp(app)}
-                                                                                        className="mt-3 flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors cursor-pointer"
-                                                                                    >
-                                                                                        <Reply className="w-3.5 h-3.5" />
-                                                                                        Reply to this message →
-                                                                                    </button>
-                                                                                )}
-                                                                            </div>
-                                                                        )}
-
-                                                                        {/* Notes */}
-                                                                        <div className="p-4 bg-white border border-slate-200 rounded-2xl">
-                                                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                                                                                <Pencil className="w-3 h-3" /> Notes
-                                                                            </p>
-                                                                            {editingApp?.id === app._id && editingApp?.field === 'notes' ? (
-                                                                                <div className="space-y-2">
-                                                                                    <textarea
-                                                                                        autoFocus
-                                                                                        defaultValue={app.notes}
-                                                                                        rows={3}
-                                                                                        className="w-full text-sm border border-slate-200 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none"
-                                                                                        onBlur={e => handleNotesChange(app._id, e.target.value)}
-                                                                                    />
-                                                                                    <p className="text-[10px] text-slate-400">Click outside to save</p>
-                                                                                </div>
-                                                                            ) : (
-                                                                                <p
-                                                                                    className="text-sm text-slate-600 cursor-pointer hover:text-slate-800 min-h-[40px]"
-                                                                                    onClick={() => setEditingApp({ id: app._id, field: 'notes' })}
-                                                                                >
-                                                                                    {app.notes || <span className="text-slate-300 italic">Click to add notes...</span>}
-                                                                                </p>
-                                                                            )}
-                                                                        </div>
-
-                                                                        {/* Meta info */}
-                                                                        <div className="flex flex-wrap gap-3 md:col-span-2">
-                                                                            <div className="flex items-center gap-2 text-xs text-slate-500 bg-white border border-slate-200 rounded-xl px-3 py-2">
-                                                                                <Mail className="w-3 h-3 text-slate-400" />
-                                                                                {app.hrEmail}
-                                                                            </div>
-                                                                            {app.gmailThreadId && (
-                                                                                <div className="flex items-center gap-2 text-xs text-slate-500 bg-white border border-slate-200 rounded-xl px-3 py-2">
-                                                                                    <Zap className="w-3 h-3 text-blue-400" />
-                                                                                    Thread tracked
-                                                                                </div>
-                                                                            )}
-                                                                            <div className="flex items-center gap-2 text-xs text-slate-500 bg-white border border-slate-200 rounded-xl px-3 py-2">
-                                                                                <Calendar className="w-3 h-3 text-slate-400" />
-                                                                                Sent {formatDate(app.createdAt)}
-                                                                            </div>
-                                                                            {app.replyConfidence && (
-                                                                                <div className="flex items-center gap-2 text-xs text-slate-500 bg-white border border-slate-200 rounded-xl px-3 py-2">
-                                                                                    <Sparkles className="w-3 h-3 text-purple-400" />
-                                                                                    AI confidence: {Math.round((app.replyConfidence || 0) * 100)}%
-                                                                                </div>
-                                                                            )}
-
-                                                                            {/* Delete button */}
-                                                                            <button
-                                                                                onClick={() => handleDelete(app._id)}
-                                                                                className="ml-auto flex items-center gap-1.5 text-xs text-rose-500 hover:text-rose-700 bg-rose-50 border border-rose-100 rounded-xl px-3 py-2 hover:bg-rose-100 transition-all"
-                                                                            >
-                                                                                <XCircle className="w-3 h-3" />
-                                                                                Remove Record
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        )}
-                                                    </>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
+                                {/* Footer Pagination */}
+                                <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100 bg-slate-50/50 rounded-b-xl mt-auto">
+                                    <p className="text-xs font-medium text-slate-500">
+                                        {filteredApps.length > 0 ? (
+                                            <>Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredApps.length)} of {filteredApps.length} Applications</>
+                                        ) : (
+                                            <>No Applications</>
+                                        )}
+                                    </p>
+                                    {totalPages > 1 && (
+                                        <div className="flex gap-2">
+                                            <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} className="p-1.5 rounded-lg bg-white border border-slate-200/60 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors shadow-sm"><ChevronLeft size={16} /></button>
+                                            <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)} className="p-1.5 rounded-lg bg-white border border-slate-200/60 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors shadow-sm"><ChevronRight size={16} /></button>
+                                        </div>
+                                    )}
                                 </div>
-                            </>
+                            </article>
                         )}
-                    </div>
+                    </section>
 
                     <p className="text-xs text-slate-400 text-center pb-4">
                         Applications are auto-created when you send emails. Click status badges to update. Click <strong>Reply</strong> to respond to HR directly from Mail Magic.

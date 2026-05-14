@@ -37,15 +37,15 @@ export default function ContactPage() {
 
                     <div className="grid md:grid-cols-2 gap-8">
                         {/* Direct Contact */}
-                        <div className="p-10 rounded-[2.5rem] bg-white border border-slate-200 shadow-sm space-y-8">
+                        <div className="p-10 rounded-xl bg-white border border-slate-200 shadow-sm space-y-8">
                             <div className="space-y-2">
                                 <h3 className="text-xl font-display font-bold text-slate-900">Direct Message</h3>
                                 <p className="text-sm text-slate-500 font-medium leading-relaxed">Reach out directly via email for rapid response protocol.</p>
                             </div>
 
                             <div className="space-y-4">
-                                <a href="mailto:support@bytescom.com" className="flex items-center gap-4 p-5 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-blue-50 hover:border-blue-100 transition-all group">
-                                    <div className="p-3 rounded-2xl bg-white shadow-sm">
+                                <a href="mailto:support@bytescom.com" className="flex items-center gap-4 p-5 rounded-xl bg-slate-50 border border-slate-100 hover:bg-blue-50 hover:border-blue-100 transition-all group">
+                                    <div className="p-3 rounded-xl bg-white shadow-sm">
                                         <Mail className="w-5 h-5 text-blue-600" />
                                     </div>
                                     <div>
@@ -53,8 +53,8 @@ export default function ContactPage() {
                                         <p className="text-sm font-bold text-slate-900">support@bytescom.com</p>
                                     </div>
                                 </a>
-                                <div className="flex items-center gap-4 p-5 rounded-3xl bg-slate-50 border border-slate-100">
-                                    <div className="p-3 rounded-2xl bg-white shadow-sm">
+                                <div className="flex items-center gap-4 p-5 rounded-xl bg-slate-50 border border-slate-100">
+                                    <div className="p-3 rounded-xl bg-white shadow-sm">
                                         <Globe className="w-5 h-5 text-emerald-600" />
                                     </div>
                                     <div>
@@ -66,18 +66,18 @@ export default function ContactPage() {
                         </div>
 
                         {/* Social/Community */}
-                        <div className="p-10 rounded-[2.5rem] bg-slate-900 text-white space-y-8 shadow-2xl shadow-slate-200">
+                        <div className="p-10 rounded-xl bg-slate-900 text-white space-y-8 shadow-2xl shadow-slate-200">
                             <div className="space-y-2">
                                 <h3 className="text-xl font-display font-bold">Community Hub</h3>
                                 <p className="text-sm text-slate-400 font-medium leading-relaxed">Join 4,000+ professionals optimizing their career growth.</p>
                             </div>
 
                             <div className="space-y-4">
-                                <button className="w-full flex items-center justify-between p-5 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
+                                <button className="w-full flex items-center justify-between p-5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
                                     <span className="text-sm font-bold uppercase tracking-widest">Follow Updates</span>
                                     <ChevronLeft className="rotate-180 w-4 h-4" />
                                 </button>
-                                <button className="w-full flex items-center justify-between p-5 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
+                                <button className="w-full flex items-center justify-between p-5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
                                     <span className="text-sm font-bold uppercase tracking-widest">Join LinkedIn Group</span>
                                     <ChevronLeft className="rotate-180 w-4 h-4" />
                                 </button>

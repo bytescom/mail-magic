@@ -138,7 +138,7 @@ export default function TemplatesPage() {
                                 setFormData({ name: '', subject: '', body: '' });
                                 setShowModal(true);
                             }}
-                            className="bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-xl shadow-blue-500/20 flex items-center justify-center gap-2"
+                            className="bg-blue-600 text-white font-bold px-6 py-3 rounded-xl text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-xl shadow-blue-500/20 flex items-center justify-center gap-2"
                         >
                             <Plus className="w-4 h-4" />
                             <span>Create New Template</span>
@@ -154,11 +154,11 @@ export default function TemplatesPage() {
                                 placeholder="Search templates..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-medium"
+                                className="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-medium"
                             />
                         </div>
 
-                        <div className="flex items-center gap-2 p-1 bg-slate-100 rounded-xl border border-slate-200/50">
+                        <div className="flex items-center gap-2 p-1 bg-slate-100 rounded-lg border border-slate-200/50">
                             <button className="p-1.5 rounded-lg bg-white shadow-sm text-blue-600 border border-slate-200/50">
                                 <LayoutGrid className="w-4 h-4" />
                             </button>
@@ -170,8 +170,8 @@ export default function TemplatesPage() {
 
                     {/* Templates Grid */}
                     {filteredTemplates.length === 0 ? (
-                        <div className="bg-white border border-slate-200/60 border-dashed rounded-[2.5rem] py-24 text-center px-6">
-                            <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-slate-100 shadow-inner">
+                        <div className="bg-white border border-slate-200/60 border-dashed rounded-xl py-24 text-center px-6">
+                            <div className="w-20 h-20 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-6 border border-slate-100 shadow-inner">
                                 <FileText className="w-8 h-8 text-slate-300" />
                             </div>
                             <h3 className="text-xl font-display font-bold text-slate-900 mb-2">
@@ -183,7 +183,7 @@ export default function TemplatesPage() {
                             {!searchQuery && (
                                 <button
                                     onClick={() => setShowModal(true)}
-                                    className="bg-blue-600 text-white font-bold px-8 py-3.5 rounded-2xl text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-lg shadow-blue-500/20 inline-flex items-center gap-2"
+                                    className="bg-blue-600 text-white font-bold px-8 py-3.5 rounded-xl text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-lg shadow-blue-500/20 inline-flex items-center gap-2"
                                 >
                                     <Plus className="w-5 h-5" />
                                     <span>Create Your First Template</span>
@@ -195,31 +195,31 @@ export default function TemplatesPage() {
                             {filteredTemplates.map((template, index) => (
                                 <div
                                     key={template._id}
-                                    className="bg-white border border-slate-200/60 p-6 rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.05)] hover:border-slate-300/80 group flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-500"
+                                    className="bg-white border border-slate-200/60 p-6 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.05)] hover:border-slate-300/80 group flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-500"
                                     style={{ animationDelay: `${index * 50}ms` }}
                                 >
                                     <div className="flex items-start justify-between mb-6">
-                                        <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center transition-transform group-hover:scale-110 duration-300">
+                                        <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center transition-transform group-hover:scale-110 duration-300">
                                             <Mail className="w-6 h-6 text-blue-600" />
                                         </div>
                                         <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-all transform translate-y-1 group-hover:translate-y-0 duration-300">
                                             <button
                                                 onClick={() => handlePreview(template)}
-                                                className="p-2.5 rounded-xl bg-slate-50 text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-all border border-slate-200/50"
+                                                className="p-2.5 rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-all border border-slate-200/50"
                                                 title="Preview"
                                             >
                                                 <Eye className="w-4 h-4" />
                                             </button>
                                             <button
                                                 onClick={() => handleEdit(template)}
-                                                className="p-2.5 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-900 hover:text-white transition-all border border-slate-200/50"
+                                                className="p-2.5 rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-900 hover:text-white transition-all border border-slate-200/50"
                                                 title="Edit"
                                             >
                                                 <Pencil className="w-4 h-4" />
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(template._id)}
-                                                className="p-2.5 rounded-xl bg-slate-50 text-slate-600 hover:bg-rose-50 hover:text-rose-600 transition-all border border-slate-200/50"
+                                                className="p-2.5 rounded-lg bg-slate-50 text-slate-600 hover:bg-rose-50 hover:text-rose-600 transition-all border border-slate-200/50"
                                                 title="Delete"
                                             >
                                                 <Trash2 className="w-4 h-4" />
@@ -233,7 +233,7 @@ export default function TemplatesPage() {
                                             <Clock className="w-3 h-3" />
                                             Subject Header
                                         </p>
-                                        <p className="text-sm font-medium text-slate-600 line-clamp-2 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100 italic">
+                                        <p className="text-sm font-medium text-slate-600 line-clamp-2 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100 italic">
                                             {template.subject}
                                         </p>
                                     </div>
@@ -256,7 +256,7 @@ export default function TemplatesPage() {
                     {showModal && (
                         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 text-sans">
                             <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => setShowModal(false)} />
-                            <div className="bg-white max-w-2xl w-full max-h-[90vh] overflow-hidden rounded-[2.5rem] shadow-2xl relative z-10 animate-in zoom-in-95 duration-300 flex flex-col">
+                            <div className="bg-white max-w-2xl w-full max-h-[90vh] overflow-hidden rounded-xl shadow-2xl relative z-10 animate-in zoom-in-95 duration-300 flex flex-col">
                                 <div className="p-8 border-b border-slate-100 flex items-center justify-between">
                                     <div>
                                         <h2 className="text-2xl font-display font-bold text-slate-900 tracking-tight">
@@ -266,7 +266,7 @@ export default function TemplatesPage() {
                                     </div>
                                     <button
                                         onClick={() => setShowModal(false)}
-                                        className="p-2 rounded-xl text-slate-400 hover:bg-slate-50 transition-colors"
+                                        className="p-2 rounded-lg text-slate-400 hover:bg-slate-50 transition-colors"
                                     >
                                         <X className="w-5 h-5" />
                                     </button>
@@ -279,7 +279,7 @@ export default function TemplatesPage() {
                                             type="text"
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
+                                            className="w-full px-5 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
                                             placeholder="e.g., Senior Frontend Application"
                                             required
                                         />
@@ -291,7 +291,7 @@ export default function TemplatesPage() {
                                             type="text"
                                             value={formData.subject}
                                             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                                            className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all placeholder:font-normal"
+                                            className="w-full px-5 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all placeholder:font-normal"
                                             placeholder="Application for {{job_role}} at {{company}}"
                                             required
                                         />
@@ -302,7 +302,7 @@ export default function TemplatesPage() {
                                         <textarea
                                             value={formData.body}
                                             onChange={(e) => setFormData({ ...formData, body: e.target.value })}
-                                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all resize-none leading-relaxed min-h-[280px]"
+                                            className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all resize-none leading-relaxed min-h-[280px]"
                                             placeholder={'Dear {{hr_name}},\n\nI am reaching out regarding the {{job_role}} position...'}
                                             required
                                         />
@@ -323,14 +323,14 @@ export default function TemplatesPage() {
                                     <div className="pt-6 flex gap-3">
                                         <button
                                             type="submit"
-                                            className="flex-1 bg-blue-600 text-white font-bold py-4 rounded-2xl text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-xl shadow-blue-500/20"
+                                            className="flex-1 bg-blue-600 text-white font-bold py-4 rounded-xl text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-xl shadow-blue-500/20"
                                         >
                                             {currentTemplate ? 'Save Changes' : 'Create Template'}
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => setShowModal(false)}
-                                            className="flex-1 bg-slate-100 text-slate-600 font-bold py-4 rounded-2xl text-sm transition-all active:scale-95 hover:bg-slate-200"
+                                            className="flex-1 bg-slate-100 text-slate-600 font-bold py-4 rounded-xl text-sm transition-all active:scale-95 hover:bg-slate-200"
                                         >
                                             Cancel
                                         </button>
@@ -344,10 +344,10 @@ export default function TemplatesPage() {
                     {preview && (
                         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 text-sans overflow-hidden">
                             <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setPreview(null)} />
-                            <div className="bg-white max-w-3xl w-full rounded-[2.5rem] shadow-2xl relative z-10 animate-in slide-in-from-bottom-5 duration-500 flex flex-col max-h-[85vh]">
+                            <div className="bg-white max-w-3xl w-full rounded-xl shadow-2xl relative z-10 animate-in slide-in-from-bottom-5 duration-500 flex flex-col max-h-[85vh]">
                                 <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-t-[2.5rem]">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
                                             <Eye className="w-5 h-5 text-white" />
                                         </div>
                                         <div>
@@ -357,7 +357,7 @@ export default function TemplatesPage() {
                                     </div>
                                     <button
                                         onClick={() => setPreview(null)}
-                                        className="p-2 rounded-xl text-slate-400 hover:bg-white hover:shadow-sm transition-all"
+                                        className="p-2 rounded-lg text-slate-400 hover:bg-white hover:shadow-sm transition-all"
                                     >
                                         <X className="w-5 h-5" />
                                     </button>
@@ -369,7 +369,7 @@ export default function TemplatesPage() {
                                                 <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
                                                 <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Subject</p>
                                             </div>
-                                            <p className="text-lg font-bold text-slate-900 leading-tight bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">{preview.subject}</p>
+                                            <p className="text-lg font-bold text-slate-900 leading-tight bg-white p-5 rounded-xl border border-slate-100 shadow-sm">{preview.subject}</p>
                                         </div>
 
                                         <div className="space-y-2 py-4">
@@ -377,14 +377,14 @@ export default function TemplatesPage() {
                                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                                                 <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Body Content</p>
                                             </div>
-                                            <div className="p-8 rounded-[2rem] bg-slate-50 border border-slate-200 text-sm text-slate-600 font-medium leading-[1.8] whitespace-pre-wrap min-h-[200px] shadow-inner">
+                                            <div className="p-8 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-600 font-medium leading-[1.8] whitespace-pre-wrap min-h-[200px] shadow-inner">
                                                 {preview.body}
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="bg-blue-50/50 rounded-2xl p-5 border border-blue-100/50 flex items-start gap-4">
-                                        <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+                                    <div className="bg-blue-50/50 rounded-xl p-5 border border-blue-100/50 flex items-start gap-4">
+                                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
                                             <Sparkles className="w-5 h-5 text-blue-600" />
                                         </div>
                                         <div>
@@ -396,7 +396,7 @@ export default function TemplatesPage() {
                                 <div className="p-8 bg-white rounded-b-[2.5rem] border-t border-slate-100">
                                     <button
                                         onClick={() => setPreview(null)}
-                                        className="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl text-sm transition-all active:scale-95 hover:bg-slate-800"
+                                        className="w-full bg-slate-900 text-white font-bold py-4 rounded-xl text-sm transition-all active:scale-95 hover:bg-slate-800"
                                     >
                                         Looks Good, Close Preview
                                     </button>

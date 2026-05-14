@@ -58,13 +58,13 @@ function HomePageContent() {
             <nav className="fixed top-0 w-full z-50 border-b border-slate-200/60 bg-white/70 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="rounded-xl flex items-center justify-center">
+                        <div className="rounded-lg flex items-center justify-center">
                             <Image
                                 src="/icon.png"
                                 alt="MailMagic"
                                 width={35}
                                 height={35}
-                                className="rounded-xl"
+                                className="rounded-lg"
                                 priority
                             />
                         </div>
@@ -72,7 +72,7 @@ function HomePageContent() {
                     </div>
                     <button
                         onClick={handleSignIn}
-                        className="text-sm font-bold text-slate-900 hover:text-blue-600 active:text-blue-600 transition-colors px-6 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:bg-slate-100 active:scale-95 shadow-sm"
+                        className="text-sm font-bold text-slate-900 hover:text-blue-600 active:text-blue-600 transition-colors px-6 py-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 active:bg-slate-100 active:scale-95 shadow-sm"
                     >
                         Sign In
                     </button>
@@ -104,7 +104,7 @@ function HomePageContent() {
                         <div className="flex flex-col items-center gap-7 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 pb-10">
                             <button
                                 onClick={handleSignIn}
-                                className="w-full max-w-md px-6 py-3.5 sm:px-8 sm:py-4 md:px-12 md:py-5 rounded-2xl bg-blue-600 text-white font-bold inline-flex items-center justify-center gap-2 sm:gap-2.5 md:gap-3 group transition-all hover:bg-blue-700 active:scale-[0.98] shadow-xl shadow-blue-600/20 cursor-pointer"
+                                className="w-full max-w-md px-6 py-3.5 sm:px-8 sm:py-4 md:px-12 md:py-5 rounded-xl bg-blue-600 text-white font-bold inline-flex items-center justify-center gap-2 sm:gap-2.5 md:gap-3 group transition-all hover:bg-blue-700 active:scale-[0.98] shadow-xl shadow-blue-600/20 cursor-pointer"
                             >
                                 <svg className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" viewBox="0 0 24 24">
                                     <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -140,9 +140,9 @@ function HomePageContent() {
                         </div>
 
                         {/* Security Notice */}
-                        <div className="group max-w-2xl bg-white border border-slate-200/60 p-6 rounded-[2rem] shadow-sm hover:shadow-md active:shadow-inner active:scale-[0.99] transition-all animate-in fade-in zoom-in-95 duration-1000 delay-700">
+                        <div className="group max-w-2xl bg-white border border-slate-200/60 p-6 rounded-xl shadow-sm hover:shadow-md active:shadow-inner active:scale-[0.99] transition-all animate-in fade-in zoom-in-95 duration-1000 delay-700">
                             <div className="flex items-start gap-5">
-                                <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0 group-hover:bg-emerald-50 group-active:bg-emerald-100 transition-colors">
+                                <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0 group-hover:bg-emerald-50 group-active:bg-emerald-100 transition-colors">
                                     <Lock className="w-5 h-5 text-slate-400 group-hover:text-emerald-500 group-active:text-emerald-600 transition-colors" />
                                 </div>
                                 <div className="text-left space-y-1">
@@ -163,8 +163,8 @@ function HomePageContent() {
                                 { icon: Briefcase, title: 'Template Assets', desc: 'Professional schemas ensures consistent quality across leads.', color: 'emerald' },
                                 { icon: Globe, title: 'Global Sync', desc: 'Manage your recruiter network across time zones effortlessly.', color: 'cyan' },
                             ].map((f, i) => (
-                                <div key={i} className="group p-8 rounded-[2.5rem] bg-white border border-slate-200/60 hover:border-slate-300 active:border-slate-400 transition-all shadow-sm hover:shadow-xl active:shadow-lg active:scale-[0.98] hover:shadow-slate-200/20 text-left">
-                                    <div className={`w-12 h-12 rounded-2xl bg-${f.color}-50 flex items-center justify-center mb-6 group-hover:scale-110 group-active:scale-110 transition-transform`}>
+                                <div key={i} className="group p-8 rounded-xl bg-white border border-slate-200/60 hover:border-slate-300 active:border-slate-400 transition-all shadow-sm hover:shadow-xl active:shadow-lg active:scale-[0.98] hover:shadow-slate-200/20 text-left">
+                                    <div className={`w-12 h-12 rounded-xl bg-${f.color}-50 flex items-center justify-center mb-6 group-hover:scale-110 group-active:scale-110 transition-transform`}>
                                         <f.icon className={`w-6 h-6 text-${f.color}-600`} />
                                     </div>
                                     <h3 className="text-lg font-display font-bold text-slate-900 mb-2 truncate group-hover:text-blue-600 group-active:text-blue-700 transition-colors uppercase tracking-tight">{f.title}</h3>

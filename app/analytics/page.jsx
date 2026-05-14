@@ -107,7 +107,7 @@ export default function AnalyticsPage() {
                                     Deep insights into your application pipeline, response rates, and send timing.
                                 </p>
                             </div>
-                            <button onClick={fetchAll} className="cursor-pointer flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all self-start">
+                            <button onClick={fetchAll} className="cursor-pointer flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all self-start">
                                 <RefreshCw className="w-4 h-4" /> Refresh
                             </button>
                         </div>
@@ -134,7 +134,7 @@ export default function AnalyticsPage() {
                                 },
                             ].map((kpi) => (
                                 <div key={kpi.label} className={cn(
-                                    'bg-white border p-4 sm:p-5 rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] transition-all hover:shadow-md',
+                                    'bg-white border p-4 sm:p-5 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] transition-all hover:shadow-md',
                                     kpi.highlight ? 'border-emerald-200 bg-emerald-50/20' : 'border-slate-200/60'
                                 )}>
                                     <div className="flex items-center justify-between mb-3">
@@ -150,13 +150,13 @@ export default function AnalyticsPage() {
                         </div>
 
                         {/* ── Tabs ── */}
-                        <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-2xl w-fit">
+                        <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl w-fit">
                             {tabs.map((tab) => (
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={cn(
-                                        'flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer',
+                                        'flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer',
                                         activeTab === tab.id
                                             ? 'bg-white text-slate-900 shadow-sm'
                                             : 'text-slate-500 hover:text-slate-700'
@@ -173,9 +173,9 @@ export default function AnalyticsPage() {
                             <div className="space-y-6">
 
                                 {/* Pipeline Funnel Bars */}
-                                <div className="bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                <div className="bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                     <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center gap-3">
-                                        <div className="p-2.5 bg-blue-50 rounded-xl"><BriefcaseBusiness className="w-5 h-5 text-blue-600" /></div>
+                                        <div className="p-2.5 bg-blue-50 rounded-lg"><BriefcaseBusiness className="w-5 h-5 text-blue-600" /></div>
                                         <div>
                                             <h3 className="font-display font-bold text-lg text-slate-900 tracking-tight">Application Pipeline</h3>
                                             <p className="text-xs text-slate-400 font-medium">{totalApps} applications tracked · stages breakdown</p>
@@ -224,7 +224,7 @@ export default function AnalyticsPage() {
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
                                     {/* Conversion Rates */}
-                                    <div className="bg-slate-900 rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden shadow-2xl shadow-slate-900/20">
+                                    <div className="bg-slate-900 rounded-xl p-6 sm:p-8 text-white relative overflow-hidden shadow-2xl shadow-slate-900/20">
                                         <div className="absolute -bottom-10 -right-10 opacity-[0.04] pointer-events-none">
                                             <TrendingUp className="w-64 h-64" />
                                         </div>
@@ -255,9 +255,9 @@ export default function AnalyticsPage() {
                                     </div>
 
                                     {/* Template Performance */}
-                                    <div className="bg-white border border-slate-200/60 rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                    <div className="bg-white border border-slate-200/60 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                         <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center gap-3">
-                                            <div className="p-2.5 bg-violet-50 rounded-xl"><FileText className="w-5 h-5 text-violet-600" /></div>
+                                            <div className="p-2.5 bg-violet-50 rounded-lg"><FileText className="w-5 h-5 text-violet-600" /></div>
                                             <div>
                                                 <h3 className="font-display font-bold text-lg text-slate-900 tracking-tight">Template Performance</h3>
                                                 <p className="text-xs text-slate-400 font-medium">Best response-generating templates</p>
@@ -296,9 +296,9 @@ export default function AnalyticsPage() {
 
                                 {/* Role + Company Performance */}
                                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                                    <div className="lg:col-span-6 bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                    <div className="lg:col-span-6 bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                         <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center gap-3">
-                                            <div className="p-2.5 bg-amber-50 rounded-xl"><Target className="w-5 h-5 text-amber-600" /></div>
+                                            <div className="p-2.5 bg-amber-50 rounded-lg"><Target className="w-5 h-5 text-amber-600" /></div>
                                             <div>
                                                 <h3 className="font-display font-bold text-lg text-slate-900 tracking-tight">Role Performance</h3>
                                                 <p className="text-xs text-slate-400 font-medium">Response rates by job role</p>
@@ -339,9 +339,9 @@ export default function AnalyticsPage() {
                                         </div>
                                     </div>
 
-                                    <div className="lg:col-span-6 bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                    <div className="lg:col-span-6 bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                         <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center gap-3">
-                                            <div className="p-2.5 bg-indigo-50 rounded-xl"><Building2 className="w-5 h-5 text-indigo-600" /></div>
+                                            <div className="p-2.5 bg-indigo-50 rounded-lg"><Building2 className="w-5 h-5 text-indigo-600" /></div>
                                             <div>
                                                 <h3 className="font-display font-bold text-lg text-slate-900 tracking-tight">Company Engagement</h3>
                                                 <p className="text-xs text-slate-400 font-medium">Depth of engagement per company</p>
@@ -386,7 +386,7 @@ export default function AnalyticsPage() {
                                 {/* Period Comparison */}
                                 {data?.periodComparison && (
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-                                        <div className="bg-white border border-slate-200/60 p-5 sm:p-6 rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+                                        <div className="bg-white border border-slate-200/60 p-5 sm:p-6 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
                                             <div className="flex items-center justify-between mb-4">
                                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Last 30 Days</p>
                                                 <div className={cn('flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold',
@@ -398,18 +398,18 @@ export default function AnalyticsPage() {
                                             <p className="text-3xl font-display font-bold text-slate-900">{data.periodComparison.current}</p>
                                             <p className="text-xs text-slate-500 font-medium mt-1">applications sent</p>
                                         </div>
-                                        <div className="bg-white border border-slate-200/60 p-5 sm:p-6 rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+                                        <div className="bg-white border border-slate-200/60 p-5 sm:p-6 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
                                             <div className="flex items-center justify-between mb-4">
                                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Delivery Rate</p>
-                                                <div className="p-2 bg-emerald-50 rounded-xl"><CheckCircle2 className="w-4 h-4 text-emerald-600" /></div>
+                                                <div className="p-2 bg-emerald-50 rounded-lg"><CheckCircle2 className="w-4 h-4 text-emerald-600" /></div>
                                             </div>
                                             <p className="text-3xl font-display font-bold text-emerald-600">{funnel.deliveryRate || 0}%</p>
                                             <p className="text-xs text-slate-500 font-medium mt-1">of emails delivered successfully</p>
                                         </div>
-                                        <div className="bg-white border border-slate-200/60 p-5 sm:p-6 rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+                                        <div className="bg-white border border-slate-200/60 p-5 sm:p-6 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
                                             <div className="flex items-center justify-between mb-4">
                                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Response Rate</p>
-                                                <div className="p-2 bg-blue-50 rounded-xl"><Target className="w-4 h-4 text-blue-600" /></div>
+                                                <div className="p-2 bg-blue-50 rounded-lg"><Target className="w-4 h-4 text-blue-600" /></div>
                                             </div>
                                             <p className="text-3xl font-display font-bold text-blue-600">{funnel.responseRate || 0}%</p>
                                             <p className="text-xs text-slate-500 font-medium mt-1">of contacts responded</p>
@@ -418,9 +418,9 @@ export default function AnalyticsPage() {
                                 )}
 
                                 {/* Application Funnel (email level) */}
-                                <div className="bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                <div className="bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                     <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center gap-3">
-                                        <div className="p-2.5 bg-blue-50 rounded-xl"><Filter className="w-5 h-5 text-blue-600" /></div>
+                                        <div className="p-2.5 bg-blue-50 rounded-lg"><Filter className="w-5 h-5 text-blue-600" /></div>
                                         <div>
                                             <h3 className="font-display font-bold text-lg text-slate-900 tracking-tight">Email Delivery Funnel</h3>
                                             <p className="text-xs text-slate-400 font-medium">Your conversion pipeline at a glance</p>
@@ -461,9 +461,9 @@ export default function AnalyticsPage() {
                                 </div>
 
                                 {/* Response Rate Timeline */}
-                                <div className="bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                <div className="bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                     <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center gap-3">
-                                        <div className="p-2.5 bg-emerald-50 rounded-xl"><TrendingUp className="w-5 h-5 text-emerald-600" /></div>
+                                        <div className="p-2.5 bg-emerald-50 rounded-lg"><TrendingUp className="w-5 h-5 text-emerald-600" /></div>
                                         <div>
                                             <h3 className="font-display font-bold text-lg text-slate-900 tracking-tight">Response Rate Timeline</h3>
                                             <p className="text-xs text-slate-400 font-medium">Weekly response rates over 90 days</p>
@@ -505,9 +505,9 @@ export default function AnalyticsPage() {
                         {activeTab === 'timing' && (
                             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
                                 {/* Peak Days */}
-                                <div className="lg:col-span-5 bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                <div className="lg:col-span-5 bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                     <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center gap-3">
-                                        <div className="p-2.5 bg-rose-50 rounded-xl"><Calendar className="w-5 h-5 text-rose-600" /></div>
+                                        <div className="p-2.5 bg-rose-50 rounded-lg"><Calendar className="w-5 h-5 text-rose-600" /></div>
                                         <div>
                                             <h3 className="font-display font-bold text-lg text-slate-900 tracking-tight">Peak Days</h3>
                                             <p className="text-xs text-slate-400 font-medium">Most active days of the week</p>
@@ -534,9 +534,9 @@ export default function AnalyticsPage() {
                                 </div>
 
                                 {/* Hourly Heatmap */}
-                                <div className="lg:col-span-7 bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                <div className="lg:col-span-7 bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                     <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center gap-3">
-                                        <div className="p-2.5 bg-cyan-50 rounded-xl"><Clock className="w-5 h-5 text-cyan-600" /></div>
+                                        <div className="p-2.5 bg-cyan-50 rounded-lg"><Clock className="w-5 h-5 text-cyan-600" /></div>
                                         <div>
                                             <h3 className="font-display font-bold text-lg text-slate-900 tracking-tight">Hourly Activity</h3>
                                             <p className="text-xs text-slate-400 font-medium">When you send the most (last 30 days)</p>
@@ -582,13 +582,13 @@ export default function AnalyticsPage() {
                         {activeTab === 'monthly' && (
                             <div className="space-y-6">
                                 {data?.monthlyData?.length > 0 ? (
-                                    <div className="bg-slate-900 rounded-2xl lg:rounded-3xl p-6 sm:p-8 lg:p-10 text-white relative overflow-hidden shadow-2xl shadow-slate-900/20">
+                                    <div className="bg-slate-900 rounded-xl lg:rounded-xl p-6 sm:p-8 lg:p-10 text-white relative overflow-hidden shadow-2xl shadow-slate-900/20">
                                         <div className="absolute -top-10 -right-10 p-8 opacity-[0.03] pointer-events-none">
                                             <BarChart3 className="w-64 h-64" />
                                         </div>
                                         <div className="relative z-10">
                                             <div className="flex items-center gap-3 mb-6">
-                                                <div className="p-2.5 bg-white/10 rounded-xl"><Activity className="w-5 h-5 text-blue-400" /></div>
+                                                <div className="p-2.5 bg-white/10 rounded-lg"><Activity className="w-5 h-5 text-blue-400" /></div>
                                                 <div>
                                                     <h3 className="font-display font-bold text-xl text-white tracking-tight">Monthly Trends</h3>
                                                     <p className="text-xs text-slate-400 font-medium">6-month application volume</p>
@@ -620,7 +620,7 @@ export default function AnalyticsPage() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="py-24 text-center bg-white rounded-2xl border border-slate-200/60">
+                                    <div className="py-24 text-center bg-white rounded-xl border border-slate-200/60">
                                         <BarChart3 className="w-10 h-10 text-slate-200 mx-auto mb-3" />
                                         <p className="text-sm font-bold text-slate-400">No monthly data yet</p>
                                         <p className="text-xs text-slate-400 mt-1 font-medium">Send applications to start seeing trends</p>

@@ -305,7 +305,7 @@ export default function FollowUpsPage() {
                                     <button
                                         onClick={handleDeleteAllClick}
                                         className={cn(
-                                            "font-semibold px-4 py-2.5 rounded-xl text-sm transition-all active:scale-95 flex items-center gap-2 cursor-pointer border",
+                                            "font-semibold px-4 py-2.5 rounded-lg text-sm transition-all active:scale-95 flex items-center gap-2 cursor-pointer border",
                                             pendingDeleteAll
                                                 ? "bg-rose-600 text-white border-rose-700 animate-pulse shadow-lg shadow-rose-500/30 hover:bg-rose-700"
                                                 : "bg-white text-rose-500 border-rose-200 hover:bg-rose-50 hover:border-rose-300"
@@ -321,7 +321,7 @@ export default function FollowUpsPage() {
                                 <button
                                     onClick={autoGenerateFollowUps}
                                     disabled={generatingFollowUps}
-                                    className="bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-[0_10px_20px_-5px_rgba(37,99,235,0.25)] flex items-center gap-2 font-sans cursor-pointer disabled:opacity-50"
+                                    className="bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-[0_10px_20px_-5px_rgba(37,99,235,0.25)] flex items-center gap-2 font-sans cursor-pointer disabled:opacity-50"
                                 >
                                     {generatingFollowUps ? (
                                         <RefreshCw className="w-4 h-4 animate-spin" />
@@ -334,7 +334,7 @@ export default function FollowUpsPage() {
                         </div>
 
                         {/* Follow-up policy info banner */}
-                        <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-100 rounded-2xl">
+                        <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-100 rounded-xl">
                             <Info className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
                             <div className="text-sm text-blue-800 leading-relaxed">
                                 <strong>Manual Follow-Ups Only:</strong> Click <strong>Send Now</strong> on any pending follow-up to send it via Gmail instantly.
@@ -354,9 +354,9 @@ export default function FollowUpsPage() {
                             ].map((stat) => (
                                 <div
                                     key={stat.label}
-                                    className="bg-white border border-slate-200/60 p-4 sm:p-5 rounded-2xl shadow-sm flex items-center gap-4 group hover:shadow-md hover:border-slate-300 transition-all"
+                                    className="bg-white border border-slate-200/60 p-4 sm:p-5 rounded-xl shadow-sm flex items-center gap-4 group hover:shadow-md hover:border-slate-300 transition-all"
                                 >
-                                    <div className={cn("p-2.5 rounded-xl transition-transform group-hover:scale-110", stat.bg)}>
+                                    <div className={cn("p-2.5 rounded-lg transition-transform group-hover:scale-110", stat.bg)}>
                                         <stat.icon className={cn("w-5 h-5", stat.color)} />
                                     </div>
                                     <div>
@@ -368,8 +368,8 @@ export default function FollowUpsPage() {
                         </div>
 
                         {/* Filter Tabs */}
-                        <div className="bg-white border border-slate-200/60 p-2 rounded-2xl shadow-sm">
-                            <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200/50">
+                        <div className="bg-white border border-slate-200/60 p-2 rounded-xl shadow-sm">
+                            <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-lg border border-slate-200/50">
                                 {[
                                     { key: 'pending', label: 'Pending', count: counts.pending },
                                     { key: 'sent', label: 'Completed', count: counts.sent },
@@ -394,8 +394,8 @@ export default function FollowUpsPage() {
 
                         {/* Follow-Up Cards */}
                         {followUps.length === 0 ? (
-                            <div className="bg-white border border-slate-200/60 border-dashed rounded-3xl py-20 text-center px-6">
-                                <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-slate-100 shadow-inner">
+                            <div className="bg-white border border-slate-200/60 border-dashed rounded-xl py-20 text-center px-6">
+                                <div className="w-20 h-20 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-6 border border-slate-100 shadow-inner">
                                     <Bell className="w-8 h-8 text-slate-200" />
                                 </div>
                                 <h3 className="text-xl font-display font-bold text-slate-900 mb-2">
@@ -409,7 +409,7 @@ export default function FollowUpsPage() {
                                 <button
                                     onClick={autoGenerateFollowUps}
                                     disabled={generatingFollowUps}
-                                    className="bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl text-sm inline-flex items-center gap-2 hover:bg-blue-700 transition-all active:scale-95 shadow-lg shadow-blue-500/20 cursor-pointer disabled:opacity-50"
+                                    className="bg-blue-600 text-white font-bold px-6 py-3 rounded-xl text-sm inline-flex items-center gap-2 hover:bg-blue-700 transition-all active:scale-95 shadow-lg shadow-blue-500/20 cursor-pointer disabled:opacity-50"
                                 >
                                     <Sparkles className="w-4 h-4" />
                                     Generate Follow&#8209;Ups
@@ -425,7 +425,7 @@ export default function FollowUpsPage() {
                                         <div
                                             key={followUp._id}
                                             className={cn(
-                                                "bg-white border rounded-2xl lg:rounded-3xl shadow-sm overflow-hidden transition-all hover:shadow-md",
+                                                "bg-white border rounded-xl lg:rounded-xl shadow-sm overflow-hidden transition-all hover:shadow-md",
                                                 replied ? "border-violet-200 bg-violet-50/20" :
                                                     overdue ? "border-rose-200 bg-rose-50/20" : "border-slate-200/60",
                                                 followUp.status === 'sent' && "opacity-60",
@@ -447,7 +447,7 @@ export default function FollowUpsPage() {
                                                 <div className="flex flex-col sm:flex-row items-start gap-4">
                                                     {/* Status Indicator */}
                                                     <div className={cn(
-                                                        "w-11 h-11 rounded-2xl flex items-center justify-center shrink-0",
+                                                        "w-11 h-11 rounded-xl flex items-center justify-center shrink-0",
                                                         replied ? "bg-violet-100" :
                                                             overdue ? "bg-rose-100" :
                                                                 followUp.status === 'sent' ? "bg-emerald-100" :
@@ -522,14 +522,14 @@ export default function FollowUpsPage() {
                                                                     <button
                                                                         disabled
                                                                         title="HR has already replied — send a Reply instead from Applications"
-                                                                        className="px-4 py-2 bg-slate-100 text-slate-400 rounded-xl text-[10px] font-bold uppercase tracking-tight cursor-not-allowed flex items-center gap-1.5 border border-slate-200"
+                                                                        className="px-4 py-2 bg-slate-100 text-slate-400 rounded-lg text-[10px] font-bold uppercase tracking-tight cursor-not-allowed flex items-center gap-1.5 border border-slate-200"
                                                                     >
                                                                         <Send className="w-3.5 h-3.5" />
                                                                         Blocked · HR Replied
                                                                     </button>
                                                                     <button
                                                                         onClick={() => updateFollowUp(followUp._id, { status: 'skipped' })}
-                                                                        className="p-2 bg-slate-50 text-slate-500 rounded-xl hover:bg-rose-50 hover:text-rose-600 transition-all cursor-pointer border border-slate-200"
+                                                                        className="p-2 bg-slate-50 text-slate-500 rounded-lg hover:bg-rose-50 hover:text-rose-600 transition-all cursor-pointer border border-slate-200"
                                                                         title="Skip this follow-up"
                                                                     >
                                                                         <SkipForward className="w-4 h-4" />
@@ -538,7 +538,7 @@ export default function FollowUpsPage() {
                                                                     <button
                                                                         onClick={() => handleDeleteClick(followUp._id)}
                                                                         className={cn(
-                                                                            "p-2 rounded-xl transition-all cursor-pointer border text-xs font-bold flex items-center gap-1",
+                                                                            "p-2 rounded-lg transition-all cursor-pointer border text-xs font-bold flex items-center gap-1",
                                                                             pendingDeleteId === followUp._id
                                                                                 ? "bg-rose-600 text-white border-rose-700 animate-pulse"
                                                                                 : "bg-slate-50 text-slate-400 border-slate-200 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200"
@@ -555,7 +555,7 @@ export default function FollowUpsPage() {
                                                                     <button
                                                                         onClick={() => sendFollowUp(followUp._id)}
                                                                         disabled={sendingFollowUpId === followUp._id}
-                                                                        className="px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-bold uppercase tracking-tight hover:bg-blue-700 transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 shadow-md shadow-blue-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                                                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg text-[10px] font-bold uppercase tracking-tight hover:bg-blue-700 transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 shadow-md shadow-blue-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
                                                                     >
                                                                         {sendingFollowUpId === followUp._id ? (
                                                                             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -566,21 +566,21 @@ export default function FollowUpsPage() {
                                                                     </button>
                                                                     <button
                                                                         onClick={() => openEditModal(followUp)}
-                                                                        className="p-2 bg-slate-50 text-slate-500 rounded-xl hover:bg-slate-100 transition-all cursor-pointer border border-slate-200"
+                                                                        className="p-2 bg-slate-50 text-slate-500 rounded-lg hover:bg-slate-100 transition-all cursor-pointer border border-slate-200"
                                                                         title="Edit message"
                                                                     >
                                                                         <Edit3 className="w-4 h-4" />
                                                                     </button>
                                                                     <button
                                                                         onClick={() => updateFollowUp(followUp._id, { snoozeDays: 3 })}
-                                                                        className="p-2 bg-slate-50 text-slate-500 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all cursor-pointer border border-slate-200"
+                                                                        className="p-2 bg-slate-50 text-slate-500 rounded-lg hover:bg-amber-50 hover:text-amber-600 transition-all cursor-pointer border border-slate-200"
                                                                         title="Snooze 3 days"
                                                                     >
                                                                         <Timer className="w-4 h-4" />
                                                                     </button>
                                                                     <button
                                                                         onClick={() => updateFollowUp(followUp._id, { status: 'skipped' })}
-                                                                        className="p-2 bg-slate-50 text-slate-500 rounded-xl hover:bg-slate-100 hover:text-slate-600 transition-all cursor-pointer border border-slate-200"
+                                                                        className="p-2 bg-slate-50 text-slate-500 rounded-lg hover:bg-slate-100 hover:text-slate-600 transition-all cursor-pointer border border-slate-200"
                                                                         title="Skip this follow-up"
                                                                     >
                                                                         <SkipForward className="w-4 h-4" />
@@ -589,7 +589,7 @@ export default function FollowUpsPage() {
                                                                     <button
                                                                         onClick={() => handleDeleteClick(followUp._id)}
                                                                         className={cn(
-                                                                            "p-2 rounded-xl transition-all cursor-pointer border text-xs font-bold flex items-center gap-1",
+                                                                            "p-2 rounded-lg transition-all cursor-pointer border text-xs font-bold flex items-center gap-1",
                                                                             pendingDeleteId === followUp._id
                                                                                 ? "bg-rose-600 text-white border-rose-700 animate-pulse"
                                                                                 : "bg-slate-50 text-slate-400 border-slate-200 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200"
@@ -609,7 +609,7 @@ export default function FollowUpsPage() {
                                                         <button
                                                             onClick={() => handleDeleteClick(followUp._id)}
                                                             className={cn(
-                                                                "shrink-0 p-2 rounded-xl transition-all cursor-pointer border flex items-center gap-1 text-xs font-bold",
+                                                                "shrink-0 p-2 rounded-lg transition-all cursor-pointer border flex items-center gap-1 text-xs font-bold",
                                                                 pendingDeleteId === followUp._id
                                                                     ? "bg-rose-600 text-white border-rose-700 animate-pulse"
                                                                     : "bg-slate-50 text-slate-300 border-slate-200 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200"
@@ -633,10 +633,10 @@ export default function FollowUpsPage() {
                     {editingFollowUp && (
                         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
                             <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setEditingFollowUp(null)} />
-                            <div className="bg-white max-w-2xl w-full rounded-[2.5rem] shadow-2xl relative z-10 animate-in slide-in-from-bottom-5 duration-500 flex flex-col max-h-[90vh] overflow-hidden">
+                            <div className="bg-white max-w-2xl w-full rounded-xl shadow-2xl relative z-10 animate-in slide-in-from-bottom-5 duration-500 flex flex-col max-h-[90vh] overflow-hidden">
                                 <div className="p-6 sm:p-8 border-b border-slate-100 flex items-center justify-between bg-white">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center">
+                                        <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
                                             <Edit3 className="w-6 h-6 text-blue-600" />
                                         </div>
                                         <div>
@@ -646,7 +646,7 @@ export default function FollowUpsPage() {
                                     </div>
                                     <button
                                         onClick={() => setEditingFollowUp(null)}
-                                        className="p-2.5 rounded-xl text-slate-400 hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 cursor-pointer"
+                                        className="p-2.5 rounded-lg text-slate-400 hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 cursor-pointer"
                                     >
                                         <X className="w-5 h-5" />
                                     </button>
@@ -659,7 +659,7 @@ export default function FollowUpsPage() {
                                             type="text"
                                             value={editForm.subject}
                                             onChange={(e) => setEditForm({ ...editForm, subject: e.target.value })}
-                                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all"
+                                            className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -668,7 +668,7 @@ export default function FollowUpsPage() {
                                             value={editForm.message}
                                             onChange={(e) => setEditForm({ ...editForm, message: e.target.value })}
                                             rows={10}
-                                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all resize-none leading-relaxed"
+                                            className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all resize-none leading-relaxed"
                                         />
                                     </div>
                                 </div>
@@ -676,13 +676,13 @@ export default function FollowUpsPage() {
                                 <div className="p-6 sm:p-8 bg-white border-t border-slate-100 flex items-center gap-3 justify-end">
                                     <button
                                         onClick={() => setEditingFollowUp(null)}
-                                        className="px-8 py-3 bg-slate-100 text-slate-700 font-bold rounded-xl text-sm transition-all active:scale-95 hover:bg-slate-200 cursor-pointer"
+                                        className="px-8 py-3 bg-slate-100 text-slate-700 font-bold rounded-lg text-sm transition-all active:scale-95 hover:bg-slate-200 cursor-pointer"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         onClick={handleEditSave}
-                                        className="px-8 py-3 bg-blue-600 text-white font-bold rounded-xl text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-lg shadow-blue-500/20 cursor-pointer flex items-center gap-2"
+                                        className="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-lg shadow-blue-500/20 cursor-pointer flex items-center gap-2"
                                     >
                                         <CheckCircle2 className="w-4 h-4" />
                                         Save Changes

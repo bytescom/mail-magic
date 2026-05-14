@@ -204,37 +204,7 @@ export default function SendEmailsPage() {
             type: 'send',
             count: selectedHrEmails.length,
             onConfirm: async () => {
-                setSending(true);
-
-                try {
-                    const response = await fetch('/api/emails/send', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            templateId: selectedTemplate,
-                            hrEmailIds: selectedHrEmails,
-                            variables,
-                            documentIds: selectedDocumentIds, // Array of selected document IDs
-                        }),
-                    });
-
-                    if (response.ok) {
-                        const result = await response.json();
-                        toast.success(`Successfully dispatched ${result.results.sent.length} communications!`);
-                        if (result.results.failed.length > 0) {
-                            toast.error(`${result.results.failed.length} dispatches failed.`);
-                        }
-                        setSelectedHrEmails([]);
-                    } else {
-                        const error = await response.json();
-                        toast.error(error.error || 'Failed to send emails');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    toast.error('Something went wrong');
-                } finally {
-                    setSending(false);
-                }
+                await executeSend(null, null);
             }
         });
         setShowConfirmModal(true);
@@ -244,19 +214,60 @@ export default function SendEmailsPage() {
         const template = templates.find((t) => t._id === selectedTemplate);
         if (!template) return;
 
-        const sampleHrEmail = hrEmails.find((hr) => selectedHrEmails.includes(hr._id)) || hrEmails[0];
+        setPreview({
+            rawSubject: template.subject,
+            rawBody: template.body,
+        });
+    };
 
+    const getPreviewSample = (rawSubject, rawBody) => {
+        const sampleHrEmail = hrEmails.find((hr) => selectedHrEmails.includes(hr._id)) || hrEmails[0];
         const previewVars = {
             ...variables,
             hr_name: sampleHrEmail?.hrName || 'Hiring Lead',
             company: sampleHrEmail?.company || 'Company Name',
             job_role: sampleHrEmail?.jobRole || 'Engineer Position',
         };
+        return {
+            subject: replaceVariables(rawSubject, previewVars),
+            body: replaceVariables(rawBody, previewVars),
+        };
+    };
 
-        setPreview({
-            subject: replaceVariables(template.subject, previewVars),
-            body: replaceVariables(template.body, previewVars),
-        });
+    const executeSend = async (customSubject, customBody) => {
+        setSending(true);
+        try {
+            const response = await fetch('/api/emails/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    templateId: selectedTemplate,
+                    hrEmailIds: selectedHrEmails,
+                    variables,
+                    documentIds: selectedDocumentIds,
+                    customSubject,
+                    customBody,
+                }),
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                toast.success(`Successfully dispatched ${result.results.sent.length} communications!`);
+                if (result.results.failed.length > 0) {
+                    toast.error(`${result.results.failed.length} dispatches failed.`);
+                }
+                setSelectedHrEmails([]);
+                setPreview(null);
+            } else {
+                const error = await response.json();
+                toast.error(error.error || 'Failed to send emails');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            toast.error('Something went wrong');
+        } finally {
+            setSending(false);
+        }
     };
 
     const toggleSelectAll = () => {
@@ -341,7 +352,7 @@ export default function SendEmailsPage() {
                             </p>
                         </div>
 
-                        <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 bg-blue-50 border border-blue-100 rounded-xl sm:rounded-2xl">
+                        <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 bg-blue-50 border border-blue-100 rounded-lg sm:rounded-xl">
                             <History className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500" />
                             <span className="text-[10px] sm:text-xs font-bold text-blue-900 uppercase tracking-tight">System Ready to Dispatch</span>
                         </div>
@@ -353,10 +364,10 @@ export default function SendEmailsPage() {
                             <div className="lg:col-span-8 space-y-6 sm:space-y-8 w-full min-w-0">
 
                                 {/* Step 1: Base Configuration */}
-                                <div className="bg-white border border-slate-200/60 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm overflow-hidden">
+                                <div className="bg-white border border-slate-200/60 rounded-xl sm:rounded-xl shadow-sm overflow-hidden">
                                     <div className="p-4 md:p-6 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
                                         <div className="flex items-center gap-3 sm:gap-4">
-                                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/10">
+                                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/10">
                                                 <LayoutPanelTop className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                                             </div>
                                             <h2 className="text-base sm:text-lg md:text-xl font-display font-bold text-slate-900">1. Core Assets</h2>
@@ -371,7 +382,7 @@ export default function SendEmailsPage() {
                                                 <select
                                                     value={selectedTemplate}
                                                     onChange={(e) => setSelectedTemplate(e.target.value)}
-                                                    className="w-full pl-10 sm:pl-12 pr-4 sm:pr-6 py-3 sm:py-3.5 md:py-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs sm:text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 appearance-none transition-all cursor-pointer"
+                                                    className="w-full pl-10 sm:pl-12 pr-4 sm:pr-6 py-3 sm:py-3.5 md:py-4 rounded-xl bg-slate-50 border border-slate-100 text-xs sm:text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 appearance-none transition-all cursor-pointer"
                                                 >
                                                     <option value="">Choose strategy...</option>
                                                     {templates.map((t) => (
@@ -389,7 +400,7 @@ export default function SendEmailsPage() {
                                                         type="text"
                                                         value={variables.your_name}
                                                         onChange={(e) => setVariables({ ...variables, your_name: e.target.value })}
-                                                        className="w-full px-3 sm:px-4 md:px-5 py-3 sm:py-3.5 md:py-4 rounded-2xl bg-white border border-slate-200 text-xs sm:text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all placeholder:font-normal"
+                                                        className="w-full px-3 sm:px-4 md:px-5 py-3 sm:py-3.5 md:py-4 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all placeholder:font-normal"
                                                         placeholder="John Doe"
                                                     />
                                                 </div>
@@ -399,7 +410,7 @@ export default function SendEmailsPage() {
                                                         type="url"
                                                         value={variables.portfolio_link}
                                                         onChange={(e) => setVariables({ ...variables, portfolio_link: e.target.value })}
-                                                        className="w-full px-3 sm:px-4 md:px-5 py-3 sm:py-3.5 md:py-4 rounded-2xl bg-white border border-slate-200 text-xs sm:text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all placeholder:font-normal"
+                                                        className="w-full px-3 sm:px-4 md:px-5 py-3 sm:py-3.5 md:py-4 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/50 transition-all placeholder:font-normal"
                                                         placeholder="Portfolio URL"
                                                     />
                                                 </div>
@@ -409,10 +420,10 @@ export default function SendEmailsPage() {
                                 </div>
 
                                 {/* Step 2: Payload Enrichment */}
-                                <div className="bg-white border border-slate-200/60 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm overflow-hidden">
+                                <div className="bg-white border border-slate-200/60 rounded-xl sm:rounded-xl shadow-sm overflow-hidden">
                                     <div className="p-4 md:p-8 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
                                         <div className="flex items-center gap-3 sm:gap-4">
-                                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-900 flex items-center justify-center shadow-lg shadow-slate-900/10">
+                                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-slate-900 flex items-center justify-center shadow-lg shadow-slate-900/10">
                                                 <Paperclip className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                                             </div>
                                             <h2 className="text-base sm:text-lg md:text-xl font-display font-bold text-slate-900">2. Payload Enrichment</h2>
@@ -439,8 +450,8 @@ export default function SendEmailsPage() {
 
                                             {/* Empty State */}
                                             {documents.length === 0 && (
-                                                <div className="flex flex-col items-center justify-center gap-3 py-12 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[1.5rem]">
-                                                    <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm">
+                                                <div className="flex flex-col items-center justify-center gap-3 py-12 bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl">
+                                                    <div className="w-12 h-12 rounded-lg bg-white border border-slate-100 flex items-center justify-center shadow-sm">
                                                         <File className="w-6 h-6 text-slate-400" />
                                                     </div>
                                                     <div className="text-center">
@@ -459,7 +470,7 @@ export default function SendEmailsPage() {
                                                             <div
                                                                 key={document._id}
                                                                 className={cn(
-                                                                    "p-3 sm:p-4 rounded-[1.25rem] sm:rounded-[1.5rem] border transition-all group cursor-pointer",
+                                                                    "p-3 sm:p-4 rounded-xl sm:rounded-xl border transition-all group cursor-pointer",
                                                                     isSelected
                                                                         ? "bg-blue-50 border-blue-300 ring-2 ring-blue-500/20"
                                                                         : "bg-slate-50 border-slate-200 hover:border-blue-200 hover:bg-white"
@@ -523,8 +534,8 @@ export default function SendEmailsPage() {
                                             )}
 
                                             {/* Upload Button */}
-                                            <label className="flex flex-col items-center justify-center gap-2 sm:gap-3 py-6 sm:py-8 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[1.25rem] sm:rounded-[1.5rem] cursor-pointer hover:bg-blue-50/50 hover:border-blue-400/50 transition-all group">
-                                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                                            <label className="flex flex-col items-center justify-center gap-2 sm:gap-3 py-6 sm:py-8 bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl sm:rounded-xl cursor-pointer hover:bg-blue-50/50 hover:border-blue-400/50 transition-all group">
+                                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-white border border-slate-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                                                     {uploadingDocument ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 animate-spin" /> : <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />}
                                                 </div>
                                                 <p className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight">
@@ -547,11 +558,11 @@ export default function SendEmailsPage() {
                                 </div>
 
                                 {/* Step 3: Recruiter Targeting */}
-                                <div className="bg-white border border-slate-200/60 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm overflow-hidden mb-6 sm:mb-12">
+                                <div className="bg-white border border-slate-200/60 rounded-xl sm:rounded-xl shadow-sm overflow-hidden mb-6 sm:mb-12">
                                     <div className="p-4 md:p-8 border-b border-slate-100 bg-slate-50/30 flex flex-col gap-4">
                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                             <div className="flex items-center gap-3 sm:gap-4">
-                                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/10">
+                                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/10">
                                                     <Users className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                                                 </div>
                                                 <h2 className="text-base sm:text-lg md:text-xl font-display font-bold text-slate-900">3. Targeted Leads</h2>
@@ -559,7 +570,7 @@ export default function SendEmailsPage() {
                                             <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-hide">
                                                 <button
                                                     onClick={() => setShowQuickAddHr(true)}
-                                                    className="whitespace-nowrap px-3 sm:px-4 py-2 bg-emerald-600 text-white border border-emerald-600 rounded-xl text-[9px] sm:text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-700 transition-all cursor-pointer flex items-center gap-1.5"
+                                                    className="whitespace-nowrap px-3 sm:px-4 py-2 bg-emerald-600 text-white border border-emerald-600 rounded-lg text-[9px] sm:text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-700 transition-all cursor-pointer flex items-center gap-1.5"
                                                 >
                                                     <span className="text-lg leading-none">+</span> Quick Add
                                                 </button>
@@ -570,7 +581,7 @@ export default function SendEmailsPage() {
                                                     } else {
                                                         setSelectedHrEmails(ids);
                                                     }
-                                                }} className="whitespace-nowrap px-3 sm:px-4 py-2 bg-white border border-slate-200 rounded-xl text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest hover:bg-slate-50 transition-all cursor-pointer">
+                                                }} className="whitespace-nowrap px-3 sm:px-4 py-2 bg-white border border-slate-200 rounded-lg text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest hover:bg-slate-50 transition-all cursor-pointer">
                                                     {filteredHrEmails.length > 0 && filteredHrEmails.every(hr => selectedHrEmails.includes(hr._id)) ? 'Clear Selection' : 'Select All'}
                                                 </button>
                                             </div>
@@ -578,7 +589,7 @@ export default function SendEmailsPage() {
 
                                         {/* Filter Tabs */}
                                         <div className="w-full overflow-x-auto">
-                                            <div className="flex flex-nowrap justify-between items-center gap-2 p-1 bg-slate-100 rounded-xl border border-slate-200/50 w-max min-w-full">
+                                            <div className="flex flex-nowrap justify-between items-center gap-2 p-1 bg-slate-100 rounded-lg border border-slate-200/50 w-max min-w-full">
                                                 <button
                                                     onClick={() => setHrFilter('not_contacted')}
                                                     className={cn(
@@ -627,7 +638,7 @@ export default function SendEmailsPage() {
                                                 value={hrSearchQuery}
                                                 onChange={(e) => setHrSearchQuery(e.target.value)}
                                                 placeholder="Search contacts..."
-                                                className="w-full pl-10 sm:pl-11 pr-10 sm:pr-4 py-2.5 sm:py-3 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
+                                                className="w-full pl-10 sm:pl-11 pr-10 sm:pr-4 py-2.5 sm:py-3 rounded-lg bg-white border border-slate-200 text-xs sm:text-sm font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
                                             />
                                             {hrSearchQuery && (
                                                 <button
@@ -656,7 +667,7 @@ export default function SendEmailsPage() {
                                                     const isSent = hr.status === 'contacted';
                                                     return (
                                                         <label key={hr._id} className={cn(
-                                                            "group relative flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-[1.25rem] sm:rounded-[1.5rem] border transition-all cursor-pointer shadow-sm select-none",
+                                                            "group relative flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-xl sm:rounded-xl border transition-all cursor-pointer shadow-sm select-none",
                                                             isSelected ? "bg-blue-600 border-blue-600 ring-4 ring-blue-500/10 shadow-blue-500/20" :
                                                                 isSent ? "bg-slate-50 border-slate-200 hover:border-slate-300" : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-md"
                                                         )}>
@@ -695,7 +706,7 @@ export default function SendEmailsPage() {
                                 <div className="lg:sticky lg:top-12 space-y-6">
 
                                     {/* Deployment Overview */}
-                                    <div className="bg-slate-900 rounded-[2rem] sm:rounded-[2.5rem] p-4 md:p-8 text-white shadow-2xl relative overflow-hidden group">
+                                    <div className="bg-slate-900 rounded-xl sm:rounded-xl p-4 md:p-8 text-white shadow-2xl relative overflow-hidden group">
                                         <div className="absolute top-0 right-0 p-10 opacity-[0.03] group-hover:rotate-12 transition-transform duration-1000 hidden sm:block">
                                             <Send className="w-64 h-64" />
                                         </div>
@@ -706,14 +717,14 @@ export default function SendEmailsPage() {
                                             </div>
 
                                             <div className="grid grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4">
-                                                <div className="flex items-center justify-between p-3 sm:p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
+                                                <div className="flex items-center justify-between p-3 sm:p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
                                                     <div className="flex items-center gap-2 sm:gap-3">
                                                         <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
                                                         <span className="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest">Active Links</span>
                                                     </div>
                                                     <span className="text-base sm:text-lg font-display font-bold text-white">{selectedHrEmails.length}</span>
                                                 </div>
-                                                <div className="flex items-center justify-between p-3 sm:p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
+                                                <div className="flex items-center justify-between p-3 sm:p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
                                                     <div className="flex items-center gap-2 sm:gap-3">
                                                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                                                         <span className="text-[9px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest">Attach Files</span>
@@ -726,7 +737,7 @@ export default function SendEmailsPage() {
                                                 <button
                                                     onClick={handlePreview}
                                                     disabled={!selectedTemplate || (hrEmails.length === 0)}
-                                                    className="w-full py-4 rounded-2xl bg-white/10 text-white font-bold text-sm border border-white/20 hover:bg-white/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 group"
+                                                    className="w-full py-4 rounded-xl bg-white/10 text-white font-bold text-sm border border-white/20 hover:bg-white/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 group"
                                                 >
                                                     <Eye className="w-4 h-4 group-hover:scale-110 transition-transform" />
                                                     <span>Validate Payload</span>
@@ -734,7 +745,7 @@ export default function SendEmailsPage() {
                                                 <button
                                                     onClick={handleSend}
                                                     disabled={sending || !selectedTemplate || selectedHrEmails.length === 0 || !variables.your_name || selectedHrEmails.length > SPAM_LIMITS.MAX_PER_BATCH}
-                                                    className="w-full py-5 rounded-2xl bg-blue-600 text-white font-bold text-sm shadow-xl shadow-blue-500/40 hover:bg-blue-500 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-3 overflow-hidden group"
+                                                    className="w-full py-5 rounded-xl bg-blue-600 text-white font-bold text-sm shadow-xl shadow-blue-500/40 hover:bg-blue-500 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-3 overflow-hidden group"
                                                 >
                                                     {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
                                                     <span className="uppercase tracking-widest text-[11px]">
@@ -744,7 +755,7 @@ export default function SendEmailsPage() {
                                             </div>
 
                                             {sending && (
-                                                <div className="p-4 bg-blue-500/10 rounded-2xl border border-blue-500/20 animate-pulse">
+                                                <div className="p-4 bg-blue-500/10 rounded-xl border border-blue-500/20 animate-pulse">
                                                     <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest text-center">Dynamic Pacing Active (3-15s intervals)</p>
                                                 </div>
                                             )}
@@ -752,13 +763,13 @@ export default function SendEmailsPage() {
                                     </div>
 
                                     {/* Spam Prevention Caution Panel */}
-                                    <div className="bg-amber-50 border border-amber-200/60 p-4 md:p-8 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm">
+                                    <div className="bg-amber-50 border border-amber-200/60 p-4 md:p-8 rounded-xl sm:rounded-xl shadow-sm">
                                         <h3 className="text-xs font-bold text-amber-900 uppercase tracking-widest mb-4 flex items-center gap-2">
                                             <ShieldAlert className="w-4 h-4 text-amber-600" />
                                             Spam Prevention Active
                                         </h3>
                                         <div className="space-y-3">
-                                            <div className="flex items-center justify-between p-3 bg-white/60 rounded-xl border border-amber-100">
+                                            <div className="flex items-center justify-between p-3 bg-white/60 rounded-lg border border-amber-100">
                                                 <div className="flex items-center gap-2">
                                                     <Zap className="w-3.5 h-3.5 text-amber-600" />
                                                     <span className="text-[11px] font-bold text-amber-800 uppercase tracking-wide">Batch Limit</span>
@@ -770,7 +781,7 @@ export default function SendEmailsPage() {
                                                     {selectedHrEmails.length}/{SPAM_LIMITS.MAX_PER_BATCH}
                                                 </span>
                                             </div>
-                                            <div className="flex items-center justify-between p-3 bg-white/60 rounded-xl border border-amber-100">
+                                            <div className="flex items-center justify-between p-3 bg-white/60 rounded-lg border border-amber-100">
                                                 <div className="flex items-center gap-2">
                                                     <Clock className="w-3.5 h-3.5 text-amber-600" />
                                                     <span className="text-[11px] font-bold text-amber-800 uppercase tracking-wide">Daily Limit</span>
@@ -782,7 +793,7 @@ export default function SendEmailsPage() {
                                             <strong>Why?</strong> Sending too many emails at once triggers Gmail&apos;s spam detection. We use dynamic delays (3&#8209;15s) and batch limits to protect your account.
                                         </p>
                                         {selectedHrEmails.length > SPAM_LIMITS.MAX_PER_BATCH && (
-                                            <div className="mt-4 p-3 bg-rose-100 border border-rose-200 rounded-xl">
+                                            <div className="mt-4 p-3 bg-rose-100 border border-rose-200 rounded-lg">
                                                 <p className="text-[11px] text-rose-700 font-bold">
                                                     ⚠️ Selection exceeds limit! Reduce to {SPAM_LIMITS.MAX_PER_BATCH} or fewer.
                                                 </p>
@@ -791,7 +802,7 @@ export default function SendEmailsPage() {
                                     </div>
 
                                     {/* Security Panel */}
-                                    <div className="bg-white border border-slate-200/60 p-4 md:p-8 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm">
+                                    <div className="bg-white border border-slate-200/60 p-4 md:p-8 rounded-xl sm:rounded-xl shadow-sm">
                                         <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
                                             <CheckCircle className="w-4 h-4 text-emerald-500" />
                                             Safety Compliance
@@ -803,7 +814,7 @@ export default function SendEmailsPage() {
                                                 { icon: Info, label: 'Audit Logging', desc: 'Full traceability of records' }
                                             ].map((item, i) => (
                                                 <div key={i} className="flex gap-3 sm:gap-4">
-                                                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0">
+                                                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0">
                                                         <item.icon className="w-4 h-4 text-slate-400" />
                                                     </div>
                                                     <div>
@@ -820,66 +831,99 @@ export default function SendEmailsPage() {
                         </div>
                     </div>
 
-                    {/* Preview Portal */}
+                    {/* Preview & Edit Portal */}
                     {preview && (
                         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 text-sans overflow-hidden">
                             <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setPreview(null)} />
-                            <div className="bg-white max-w-3xl w-full rounded-[2.5rem] shadow-2xl relative z-10 animate-in slide-in-from-bottom-5 duration-500 flex flex-col max-h-[85vh]">
-                                <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-t-[2.5rem]">
+                            <div className="bg-white max-w-4xl w-full rounded-xl shadow-2xl relative z-10 animate-in slide-in-from-bottom-5 duration-500 flex flex-col max-h-[90vh]">
+                                <div className="p-6 md:p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-t-[2.5rem]">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
                                             <Eye className="w-5 h-5 text-white" />
                                         </div>
                                         <div>
-                                            <h2 className="text-xl font-display font-bold text-slate-900 tracking-tight">Campaign Preview</h2>
+                                            <h2 className="text-xl font-display font-bold text-slate-900 tracking-tight">Validate & Edit Payload</h2>
                                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Final Validation Point</p>
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => setPreview(null)}
-                                        className="p-2 rounded-xl text-slate-400 hover:bg-white transition-all shadow-sm"
+                                        className="p-2 rounded-lg text-slate-400 hover:bg-white transition-all shadow-sm"
                                     >
                                         <X className="w-5 h-5" />
                                     </button>
                                 </div>
-                                <div className="p-8 space-y-8 overflow-y-auto">
-                                    <div className="space-y-4">
-                                        <div className="space-y-2">
-                                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Subject Header</p>
-                                            <div className="p-5 bg-slate-50 border border-slate-200 rounded-[1.5rem] flex gap-3 italic">
-                                                <p className="text-sm font-bold text-slate-900">{preview.subject}</p>
+                                <div className="p-6 md:p-8 overflow-y-auto space-y-6 md:space-y-8 flex-1">
+                                    <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+                                        {/* Edit Section */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                                                <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest">Edit Template</h3>
+                                            </div>
+                                            <div className="space-y-4">
+                                                <div className="space-y-2">
+                                                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Subject Header</p>
+                                                    <input 
+                                                        value={preview.rawSubject} 
+                                                        onChange={(e) => setPreview({...preview, rawSubject: e.target.value})}
+                                                        className="w-full p-3 bg-white border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Message Payload</p>
+                                                    <textarea 
+                                                        value={preview.rawBody} 
+                                                        onChange={(e) => setPreview({...preview, rawBody: e.target.value})}
+                                                        className="w-full p-4 bg-white border border-slate-200 rounded-xl text-sm font-medium leading-relaxed h-[250px] resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
-
-                                        <div className="space-y-2 pt-4">
-                                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Message Payload</p>
-                                            <div className="p-8 rounded-[2rem] bg-white border border-slate-200 text-sm text-slate-600 font-medium leading-[1.8] whitespace-pre-wrap min-h-[250px] shadow-inner font-sans">
-                                                {preview.body}
+                                        
+                                        {/* Live Preview Section */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                                <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest">Live Preview</h3>
+                                            </div>
+                                            <div className="space-y-4 opacity-90">
+                                                <div className="space-y-2">
+                                                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Sample Subject</p>
+                                                    <div className="p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 italic truncate">
+                                                        {getPreviewSample(preview.rawSubject, preview.rawBody).subject}
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Sample Message</p>
+                                                    <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl text-sm text-slate-600 font-medium leading-[1.8] whitespace-pre-wrap h-[250px] overflow-y-auto custom-scrollbar">
+                                                        {getPreviewSample(preview.rawSubject, preview.rawBody).body}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="bg-slate-900 rounded-3xl p-6 flex items-center justify-between group overflow-hidden">
+                                    <div className="bg-slate-900 rounded-xl p-4 md:p-6 flex items-center justify-between group overflow-hidden">
                                         <div className="flex items-center gap-4 relative z-10">
-                                            <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center">
-                                                <Sparkles className="w-6 h-6 text-white" />
+                                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-blue-600 flex items-center justify-center shrink-0">
+                                                <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-white" />
                                             </div>
                                             <div>
                                                 <p className="text-sm font-bold text-white tracking-wide">Ready for Production</p>
-                                                <p className="text-[11px] text-slate-400 uppercase tracking-widest mt-0.5">Dispatches formatted for high deliverability</p>
+                                                <p className="text-[10px] md:text-[11px] text-slate-400 uppercase tracking-widest mt-0.5">Dispatches formatted for high deliverability</p>
                                             </div>
-                                        </div>
-                                        <div className="absolute top-0 right-0 p-8 opacity-5 -rotate-12 transition-transform group-hover:-rotate-45 duration-700">
-                                            <Sparkles className="w-32 h-32 text-blue-500" />
                                         </div>
                                     </div>
                                 </div>
-                                <div className="p-8 bg-white border-t border-slate-100 rounded-b-[2.5rem]">
+                                <div className="p-6 md:p-8 bg-white border-t border-slate-100 rounded-b-[2.5rem]">
                                     <button
-                                        onClick={() => setPreview(null)}
-                                        className="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl text-sm transition-all active:scale-95 hover:bg-slate-800"
+                                        onClick={() => executeSend(preview.rawSubject, preview.rawBody)}
+                                        disabled={sending}
+                                        className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl text-sm transition-all active:scale-95 hover:bg-blue-700 shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2"
                                     >
-                                        Everything Looks Correct
+                                        {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                                        Everything Looks Correct — Initiate Launch
                                     </button>
                                 </div>
                             </div>
@@ -890,10 +934,10 @@ export default function SendEmailsPage() {
                     {showQuickAddHr && (
                         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 text-sans overflow-hidden">
                             <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setShowQuickAddHr(false)} />
-                            <div className="bg-white max-w-lg w-full rounded-[2.5rem] shadow-2xl relative z-10 animate-in slide-in-from-bottom-5 duration-500 flex flex-col max-h-[85vh]">
+                            <div className="bg-white max-w-lg w-full rounded-xl shadow-2xl relative z-10 animate-in slide-in-from-bottom-5 duration-500 flex flex-col max-h-[85vh]">
                                 <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-t-[2.5rem]">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-2xl bg-emerald-600 flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center">
                                             <Users className="w-5 h-5 text-white" />
                                         </div>
                                         <div>
@@ -903,7 +947,7 @@ export default function SendEmailsPage() {
                                     </div>
                                     <button
                                         onClick={() => setShowQuickAddHr(false)}
-                                        className="p-2 rounded-xl text-slate-400 hover:bg-white transition-all shadow-sm cursor-pointer"
+                                        className="p-2 rounded-lg text-slate-400 hover:bg-white transition-all shadow-sm cursor-pointer"
                                     >
                                         <X className="w-5 h-5" />
                                     </button>
@@ -915,7 +959,7 @@ export default function SendEmailsPage() {
                                             type="email"
                                             value={quickAddForm.email}
                                             onChange={(e) => setQuickAddForm({ ...quickAddForm, email: e.target.value })}
-                                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all placeholder:font-normal"
+                                            className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all placeholder:font-normal"
                                             placeholder="recruiter@company.com"
                                             required
                                         />
@@ -927,7 +971,7 @@ export default function SendEmailsPage() {
                                                 type="text"
                                                 value={quickAddForm.hrName}
                                                 onChange={(e) => setQuickAddForm({ ...quickAddForm, hrName: e.target.value })}
-                                                className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all placeholder:font-normal"
+                                                className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all placeholder:font-normal"
                                                 placeholder="Sarah Miller"
                                             />
                                         </div>
@@ -937,7 +981,7 @@ export default function SendEmailsPage() {
                                                 type="text"
                                                 value={quickAddForm.company}
                                                 onChange={(e) => setQuickAddForm({ ...quickAddForm, company: e.target.value })}
-                                                className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all placeholder:font-normal"
+                                                className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all placeholder:font-normal"
                                                 placeholder="Tesla Inc."
                                             />
                                         </div>
@@ -947,7 +991,7 @@ export default function SendEmailsPage() {
                                         <select
                                             value={quickAddForm.jobRole}
                                             onChange={(e) => setQuickAddForm({ ...quickAddForm, jobRole: e.target.value })}
-                                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all cursor-pointer appearance-none"
+                                            className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all cursor-pointer appearance-none"
                                         >
                                             <option value="">Select a role...</option>
                                             <option value="Software Engineer">Software Engineer</option>
@@ -967,14 +1011,14 @@ export default function SendEmailsPage() {
                                     <div className="flex gap-3 pt-4">
                                         <button
                                             type="submit"
-                                            className="flex-1 bg-emerald-600 text-white font-bold py-4 rounded-2xl text-sm transition-all active:scale-95 hover:bg-emerald-700 shadow-xl shadow-emerald-500/20 cursor-pointer"
+                                            className="flex-1 bg-emerald-600 text-white font-bold py-4 rounded-xl text-sm transition-all active:scale-95 hover:bg-emerald-700 shadow-xl shadow-emerald-500/20 cursor-pointer"
                                         >
                                             Add & Select
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => setShowQuickAddHr(false)}
-                                            className="flex-1 bg-slate-100 text-slate-600 font-bold py-4 rounded-2xl text-sm transition-all active:scale-95 hover:bg-slate-200 cursor-pointer"
+                                            className="flex-1 bg-slate-100 text-slate-600 font-bold py-4 rounded-xl text-sm transition-all active:scale-95 hover:bg-slate-200 cursor-pointer"
                                         >
                                             Cancel
                                         </button>
@@ -988,7 +1032,7 @@ export default function SendEmailsPage() {
                     {showConfirmModal && confirmAction && (
                         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6 text-sans animate-in fade-in duration-300">
                             <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-lg" onClick={() => setShowConfirmModal(false)} />
-                            <div className="bg-white max-w-md w-full rounded-[2.5rem] shadow-2xl relative z-10 animate-in slide-in-from-bottom-8 zoom-in-95 duration-500 overflow-hidden border border-slate-200">
+                            <div className="bg-white max-w-md w-full rounded-xl shadow-2xl relative z-10 animate-in slide-in-from-bottom-8 zoom-in-95 duration-500 overflow-hidden border border-slate-200">
                                 {/* Decorative gradient background */}
                                 <div className={cn(
                                     "absolute top-0 left-0 right-0 h-32 opacity-10",
@@ -1000,7 +1044,7 @@ export default function SendEmailsPage() {
                                     {/* Icon */}
                                     <div className="flex justify-center">
                                         <div className={cn(
-                                            "w-16 h-16 rounded-3xl flex items-center justify-center shadow-lg",
+                                            "w-16 h-16 rounded-xl flex items-center justify-center shadow-lg",
                                             confirmAction.type === 'send' ?
                                                 'bg-blue-600 shadow-blue-500/30' :
                                                 'bg-rose-600 shadow-rose-500/30'
@@ -1024,7 +1068,7 @@ export default function SendEmailsPage() {
 
                                         {confirmAction.count && (
                                             <div className="flex items-center justify-center gap-2 pt-2">
-                                                <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-xl">
+                                                <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
                                                     <div className="flex items-center gap-2">
                                                         <Users className="w-4 h-4 text-blue-600" />
                                                         <span className="text-lg font-display font-bold text-blue-900">
@@ -1043,7 +1087,7 @@ export default function SendEmailsPage() {
                                     <div className="flex gap-3 pt-4">
                                         <button
                                             onClick={() => setShowConfirmModal(false)}
-                                            className="flex-1 bg-slate-100 text-slate-700 font-bold py-4 rounded-2xl text-sm transition-all hover:bg-slate-200 active:scale-95 border border-slate-200"
+                                            className="flex-1 bg-slate-100 text-slate-700 font-bold py-4 rounded-xl text-sm transition-all hover:bg-slate-200 active:scale-95 border border-slate-200"
                                         >
                                             Cancel
                                         </button>
@@ -1053,7 +1097,7 @@ export default function SendEmailsPage() {
                                                 confirmAction.onConfirm();
                                             }}
                                             className={cn(
-                                                "flex-1 font-bold py-4 rounded-2xl text-sm transition-all active:scale-95 shadow-xl flex items-center justify-center gap-2 group",
+                                                "flex-1 font-bold py-4 rounded-xl text-sm transition-all active:scale-95 shadow-xl flex items-center justify-center gap-2 group",
                                                 confirmAction.type === 'send' ?
                                                     'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/40' :
                                                     'bg-rose-600 text-white hover:bg-rose-700 shadow-rose-500/40'
@@ -1075,7 +1119,7 @@ export default function SendEmailsPage() {
 
                                     {/* Safety notice for send */}
                                     {confirmAction.type === 'send' && (
-                                        <div className="px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl">
+                                        <div className="px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg">
                                             <div className="flex items-start gap-3">
                                                 <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                                                 <div>

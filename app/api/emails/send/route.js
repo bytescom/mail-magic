@@ -58,10 +58,11 @@ export async function POST(request) {
         }
 
         const body = await request.json();
-        const { templateId, hrEmailIds, variables, documentIds } = body;
+        const { templateId, hrEmailIds, variables, documentIds, customSubject, customBody } = body;
 
         console.log('📦 Payload received:', {
             templateId,
+            customSubjectProvided: !!customSubject,
             hrEmailCount: hrEmailIds?.length,
             documentIds,
             documentCount: documentIds?.length || 0,
@@ -261,9 +262,13 @@ export async function POST(request) {
                     portfolio_link: variables.portfolio_link || '',
                 };
 
+                // Use custom template strings if provided, otherwise fallback to DB template
+                const rawSubject = customSubject || template.subject;
+                const rawBody = customBody || template.body;
+
                 // Replace variables in subject and body
-                const subject = replaceVariables(template.subject, emailVariables);
-                const emailBody = replaceVariables(template.body, emailVariables);
+                const subject = replaceVariables(rawSubject, emailVariables);
+                const emailBody = replaceVariables(rawBody, emailVariables);
 
                 // Send email with optional attachments
                 // Format sender as "Name <email>" for proper display

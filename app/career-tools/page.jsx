@@ -323,7 +323,7 @@ export default function CareerToolsPage() {
                             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
                                 {/* Left: Input */}
                                 <div className="lg:col-span-5 space-y-4">
-                                    <div className="bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                    <div className="bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                         <div className="p-5 sm:p-6 border-b border-slate-100">
                                             <h3 className="font-display font-bold text-lg text-slate-900 tracking-tight">Your Resume</h3>
                                             <p className="text-xs text-slate-400 font-medium mt-1 font-sans">Paste your resume content below</p>
@@ -334,7 +334,7 @@ export default function CareerToolsPage() {
                                                 <select
                                                     value={targetRole}
                                                     onChange={(e) => setTargetRole(e.target.value)}
-                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-sans text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition-all appearance-none cursor-pointer"
+                                                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm font-sans text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition-all appearance-none cursor-pointer"
                                                 >
                                                     {roles.map(role => (
                                                         <option key={role} value={role}>{role}</option>
@@ -348,7 +348,7 @@ export default function CareerToolsPage() {
                                                     value={resumeText}
                                                     onChange={(e) => setResumeText(e.target.value)}
                                                     placeholder="Paste your entire resume here — include all sections (summary, experience, education, skills, projects, etc.)..."
-                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-sans text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition-all resize-none"
+                                                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm font-sans text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition-all resize-none"
                                                     rows={16}
                                                 />
                                                 <p className="text-[10px] text-slate-400 font-medium mt-1.5 font-sans">
@@ -359,7 +359,7 @@ export default function CareerToolsPage() {
                                             <button
                                                 onClick={handleAnalyze}
                                                 disabled={analyzing || !resumeText.trim()}
-                                                className="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl text-sm transition-all active:scale-[0.98] hover:bg-blue-700 shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer font-sans"
+                                                className="w-full bg-blue-600 text-white font-bold py-3.5 rounded-lg text-sm transition-all active:scale-[0.98] hover:bg-blue-700 shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer font-sans"
                                             >
                                                 {analyzing ? (
                                                     <>
@@ -380,8 +380,8 @@ export default function CareerToolsPage() {
                                 {/* Right: Results */}
                                 <div className="lg:col-span-7 space-y-5">
                                     {!analysis && !analyzing && (
-                                        <div className="bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] p-12 sm:p-16 text-center">
-                                            <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-slate-100 shadow-inner">
+                                        <div className="bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] p-12 sm:p-16 text-center">
+                                            <div className="w-20 h-20 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-6 border border-slate-100 shadow-inner">
                                                 <FileSearch className="w-8 h-8 text-slate-300" />
                                             </div>
                                             <p className="font-display font-bold text-xl text-slate-900 mb-2">Ready to Optimize</p>
@@ -392,7 +392,7 @@ export default function CareerToolsPage() {
                                     )}
 
                                     {analyzing && (
-                                        <div className="bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] p-16 text-center">
+                                        <div className="bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] p-16 text-center">
                                             <div className="w-12 h-12 border-3 border-slate-200 border-t-blue-500 rounded-full animate-spin mx-auto mb-6" />
                                             <p className="font-display font-bold text-lg text-slate-900 mb-1">Scanning your resume...</p>
                                             <p className="text-sm text-slate-500 font-medium">Checking keywords, ATS patterns, and content quality</p>
@@ -402,7 +402,7 @@ export default function CareerToolsPage() {
                                     {analysis && (
                                         <>
                                             {/* Score Card */}
-                                            <div className="bg-slate-900 rounded-2xl lg:rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-2xl shadow-slate-900/20">
+                                            <div className="bg-slate-900 rounded-xl lg:rounded-xl p-6 sm:p-8 text-white relative overflow-hidden shadow-2xl shadow-slate-900/20">
                                                 <div className="flex items-center gap-6 sm:gap-8">
                                                     <div className="relative shrink-0">
                                                         <svg className="w-28 h-28 sm:w-32 sm:h-32 -rotate-90" viewBox="0 0 120 120">
@@ -436,7 +436,7 @@ export default function CareerToolsPage() {
                                                                 { label: 'Content', value: `${analysis.contentQuality.score}%` },
                                                                 { label: 'ATS', value: `${analysis.atsCompatibility.score}%` },
                                                             ].map(m => (
-                                                                <div key={m.label} className="bg-white/5 rounded-xl p-2.5 text-center border border-white/5">
+                                                                <div key={m.label} className="bg-white/5 rounded-lg p-2.5 text-center border border-white/5">
                                                                     <p className="text-[8px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-wider">{m.label}</p>
                                                                     <p className="text-sm sm:text-base font-bold mt-0.5">{m.value}</p>
                                                                 </div>
@@ -448,9 +448,9 @@ export default function CareerToolsPage() {
 
                                             {/* Tips */}
                                             {analysis.tips.length > 0 && (
-                                                <div className="bg-white border border-slate-200/60 rounded-2xl lg:rounded-3xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                                <div className="bg-white border border-slate-200/60 rounded-xl lg:rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                                     <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center gap-3">
-                                                        <div className="p-2.5 bg-amber-50 rounded-xl">
+                                                        <div className="p-2.5 bg-amber-50 rounded-lg">
                                                             <Lightbulb className="w-5 h-5 text-amber-600" />
                                                         </div>
                                                         <div>
@@ -506,7 +506,7 @@ export default function CareerToolsPage() {
                                                     key={cat}
                                                     onClick={() => handleCategoryChange(cat)}
                                                     className={cn(
-                                                        "px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border cursor-pointer",
+                                                        "px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all border cursor-pointer",
                                                         isActive
                                                             ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20"
                                                             : "bg-white text-slate-600 border-slate-200/60 hover:border-slate-300 hover:bg-slate-50"
@@ -519,7 +519,7 @@ export default function CareerToolsPage() {
                                     </div>
                                     <button
                                         onClick={() => setShowCreate(true)}
-                                        className="bg-blue-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition-all active:scale-95 hover:bg-blue-700 shadow-lg shadow-blue-500/20 flex items-center gap-2 cursor-pointer font-sans shrink-0"
+                                        className="bg-blue-600 text-white font-bold px-4 py-2 rounded-lg text-xs transition-all active:scale-95 hover:bg-blue-700 shadow-lg shadow-blue-500/20 flex items-center gap-2 cursor-pointer font-sans shrink-0"
                                     >
                                         <Plus className="w-4 h-4" />
                                         Create
@@ -539,9 +539,9 @@ export default function CareerToolsPage() {
 
                                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                                             <div className="lg:col-span-4 space-y-4">
-                                                <div className="bg-white border border-slate-200/60 rounded-2xl p-5 sm:p-6 shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+                                                <div className="bg-white border border-slate-200/60 rounded-xl p-5 sm:p-6 shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
                                                     <div className="flex items-start gap-3 mb-4">
-                                                        <div className={cn("p-2.5 rounded-xl", CATEGORY_META[selectedTemplate.category]?.bg || 'bg-slate-50')}>
+                                                        <div className={cn("p-2.5 rounded-lg", CATEGORY_META[selectedTemplate.category]?.bg || 'bg-slate-50')}>
                                                             {(() => {
                                                                 const IconComp = CATEGORY_META[selectedTemplate.category]?.icon || FileText;
                                                                 return <IconComp className={cn("w-5 h-5", CATEGORY_META[selectedTemplate.category]?.color || 'text-slate-600')} />;
@@ -576,7 +576,7 @@ export default function CareerToolsPage() {
                                                     <div className="flex gap-3 mt-5">
                                                         <button
                                                             onClick={() => handleCopy(selectedTemplate)}
-                                                            className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl text-sm transition-all active:scale-[0.98] hover:bg-blue-700 shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer font-sans"
+                                                            className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg text-sm transition-all active:scale-[0.98] hover:bg-blue-700 shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer font-sans"
                                                         >
                                                             {copiedId === selectedTemplate._id ? (
                                                                 <><Check className="w-4 h-4" /> Copied!</>
@@ -587,7 +587,7 @@ export default function CareerToolsPage() {
                                                         {!selectedTemplate.isSystem && (
                                                             <button
                                                                 onClick={() => handleDelete(selectedTemplate._id)}
-                                                                className="p-3 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-100 transition-all cursor-pointer"
+                                                                className="p-3 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-100 transition-all cursor-pointer"
                                                             >
                                                                 <Trash2 className="w-4 h-4" />
                                                             </button>
@@ -596,7 +596,7 @@ export default function CareerToolsPage() {
                                                 </div>
                                             </div>
 
-                                            <div className="lg:col-span-8 bg-white border border-slate-200/60 rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
+                                            <div className="lg:col-span-8 bg-white border border-slate-200/60 rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.02)] overflow-hidden">
                                                 <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center gap-2">
                                                     <Eye className="w-4 h-4 text-slate-400" />
                                                     <h4 className="font-bold text-sm text-slate-900">Preview</h4>
@@ -617,11 +617,11 @@ export default function CareerToolsPage() {
                                             return (
                                                 <div
                                                     key={template._id}
-                                                    className="bg-white border border-slate-200/60 rounded-2xl p-5 sm:p-6 shadow-[0_2px_4px_rgba(0,0,0,0.02)] hover:shadow-lg hover:border-slate-300/80 transition-all group cursor-pointer"
+                                                    className="bg-white border border-slate-200/60 rounded-xl p-5 sm:p-6 shadow-[0_2px_4px_rgba(0,0,0,0.02)] hover:shadow-lg hover:border-slate-300/80 transition-all group cursor-pointer"
                                                     onClick={() => { setSelectedTemplate(template); setVariableValues({}); }}
                                                 >
                                                     <div className="flex items-start gap-3 mb-3">
-                                                        <div className={cn("p-2.5 rounded-xl transition-transform group-hover:scale-110", meta.bg)}>
+                                                        <div className={cn("p-2.5 rounded-lg transition-transform group-hover:scale-110", meta.bg)}>
                                                             <IconComp className={cn("w-5 h-5", meta.color)} />
                                                         </div>
                                                         <div className="flex-1 min-w-0">
@@ -648,7 +648,7 @@ export default function CareerToolsPage() {
                                         })}
 
                                         {templates.length === 0 && !loading && (
-                                            <div className="sm:col-span-2 lg:col-span-3 bg-white border border-slate-200/60 rounded-2xl p-16 text-center">
+                                            <div className="sm:col-span-2 lg:col-span-3 bg-white border border-slate-200/60 rounded-xl p-16 text-center">
                                                 <FileText className="w-12 h-12 text-slate-200 mx-auto mb-4" />
                                                 <p className="font-display font-bold text-lg text-slate-900">No templates</p>
                                                 <p className="text-sm text-slate-500 mt-2 font-medium">Try another category or create your own</p>
@@ -660,10 +660,10 @@ export default function CareerToolsPage() {
                                 {/* Create Modal */}
                                 {showCreate && (
                                     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-                                        <div className="bg-white rounded-2xl lg:rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
+                                        <div className="bg-white rounded-xl lg:rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
                                             <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10">
                                                 <h3 className="font-display font-bold text-xl text-slate-900">Create Template</h3>
-                                                <button onClick={() => setShowCreate(false)} className="p-2 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer">
+                                                <button onClick={() => setShowCreate(false)} className="p-2 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer">
                                                     <X className="w-5 h-5 text-slate-400" />
                                                 </button>
                                             </div>
@@ -673,12 +673,12 @@ export default function CareerToolsPage() {
                                                     value={newTemplate.title}
                                                     onChange={(e) => setNewTemplate(p => ({ ...p, title: e.target.value }))}
                                                     placeholder="Template title"
-                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-sans"
+                                                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-sans"
                                                 />
                                                 <select
                                                     value={newTemplate.category}
                                                     onChange={(e) => setNewTemplate(p => ({ ...p, category: e.target.value }))}
-                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-sans cursor-pointer"
+                                                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-sans cursor-pointer"
                                                 >
                                                     {Object.entries(CATEGORY_META).filter(([k]) => k !== 'all').map(([key, val]) => (
                                                         <option key={key} value={key}>{val.label}</option>
@@ -688,20 +688,20 @@ export default function CareerToolsPage() {
                                                     value={newTemplate.content}
                                                     onChange={(e) => setNewTemplate(p => ({ ...p, content: e.target.value }))}
                                                     placeholder="Dear Hiring Manager,&#10;&#10;I am writing to apply for the {role} position at {company}...&#10;&#10;Best regards,&#10;{name}"
-                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-sans resize-none"
+                                                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm font-sans resize-none"
                                                     rows={12}
                                                 />
                                                 <div className="flex gap-3">
                                                     <button
                                                         onClick={() => setShowCreate(false)}
-                                                        className="flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-xl text-sm hover:bg-slate-200 transition-all cursor-pointer"
+                                                        className="flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-lg text-sm hover:bg-slate-200 transition-all cursor-pointer"
                                                     >
                                                         Cancel
                                                     </button>
                                                     <button
                                                         onClick={handleCreate}
                                                         disabled={creating}
-                                                        className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl text-sm hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+                                                        className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
                                                     >
                                                         {creating ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Save className="w-4 h-4" /> Save</>}
                                                     </button>
