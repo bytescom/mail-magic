@@ -43,7 +43,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
+        <html lang="en" className={`${inter.variable} ${outfit.variable}`} data-scroll-behavior="smooth">
             <head>
                 {/* Preconnect to external domains for faster resource loading */}
                 <link rel="preconnect" href="https://api.dicebear.com" />

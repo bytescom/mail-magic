@@ -16,6 +16,123 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
+        const contentType = request.headers.get('content-type') || '';
+
+        // --- STAGE 2: Process JSON array of contacts to save into DB ---
+        if (contentType.includes('application/json')) {
+            const body = await request.json();
+            const contacts = body.contacts;
+
+            if (!Array.isArray(contacts)) {
+                return NextResponse.json({ error: 'Invalid payload: contacts must be an array' }, { status: 400 });
+            }
+
+            await dbConnect();
+
+            const imported = [];
+            const skipped = [];
+            const errors = [];
+
+            for (const row of contacts) {
+                const email = row.email || '';
+                const company = row.company || '';
+                const jobRole = row.jobRole || '';
+
+                if (!email) {
+                    errors.push({ row, reason: 'Missing email' });
+                    continue;
+                }
+
+                // Validate email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    errors.push({ row, reason: 'Invalid email format' });
+                    continue;
+                }
+
+                if (!company) {
+                    errors.push({ row, reason: 'Missing company' });
+                    continue;
+                }
+
+                if (!jobRole) {
+                    errors.push({ row, reason: 'Missing jobRole' });
+                    continue;
+                }
+
+                // Check for duplicate
+                const existing = await HrEmail.findOne({
+                    userId: session.user.id,
+                    email: email.toLowerCase(),
+                });
+
+                if (existing) {
+                    skipped.push(email);
+                    continue;
+                }
+
+                // Parse tags
+                let tags = [];
+                if (Array.isArray(row.tags)) {
+                    tags = row.tags;
+                } else if (typeof row.tags === 'string') {
+                    tags = row.tags
+                        .split(/[\s,]+/)
+                        .map(t => t.replace(/^#/, '').trim())
+                        .filter(Boolean);
+                }
+
+                // Create new HR email
+                try {
+                    await HrEmail.create({
+                        userId: session.user.id,
+                        email: email.toLowerCase(),
+                        hrName: row.hrName || '',
+                        company,
+                        jobRole,
+                        tags,
+                        notes: row.notes || '',
+                    });
+                    imported.push(email);
+                } catch (error) {
+                    errors.push({ row, reason: error.message });
+                }
+            }
+
+            // Create notification if HR emails were imported
+            if (imported.length > 0) {
+                try {
+                    const user = await User.findById(session.user.id);
+                    if (user) {
+                        await Notification.create({
+                            userId: user._id,
+                            userEmail: user.email,
+                            title: 'HR List Synced',
+                            message: `Successfully imported ${imported.length} new HR contact${imported.length !== 1 ? 's' : ''}`,
+                            type: 'hr_sync',
+                            icon: 'Users',
+                            link: '/hr-emails',
+                            isRead: false,
+                        });
+                    }
+                } catch (notifError) {
+                    console.error('Error creating notification:', notifError);
+                }
+            }
+
+            return NextResponse.json({
+                imported: imported.length,
+                skipped: skipped.length,
+                errors: errors.length,
+                details: {
+                    imported,
+                    skipped,
+                    errors,
+                },
+            });
+        }
+
+        // --- STAGE 1: Parse uploaded CSV/Excel file and return JSON list ---
         const formData = await request.formData();
         const file = formData.get('file');
 
@@ -73,105 +190,36 @@ export async function POST(request) {
             }, { status: 400 });
         }
 
-        await dbConnect();
-
-        const imported = [];
-        const skipped = [];
-        const errors = [];
-
+        const contacts = [];
         for (const row of parsedData) {
-            const email = row.email || row.Email;
-            const company = row.company || row.Company;
-            const jobRole = row.jobRole || row['Job Role'] || row.jobrole;
-
-            if (!email) {
-                errors.push({ row, reason: 'Missing email' });
-                continue;
-            }
-
-            // Validate email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                errors.push({ row, reason: 'Invalid email format' });
-                continue;
-            }
-
-            if (!company) {
-                errors.push({ row, reason: 'Missing company' });
-                continue;
-            }
-
-            if (!jobRole) {
-                errors.push({ row, reason: 'Missing jobRole' });
-                continue;
-            }
-
-            // Check for duplicate
-            const existing = await HrEmail.findOne({
-                userId: session.user.id,
-                email: email.toLowerCase(),
-            });
-
-            if (existing) {
-                skipped.push(email);
-                continue;
-            }
-
-            // Parse tags — support "#react #frontend" or "react, frontend" format
+            const email = row.email || row.Email || '';
+            const company = row.company || row.Company || '';
+            const jobRole = row.jobRole || row['Job Role'] || row.jobrole || '';
+            const hrName = row.hrName || row['HR Name'] || row.hrname || '';
             const rawTags = row.tags || row.Tags || '';
-            const tags = rawTags
-                .split(/[\s,]+/)
-                .map(t => t.replace(/^#/, '').trim())
-                .filter(Boolean);
+            const notes = row.notes || row.Notes || '';
 
-            // Create new HR email
-            try {
-                await HrEmail.create({
-                    userId: session.user.id,
-                    email: email.toLowerCase(),
-                    hrName: row.hrName || row['HR Name'] || '',
-                    company,
-                    jobRole,
-                    tags,
-                    notes: row.notes || row.Notes || '',
-                });
-                imported.push(email);
-            } catch (error) {
-                errors.push({ row, reason: error.message });
-            }
-        }
+            // Map tags to array of strings
+            const tags = typeof rawTags === 'string'
+                ? rawTags
+                    .split(/[\s,]+/)
+                    .map(t => t.replace(/^#/, '').trim())
+                    .filter(Boolean)
+                : (Array.isArray(rawTags) ? rawTags : []);
 
-        // Create notification if HR emails were imported
-        if (imported.length > 0) {
-            try {
-                const user = await User.findById(session.user.id);
-                if (user) {
-                    await Notification.create({
-                        userId: user._id,
-                        userEmail: user.email,
-                        title: 'HR List Synced',
-                        message: `Successfully imported ${imported.length} new HR contact${imported.length !== 1 ? 's' : ''}`,
-                        type: 'hr_sync',
-                        icon: 'Users',
-                        link: '/hr-emails',
-                        isRead: false,
-                    });
-                }
-            } catch (notifError) {
-                console.error('Error creating notification:', notifError);
-                // Don't fail the request if notification creation fails
-            }
+            contacts.push({
+                email,
+                company,
+                jobRole,
+                hrName,
+                tags,
+                notes,
+            });
         }
 
         return NextResponse.json({
-            imported: imported.length,
-            skipped: skipped.length,
-            errors: errors.length,
-            details: {
-                imported,
-                skipped,
-                errors,
-            },
+            success: true,
+            contacts,
         });
     } catch (error) {
         console.error('Error importing file:', error);
