@@ -12,7 +12,7 @@ import Cta from "@/components/Cta";
 export default function Home() {
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground font-sans selection:bg-primary/20 selection:text-primary-dark">
+    <div className="flex flex-col min-h-screen bg-background text-foreground font-sans selection:bg-primary/20 selection:text-primary-dark animate-page-transition">
 
       {/* Navbar */}
       <header className="fixed top-0 z-50 w-full border-b border-gray-200/60 bg-white/80 backdrop-blur-xl transition-all shadow-sm">

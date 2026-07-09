@@ -1,8 +1,7 @@
 "use client";
+
 import Link from "next/link";
-import Image from "next/image";
-import { useState } from "react";
-import { FiTwitter, FiGithub, FiMail, FiArrowRight } from "react-icons/fi";
+import { FiTwitter, FiGithub, } from "react-icons/fi";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -15,8 +14,8 @@ export default function Footer() {
         {
             title: "Legal",
             links: [
-                { name: "Privacy Policy", href: "/privacy" },
-                { name: "Terms of Service", href: "/terms" },
+                { name: "Privacy Policy", href: "legal/privacy" },
+                { name: "Terms of Service", href: "legal/terms" },
             ],
         },
         {
@@ -35,7 +34,7 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="w-full border-t border-gray-200 bg-gray-50 text-text-dark relative overflow-hidden">
+        <footer className="w-full border-t border-border bg-surface text-text-dark relative overflow-hidden">
             {/* Background Pattern */}
             <div className="absolute inset-0 -z-10">
                 <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
@@ -80,7 +79,7 @@ export default function Footer() {
                 </div>
 
                 {/* Bottom Section */}
-                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-primary/20 text-sm pt-8">
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-border text-sm pt-8">
                     <p className="text-text/70 font-medium">
                         &copy; {currentYear} Desento by{" "}
                         <Link

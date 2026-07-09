@@ -17,8 +17,8 @@ const Cta = () => {
                     Sign in to get started with the ultimate full-stack outreach platform.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <Link href="/sign-in" className="flex items-center justify-center gap-2 rounded-xl h-16 px-10 text-lg font-bold bg-white text-primary hover:bg-gray-50 hover:scale-105 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
-                        Sign In Now
+                    <Link href="/auth/login" className="flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-lg font-bold bg-white text-primary hover:bg-gray-50 hover:scale-105 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
+                        Access Your Dashboard
                         <FiArrowRight size={22} strokeWidth={3} />
                     </Link>
                 </div>
