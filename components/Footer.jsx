@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { FiTwitter, FiGithub, } from "react-icons/fi";
 
@@ -34,7 +32,7 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="w-full border-t border-border bg-surface text-text-dark relative overflow-hidden">
+        <footer id="footer" className="w-full border-t border-border bg-surface text-text-dark relative overflow-hidden">
             {/* Background Pattern */}
             <div className="absolute inset-0 -z-10">
                 <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />

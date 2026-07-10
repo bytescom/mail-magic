@@ -15,7 +15,7 @@ export const metadata = {
 export default function GlobalNotFound() {
     return (
         <html lang="en" className={`${manrope.variable} h-full antialiased`}>
-            <body className="min-h-full flex flex-col font-sans bg-foreground" suppressHydrationWarning>
+            <body className="min-h-full flex flex-col font-sans bg-background" suppressHydrationWarning>
                 {/* overlay */}
                 <div
                     className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
@@ -27,22 +27,22 @@ export default function GlobalNotFound() {
                     {/* 404 Content */}
                     <div className="space-y-8 max-w-md relative z-10 flex flex-col items-center">
                         <div className="flex items-center justify-center gap-2 sm:gap-4 opacity-0 animate-[pageFadeIn_0.5s_ease-out_forwards]">
-                            <h1 className="text-[120px] sm:text-[160px] leading-none font-black tracking-tighter text-background drop-shadow-lg">
+                            <h1 className="text-[120px] sm:text-[160px] leading-none font-black tracking-tighter text-text-dark drop-shadow-lg">
                                 4
                             </h1>
-                            <div className="relative flex items-center justify-center h-[90px] w-[90px] sm:h-[120px] sm:w-[120px] rounded-full bg-secondary/10 border border-secondary/20 shadow-[0_0_40px_rgba(249,115,22,0.15)]">
+                            <div className="relative flex items-center justify-center h-[90px] w-[90px] sm:h-[120px] sm:w-[120px] rounded-full bg-secondary/10 border border-foreground shadow-[0_0_40px_rgba(249,115,22,0.15)]">
                                 <FiMail className="w-10 h-10 sm:w-14 sm:h-14 text-secondary" strokeWidth={1.5} />
                             </div>
-                            <h1 className="text-[120px] sm:text-[160px] leading-none font-black tracking-tighter text-background drop-shadow-lg">
+                            <h1 className="text-[120px] sm:text-[160px] leading-none font-black tracking-tighter text-text-dark drop-shadow-lg">
                                 4
                             </h1>
                         </div>
 
                         <div className="space-y-4 mt-8 opacity-0 animate-[pageFadeIn_0.5s_ease-out_0.15s_forwards]">
-                            <h2 className="text-3xl font-bold text-background">
+                            <h2 className="text-3xl font-bold text-text-dark">
                                 Page not found
                             </h2>
-                            <p className="text-background/70 font-medium leading-relaxed text-[15px]">
+                            <p className="text-text font-medium leading-relaxed text-[15px]">
                                 Sorry, we couldn't find the page you're looking for. It might have been removed, renamed, or didn't exist in the first place.
                             </p>
                         </div>

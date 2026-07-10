@@ -1,6 +1,6 @@
 {
-  "name": "desento",
-  "version": "3.0.0",
+  "name": "mail-magic",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
