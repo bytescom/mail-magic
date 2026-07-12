@@ -40,5 +40,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-*app/dashboard
-*app/auth
+redux
+lib
+config
+features/analytics
+features/followup  
+features/leads
+features/outreach
+features/settings
+features/tracking
+app/dashboard
