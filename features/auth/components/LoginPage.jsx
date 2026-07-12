@@ -1,6 +1,8 @@
+"use client"
 import Link from 'next/link';
 import { FcGoogle } from 'react-icons/fc';
 import { Playfair_Display } from 'next/font/google';
+import { signIn } from 'next-auth/react';
 
 const serif = Playfair_Display({
     subsets: ['latin'],
@@ -62,23 +64,24 @@ export default function LoginPage() {
                         </p>
                     </div>
 
-                        <button
-                            className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium text-black hover:bg-black hover:text-white transition-colors ease-linear cursor-pointer"
-                        >
-                            <FcGoogle className="w-5 h-5 shrink-0" />
-                            <span>Sign In with Google</span>
-                        </button>
-                    </div>
-
-                    <div className="text-center absolute bottom-10 left-0 w-full">
-                        <p className="text-sm font-medium text-gray-500">
-                            Don't have an account?{' '}
-                            <Link href="/signup" className="font-bold text-black hover:underline">
-                                Sign Up
-                            </Link>
-                        </p>
-                    </div>
+                    <button
+                        onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                        className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium text-black hover:bg-black hover:text-white transition-colors ease-linear cursor-pointer"
+                    >
+                        <FcGoogle className="w-5 h-5 shrink-0" />
+                        <span>Sign In with Google</span>
+                    </button>
                 </div>
+
+                <div className="text-center absolute bottom-10 left-0 w-full">
+                    <p className="text-sm font-medium text-gray-500">
+                        Don't have an account?{' '}
+                        <Link href="/signup" className="font-bold text-black hover:underline">
+                            Sign Up
+                        </Link>
+                    </p>
+                </div>
+            </div>
         </section>
     );
 }

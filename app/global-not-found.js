@@ -43,7 +43,7 @@ export default function GlobalNotFound() {
                                 Page not found
                             </h2>
                             <p className="text-text font-medium leading-relaxed text-[15px]">
-                                Sorry, we couldn't find the page you're looking for. It might have been removed, renamed, or didn't exist in the first place.
+                                Sorry, we couldn&apos;t find the page you&apos;re looking for. It might have been removed, renamed, or didn&apos;t exist in the first place.
                             </p>
                         </div>
                     </div>

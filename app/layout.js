@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono, Manrope } from "next/font/google";
+import AuthProvider from "@/lib/AuthProvider";
 import "./globals.css";
 
 // const geistSans = Geist({
@@ -30,7 +31,7 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

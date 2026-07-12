@@ -1,7 +1,15 @@
 import React from "react";
 import Sidebar from "@/components/layout/Sidebar";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 
-export default function DashboardLayout({ children }) {
+export default async function DashboardLayout({ children }) {
+    const session = await auth()
+
+    if (!session){
+        redirect("/login")
+    }
+
     return (
         <div className="w-full min-h-screen flex gap-2 p-2 bg-primary/5">
             <Sidebar />

@@ -28,7 +28,7 @@ const Hero = () => {
                 </p>
 
                 <div className="w-full mt-4 flex flex-col sm:flex-row justify-center items-center gap-4">
-                    <Link href="/auth/signup" className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-14 px-8 text-base font-bold bg-primary text-white shadow-[0_8px_30px_rgb(79,70,229,0.35)] hover:bg-primary-dark hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(79,70,229,0.4)] transition-all duration-300 group">
+                    <Link href="/signup" className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-14 px-8 text-base font-bold bg-primary text-white shadow-[0_8px_30px_rgb(79,70,229,0.35)] hover:bg-primary-dark hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(79,70,229,0.4)] transition-all duration-300 group">
                         Get Started for Free
                         <FiArrowRight size={20} strokeWidth={3} className="transition-transform group-hover:translate-x-1" />
                     </Link>

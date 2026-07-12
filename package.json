@@ -1,6 +1,6 @@
 {
   "name": "mail-magic",
-  "version": "0.1.0",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,7 +11,8 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "mongoose": "^9.7.4",
-    "next": "16.2.10",
+    "next": "15.5.20",
+    "next-auth": "^4.24.14",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-icons": "^5.7.0"

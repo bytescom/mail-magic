@@ -20,7 +20,7 @@ const Navbar = () => {
                 <li className="hidden md:block"><Link href="#faq" className="hover:text-primary transition-colors">FAQs</Link></li>
                 <li>
                     <Link
-                        href="/auth/login"
+                        href="/login"
                         className="inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2 text-sm font-bold text-white shadow-md shadow-primary/30 hover:bg-primary-dark hover:shadow-lg hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-200 active:scale-95 border border-primary/20"
                     >
                         Sign In

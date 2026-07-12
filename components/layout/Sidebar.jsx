@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LuPanelLeftClose, LuPanelRightClose } from "react-icons/lu";
@@ -147,7 +148,7 @@ export default function Sidebar() {
                         >
                             <div className="flex items-center gap-3 px-4 py-4 border-b border-border bg-surface">
                                 <div className="w-11 h-11 rounded-xl bg-orange-100 overflow-hidden border border-orange-200 shrink-0">
-                                    <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
+                                    <Image src={avatarUrl} alt="Profile" width={44} height={44} className="w-full h-full object-cover" />
                                 </div>
                                 <div className="min-w-0 pr-2">
                                     <p className="text-[14px] font-bold text-text-dark flex items-center gap-1 truncate">
@@ -188,7 +189,7 @@ export default function Sidebar() {
                 >
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-orange-200 overflow-hidden border border-orange-100 shrink-0">
-                            <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
+                            <Image src={avatarUrl} alt="Profile" width={40} height={40} className="w-full h-full object-cover" />
                         </div>
                         {isOpen && (
                             <div className="flex flex-col items-start leading-tight min-w-0">
