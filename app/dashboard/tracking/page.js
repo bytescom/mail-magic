@@ -1,5 +1,14 @@
-import TrackingPage from '@/features/tracking/components/TrackingPage';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+
+const TrackingPage = dynamic(() => import('@/features/tracking/components/TrackingPage'), {
+    ssr: false,
+});
 
 export default function Page() {
-    return <TrackingPage />;
+    return (
+        <Suspense>
+            <TrackingPage />
+        </Suspense>
+    );
 }

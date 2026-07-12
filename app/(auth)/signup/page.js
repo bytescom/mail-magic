@@ -1,5 +1,14 @@
-import SignupPage from '@/features/auth/components/SignupPage';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+
+const SignupPage = dynamic(() => import('@/features/auth/components/SignupPage'), {
+    ssr: false,
+});
 
 export default function Page() {
-    return <SignupPage />;
+    return (
+        <Suspense>
+            <SignupPage />
+        </Suspense>
+    );
 }

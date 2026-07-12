@@ -1,5 +1,14 @@
-import PrivacyPage from '@/features/marketing/components/PrivacyPage';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+
+const PrivacyPage = dynamic(() => import('@/features/marketing/components/PrivacyPage'), {
+    ssr: true,
+});
 
 export default function Page() {
-    return <PrivacyPage />;
+    return (
+        <Suspense>
+            <PrivacyPage />
+        </Suspense>
+    );
 }

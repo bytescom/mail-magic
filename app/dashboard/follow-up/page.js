@@ -1,5 +1,14 @@
-import FollowUpPage from '@/features/followup/components/FollowUpPage';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+
+const FollowUpPage = dynamic(() => import('@/features/followup/components/FollowUpPage'), {
+    ssr: false,
+});
 
 export default function Page() {
-    return <FollowUpPage />;
+    return (
+        <Suspense>
+            <FollowUpPage />
+        </Suspense>
+    );
 }

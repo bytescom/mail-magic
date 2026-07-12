@@ -1,25 +1,32 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
+import dynamic from 'next/dynamic'
 import { Playfair_Display } from "next/font/google";
-import ProfileTab from '@/features/settings/components/ProfileTab';
-import IntegrationsTab from '@/features/settings/components/IntegrationsTab';
-import AutomationTab from '@/features/settings/components/AutomationTab';
-import UsageTab from '@/features/settings/components/UsageTab';
-import DangerZoneTab from '@/features/settings/components/DangerZoneTab';
+import Loading from "@/components/Loading";
 
 const serif = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+
+// Lazy load each tab — only downloads JS when user clicks
+const ProfileTab = dynamic(() => import('@/features/settings/components/ProfileTab'), { ssr: false });
+const IntegrationsTab = dynamic(() => import('@/features/settings/components/IntegrationsTab'), { ssr: false });
+const AutomationTab = dynamic(() => import('@/features/settings/components/AutomationTab'), { ssr: false });
+const UsageTab = dynamic(() => import('@/features/settings/components/UsageTab'), { ssr: false });
+const DangerZoneTab = dynamic(() => import('@/features/settings/components/DangerZoneTab'), { ssr: false });
 
 const tabs = ["Profile", "Integrations", "Automation", "Usage Quotas", "Danger Zone"];
 
 export default function Settings() {
     const [activeTab, setActiveTab] = useState("Profile");
 
-    const tabContent = {
-        "Profile": <ProfileTab />,
-        "Integrations": <IntegrationsTab />,
-        "Automation": <AutomationTab />,
-        "Usage Quotas": <UsageTab />,
-        "Danger Zone": <DangerZoneTab />,
+    const renderTab = () => {
+        switch (activeTab) {
+            case "Profile": return <ProfileTab />;
+            case "Integrations": return <IntegrationsTab />;
+            case "Automation": return <AutomationTab />;
+            case "Usage Quotas": return <UsageTab />;
+            case "Danger Zone": return <DangerZoneTab />;
+            default: return null;
+        }
     };
 
     return (
@@ -53,7 +60,9 @@ export default function Settings() {
 
                 {/* Tab Content */}
                 <div className="px-2 md:px-0 w-full max-w-full overflow-x-auto">
-                    {tabContent[activeTab]}
+                    <Suspense fallback={<Loading />}>
+                        {renderTab()}
+                    </Suspense>
                 </div>
             </section>
         </div>
