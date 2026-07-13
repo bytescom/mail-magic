@@ -26,6 +26,11 @@ const EmailTemplateSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    category: {
+        type: String,
+        enum: ['Cold Outreach', 'Follow-up', 'Newsletter', 'Transactional', 'Event Invite', 'Product Update'],
+        default: 'Cold Outreach',
+    },
     usageCount: {
         type: Number,
         default: 0,
