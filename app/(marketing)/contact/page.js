@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 
-const ContactPage = dynamic(() => import('@/features/marketing/components/ContactPage'), {
+const ContactPage = dynamic(() => import('@/features/marketing/ContactPage'), {
     ssr: true,
 });
 

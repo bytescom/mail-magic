@@ -7,13 +7,13 @@ import Loading from "@/components/Loading";
 const serif = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 // Lazy load each tab — only downloads JS when user clicks
-const ProfileTab = dynamic(() => import('@/features/settings/components/ProfileTab'), { ssr: false });
-const IntegrationsTab = dynamic(() => import('@/features/settings/components/IntegrationsTab'), { ssr: false });
-const AutomationTab = dynamic(() => import('@/features/settings/components/AutomationTab'), { ssr: false });
-const UsageTab = dynamic(() => import('@/features/settings/components/UsageTab'), { ssr: false });
-const DangerZoneTab = dynamic(() => import('@/features/settings/components/DangerZoneTab'), { ssr: false });
+const ProfileTab = dynamic(() => import('@/features/settings/components/ProfileTab'));
+const IntegrationsTab = dynamic(() => import('@/features/settings/components/IntegrationsTab'));
+const AutomationTab = dynamic(() => import('@/features/settings/components/AutomationTab'));
+const PricingTab = dynamic(() => import('@/features/settings/components/PricingTab'));
+const DangerZoneTab = dynamic(() => import('@/features/settings/components/DangerZoneTab'));
 
-const tabs = ["Profile", "Integrations", "Automation", "Usage Quotas", "Danger Zone"];
+const tabs = ["Profile", "Integrations", "Automation", "Pricing", "Danger Zone"];
 
 export default function Settings() {
     const [activeTab, setActiveTab] = useState("Profile");
@@ -23,7 +23,7 @@ export default function Settings() {
             case "Profile": return <ProfileTab />;
             case "Integrations": return <IntegrationsTab />;
             case "Automation": return <AutomationTab />;
-            case "Usage Quotas": return <UsageTab />;
+            case "Pricing": return <PricingTab />;
             case "Danger Zone": return <DangerZoneTab />;
             default: return null;
         }
