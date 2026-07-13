@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { LuPanelLeftClose, LuPanelRightClose } from "react-icons/lu";
 import { FiGrid, FiBriefcase, FiFileText, FiUser, FiClock, FiSettings, FiCheckCircle, FiLogOut, FiChevronUp, FiMenu, FiX } from "react-icons/fi";
 import { Playfair_Display } from "next/font/google";
@@ -23,12 +23,37 @@ const navItems = [
     { name: 'Settings', path: '/dashboard/settings', icon: <FiSettings size={20} strokeWidth={1.5} /> },
 ];
 
-const avatarUrl = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&auto=format&fit=crop";
-const displayEmail = "alex.morgan@example.com";
-const userName = "Alex";
+/** Renders a small avatar: Google image or initials fallback */
+function UserAvatar({ src, name, size = 40, className = "" }) {
+    const [imgError, setImgError] = useState(false);
+    const initials = name
+        ? name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()
+        : "?";
+
+    if (src && !imgError) {
+        return (
+            <Image
+                src={src}
+                alt={name || "User avatar"}
+                width={size}
+                height={size}
+                referrerPolicy="no-referrer"
+                className={`w-full h-full object-cover ${className}`}
+                onError={() => setImgError(true)}
+            />
+        );
+    }
+
+    return (
+        <span className={`flex items-center justify-center w-full h-full text-[13px] font-bold text-primary bg-primary/10 ${className}`}>
+            {initials}
+        </span>
+    );
+}
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const { data: session, status } = useSession();
     const [isOpen, setIsOpen] = useState(true);
     const [profileOpen, setProfileOpen] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -38,6 +63,12 @@ export default function Sidebar() {
     const toggleSidebar = () => setIsOpen(prev => !prev);
 
     const [popupStyle, setPopupStyle] = useState({});
+
+    // Derive user info from session
+    const userName = session?.user?.name || "User";
+    const displayEmail = session?.user?.email || "";
+    const avatarSrc = session?.user?.image || null;
+    const firstName = userName.split(" ")[0];
 
     useEffect(() => {
         const updatePosition = () => {
@@ -69,7 +100,10 @@ export default function Sidebar() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [profileOpen]);
 
-
+    const handleSignOut = () => {
+        setProfileOpen(false);
+        signOut({ callbackUrl: "/login" });
+    };
 
     return (
         <>
@@ -80,8 +114,8 @@ export default function Sidebar() {
                         Desento<span className="text-secondary">.</span>
                     </h1>
                 </Link>
-                <button 
-                    onClick={() => setMobileOpen(true)} 
+                <button
+                    onClick={() => setMobileOpen(true)}
                     className="p-1.5 rounded-lg text-text hover:bg-surface hover:text-primary transition-colors cursor-pointer"
                 >
                     <FiMenu size={24} />
@@ -90,7 +124,7 @@ export default function Sidebar() {
 
             {/* Mobile Overlay */}
             {mobileOpen && (
-                <div 
+                <div
                     className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
                     onClick={() => setMobileOpen(false)}
                 />
@@ -112,12 +146,12 @@ export default function Sidebar() {
                                 </h1>
                             </Link>
                         )}
-                        
+
                         {/* Desktop Toggle Button */}
                         <button onClick={toggleSidebar} className='hidden md:block cursor-pointer text-text hover:text-primary transition-colors'>
                             {isOpen ? <LuPanelLeftClose size={22} /> : <LuPanelRightClose size={22} />}
                         </button>
-                        
+
                         {/* Mobile Close Button */}
                         <button onClick={() => setMobileOpen(false)} className='md:hidden cursor-pointer text-text hover:text-primary p-1 rounded-lg hover:bg-surface transition-colors'>
                             <FiX size={22} />
@@ -128,7 +162,7 @@ export default function Sidebar() {
                         {(isOpen || mobileOpen) && (
                             <div className='flex gap-2'>
                                 <h2 className={`text-xl leading-[1.2] text-text ${serif.className}`}>Welcome back,</h2>
-                                <h2 className={`text-xl leading-[1.2] font-semibold text-primary ${serif.className}`}>{userName} :)</h2>
+                                <h2 className={`text-xl leading-[1.2] font-semibold text-primary ${serif.className}`}>{firstName} :)</h2>
                             </div>
                         )}
 
@@ -171,8 +205,8 @@ export default function Sidebar() {
                             <div className="fixed inset-0" style={{ zIndex: 9998 }} onClick={() => setProfileOpen(false)} />
                             <div ref={menuRef} className="fixed bg-background border border-border rounded-2xl shadow-xl overflow-hidden" style={{ ...popupStyle, zIndex: 9999 }}>
                                 <div className="flex items-center gap-3 px-4 py-4 border-b border-border bg-surface">
-                                    <div className="w-11 h-11 rounded-xl bg-orange-100 overflow-hidden border border-orange-200 shrink-0">
-                                        <Image src={avatarUrl} alt="Profile" width={44} height={44} className="w-full h-full object-cover" />
+                                    <div className="w-11 h-11 rounded-xl bg-primary/10 overflow-hidden border border-primary/20 shrink-0">
+                                        <UserAvatar src={avatarSrc} name={userName} size={44} />
                                     </div>
                                     <div className="min-w-0 pr-2">
                                         <p className="text-[14px] font-bold text-text-dark flex items-center gap-1 truncate">
@@ -182,12 +216,19 @@ export default function Sidebar() {
                                     </div>
                                 </div>
                                 <div className="py-1.5">
-                                    <Link href="/dashboard" onClick={() => setProfileOpen(false)} className="w-full flex items-center gap-3 px-4 py-3 text-[13px] font-semibold text-text hover:bg-surface hover:text-primary transition-colors">
-                                        <FiUser size={15} className="text-muted" /> Profile
+                                    <Link
+                                        href="/dashboard/settings"
+                                        onClick={() => setProfileOpen(false)}
+                                        className="w-full flex items-center gap-3 px-4 py-3 text-[13px] font-semibold text-text hover:bg-surface hover:text-primary transition-colors"
+                                    >
+                                        <FiUser size={15} className="text-muted" /> Profile & Settings
                                     </Link>
                                     <div className="mx-4 my-1 border-t border-border" />
-                                    <button onClick={() => { setProfileOpen(false); signOut({ callbackUrl: "/login" }); }} className="w-full flex items-center gap-3 px-4 py-3 text-[13px] font-semibold text-red-500 hover:bg-red-50 transition-colors cursor-pointer">
-                                        <FiLogOut size={15} className="text-red-400" /> Logout
+                                    <button
+                                        onClick={handleSignOut}
+                                        className="w-full flex items-center gap-3 px-4 py-3 text-[13px] font-semibold text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+                                    >
+                                        <FiLogOut size={15} className="text-red-400" /> Sign out
                                     </button>
                                 </div>
                             </div>
@@ -201,13 +242,13 @@ export default function Sidebar() {
                         className={`w-full flex items-center rounded-b-xl cursor-pointer transition-all group active:scale-[0.98] ${isOpen || mobileOpen ? 'justify-between p-5' : 'justify-center py-5 px-2'} ${profileOpen ? 'bg-surface' : 'hover:bg-surface'}`}
                     >
                         <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-10 h-10 rounded-lg bg-orange-200 overflow-hidden border border-orange-100 shrink-0">
-                                <Image src={avatarUrl} alt="Profile" width={40} height={40} className="w-full h-full object-cover" />
+                            <div className="w-10 h-10 rounded-lg overflow-hidden border border-primary/20 shrink-0 bg-primary/10">
+                                <UserAvatar src={avatarSrc} name={userName} size={40} />
                             </div>
                             {(isOpen || mobileOpen) && (
                                 <div className="flex flex-col items-start leading-tight min-w-0">
                                     <span className="text-[14px] font-semibold text-text-dark flex items-center gap-1 group-hover:text-primary transition-colors truncate max-w-full">
-                                        <span className="truncate">{userName}</span>
+                                        <span className="truncate">{status === 'loading' ? '…' : firstName}</span>
                                         <FiCheckCircle className="text-primary w-3 h-3 shrink-0" />
                                     </span>
                                     <span className="text-xs text-text font-medium truncate max-w-full">{displayEmail}</span>
