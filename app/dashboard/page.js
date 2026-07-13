@@ -1,9 +1,7 @@
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 
-const DashboardHome = dynamic(() => import('@/features/analytics/components/DashboardHome'), {
-    ssr: false,
-});
+const DashboardHome = dynamic(() => import('@/features/analytics/components/DashboardHome'));
 
 export default function Page() {
     return (
