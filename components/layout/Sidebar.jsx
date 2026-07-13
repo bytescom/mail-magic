@@ -4,22 +4,23 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { LuPanelLeftClose, LuPanelRightClose } from "react-icons/lu";
 import { FiGrid, FiBriefcase, FiFileText, FiUser, FiClock, FiSettings, FiCheckCircle, FiLogOut, FiChevronUp } from "react-icons/fi";
 import { Playfair_Display } from "next/font/google";
 
 const serif = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+    subsets: ["latin"],
+    weight: ["400", "500", "600", "700"],
 });
 
 const navItems = [
-  { name: 'Dashboard', path: '/dashboard', icon: <FiGrid size={20} strokeWidth={1.5} /> },
-  { name: 'Leads', path: '/dashboard/leads', icon: <FiBriefcase size={20} strokeWidth={1.5} /> },
-  { name: 'Outreach', path: '/dashboard/outreach', icon: <FiFileText size={20} strokeWidth={1.5} /> },
-  { name: 'Follow Ups', path: '/dashboard/follow-up', icon: <FiUser size={20} strokeWidth={1.5} /> },
-  { name: 'Tracking', path: '/dashboard/tracking', icon: <FiClock size={20} strokeWidth={1.5} /> },
-  { name: 'Settings', path: '/dashboard/settings', icon: <FiSettings size={20} strokeWidth={1.5} /> },
+    { name: 'Dashboard', path: '/dashboard', icon: <FiGrid size={20} strokeWidth={1.5} /> },
+    { name: 'Leads', path: '/dashboard/leads', icon: <FiBriefcase size={20} strokeWidth={1.5} /> },
+    { name: 'Outreach', path: '/dashboard/outreach', icon: <FiFileText size={20} strokeWidth={1.5} /> },
+    { name: 'Follow Ups', path: '/dashboard/follow-up', icon: <FiUser size={20} strokeWidth={1.5} /> },
+    { name: 'Tracking', path: '/dashboard/tracking', icon: <FiClock size={20} strokeWidth={1.5} /> },
+    { name: 'Settings', path: '/dashboard/settings', icon: <FiSettings size={20} strokeWidth={1.5} /> },
 ];
 
 const avatarUrl = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&auto=format&fit=crop";
@@ -169,7 +170,7 @@ export default function Sidebar() {
                                 <button
                                     onClick={() => {
                                         setProfileOpen(false);
-                                        alert('Logout clicked');
+                                        signOut({ callbackUrl: "/login" });
                                     }}
                                     className="w-full flex items-center gap-3 px-4 py-3 text-[13px] font-semibold text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
                                 >
