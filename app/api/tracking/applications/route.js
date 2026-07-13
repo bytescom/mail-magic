@@ -2,16 +2,25 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import Application from '../../../../models/Application';
+import User from '../../../../models/User';
 import mongoose from 'mongoose';
+import { connectDB } from '@/lib/db';
 
 export async function GET(req) {
     try {
+        await connectDB();
         const session = await getServerSession(authOptions);
-        if (!session || !session.user) {
+        if (!session || !session.user || !session.user.email) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const userId = session.user.id;
+        const User = mongoose.models.User || mongoose.model('User');
+        const dbUser = await User.findOne({ email: session.user.email });
+        if (!dbUser) {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
+        
+        const userId = dbUser._id;
         const { searchParams } = new URL(req.url);
         
         // Pagination
