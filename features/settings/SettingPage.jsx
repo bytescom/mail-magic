@@ -1,10 +1,8 @@
 "use client"
 import React, { useState, Suspense } from 'react'
 import dynamic from 'next/dynamic'
-import { Playfair_Display } from "next/font/google";
 import Loading from "@/components/Loading";
 
-const serif = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 // Lazy load each tab — only downloads JS when user clicks
 const ProfileTab = dynamic(() => import('@/features/settings/components/ProfileTab'));
@@ -30,11 +28,11 @@ export default function Settings() {
     };
 
     return (
-        <div className="max-w-full h-full min-h-screen overflow-x-hidden w-full">
+        <div className="max-w-full h-full min-h-full overflow-x-hidden w-full">
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6 px-2 md:px-0">
                 <div>
-                    <h1 className={`text-[32px] font-extrabold text-text-dark leading-[1.1] mb-1.5 tracking-tight ${serif.className}`}>
+                    <h1 className={`text-[32px] font-extrabold text-text-dark leading-[1.1] mb-1.5 tracking-tight`}>
                         Settings
                     </h1>
                     <p className="text-[14px] text-text">Manage your account settings and preferences.</p>

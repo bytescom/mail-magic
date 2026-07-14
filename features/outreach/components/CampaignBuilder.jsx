@@ -5,11 +5,10 @@ import {
     FiSettings, FiUpload, FiSearch, FiEdit2, FiX,
     FiChevronDown, FiAlertCircle, FiPlus, FiLoader
 } from 'react-icons/fi';
-import { Playfair_Display } from "next/font/google";
 import TemplateEditorModal from './TemplateEditorModal';
 import LaunchConfirmationModal from './LaunchConfirmationModal';
+import { useScrollLock } from "@/lib/useScrollLock";
 
-const serif = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 const CampaignBuilder = ({ onClose, initialData }) => {
     const isEditing = !!initialData;
@@ -56,6 +55,7 @@ const CampaignBuilder = ({ onClose, initialData }) => {
     const [error, setError] = useState('');
 
     // ── Fetch real leads ───────────────────────────────────────────────────
+    useScrollLock(isTemplateModalOpen || isLaunchModalOpen || isQuickAddOpen);
     useEffect(() => {
         const fetchLeads = async () => {
             setLeadsLoading(true);
@@ -244,7 +244,7 @@ const CampaignBuilder = ({ onClose, initialData }) => {
                     </button>
                     <div>
                         <div className="text-[12px] font-bold text-muted mb-0.5">Campaign Builder</div>
-                        <h1 className={`text-[20px] sm:text-[24px] font-extrabold text-text-dark leading-tight tracking-tight ${serif.className}`}>
+                        <h1 className={`text-[20px] sm:text-[24px] font-extrabold text-text-dark leading-tight tracking-tight`}>
                             {isEditing ? 'Edit Campaign' : 'Create New Campaign'}
                         </h1>
                     </div>
@@ -268,7 +268,7 @@ const CampaignBuilder = ({ onClose, initialData }) => {
                     <section className="bg-white border border-border/60 rounded-[14px] shadow-sm p-5 sm:p-6">
                         <div className="flex items-center gap-2 mb-4">
                             <div className="w-8 h-8 rounded-lg bg-[#1a1a1a] text-white flex items-center justify-center shrink-0"><FiSettings size={14} /></div>
-                            <h2 className={`text-[17px] font-bold text-text-dark ${serif.className}`}>Campaign Details</h2>
+                            <h2 className={`text-[17px] font-bold text-text-dark`}>Campaign Details</h2>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
@@ -300,7 +300,7 @@ const CampaignBuilder = ({ onClose, initialData }) => {
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-lg bg-[#1a1a1a] text-white flex items-center justify-center shrink-0"><FiMail size={14} /></div>
                                 <div>
-                                    <h2 className={`text-[17px] font-bold text-text-dark ${serif.className}`}>Email Template</h2>
+                                    <h2 className={`text-[17px] font-bold text-text-dark`}>Email Template</h2>
                                     <p className="text-[12px] font-medium text-muted">Select or create the template for this campaign</p>
                                 </div>
                             </div>
@@ -340,7 +340,7 @@ const CampaignBuilder = ({ onClose, initialData }) => {
                     <section className="bg-white border border-border/60 rounded-[14px] shadow-sm p-5 sm:p-6">
                         <div className="flex items-center gap-2 mb-4">
                             <div className="w-8 h-8 rounded-lg bg-[#1a1a1a] text-white flex items-center justify-center shrink-0"><FiPaperclip size={14} /></div>
-                            <h2 className={`text-[17px] font-bold text-text-dark ${serif.className}`}>Attachments <span className="text-muted text-[12px] font-medium">(Optional)</span></h2>
+                            <h2 className={`text-[17px] font-bold text-text-dark`}>Attachments <span className="text-muted text-[12px] font-medium">(Optional)</span></h2>
                         </div>
 
                         <div
@@ -383,7 +383,7 @@ const CampaignBuilder = ({ onClose, initialData }) => {
                                     <FiUsers size={18} />
                                 </div>
                                 <div>
-                                    <h2 className={`text-[18px] font-bold text-text-dark ${serif.className}`}>3. Targeted Leads</h2>
+                                    <h2 className={`text-[18px] font-bold text-text-dark`}>3. Targeted Leads</h2>
                                     <p className="text-[12px] font-medium text-muted">{selectedLeadIds.length} leads selected</p>
                                 </div>
                             </div>
@@ -523,7 +523,7 @@ const CampaignBuilder = ({ onClose, initialData }) => {
                     <section className="bg-white border border-border/60 rounded-[14px] shadow-sm p-5 sm:p-6">
                         <div className="flex items-center gap-2 mb-4">
                             <div className="w-8 h-8 rounded-lg bg-[#1a1a1a] text-white flex items-center justify-center shrink-0"><FiSettings size={14} /></div>
-                            <h2 className={`text-[17px] font-bold text-text-dark ${serif.className}`}>Campaign Settings</h2>
+                            <h2 className={`text-[17px] font-bold text-text-dark`}>Campaign Settings</h2>
                         </div>
                         <div className="flex flex-col gap-3">
                             {[
@@ -645,7 +645,7 @@ const CampaignBuilder = ({ onClose, initialData }) => {
                     <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsQuickAddOpen(false)} />
                     <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 border border-border/50 animate-in zoom-in-95 duration-200">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className={`text-[18px] font-bold text-text-dark ${serif.className}`}>Quick Add Lead</h3>
+                            <h3 className={`text-[18px] font-bold text-text-dark`}>Quick Add Lead</h3>
                             <button onClick={() => setIsQuickAddOpen(false)} className="p-1.5 hover:bg-surface rounded-lg text-muted hover:text-text-dark transition-colors">
                                 <FiX size={18} />
                             </button>

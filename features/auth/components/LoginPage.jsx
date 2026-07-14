@@ -1,13 +1,8 @@
 "use client"
 import Link from 'next/link';
 import { FcGoogle } from 'react-icons/fc';
-import { Playfair_Display } from 'next/font/google';
 import { signIn } from 'next-auth/react';
 
-const serif = Playfair_Display({
-    subsets: ['latin'],
-    weight: ['400', '500', '600', '700'],
-});
 
 export default function LoginPage() {
     return (
@@ -31,7 +26,7 @@ export default function LoginPage() {
 
                     {/* Bottom content */}
                     <div className="relative z-10 space-y-4 max-w-sm mb-4">
-                        <h2 className={`text-5xl font-semibold tracking-tight text-white leading-[1.1] ${serif.className}`}>
+                        <h2 className={`text-5xl font-semibold tracking-tight text-white leading-[1.1]`}>
                             Get<br />Everything<br />You Want
                         </h2>
                         <p className="text-sm font-normal text-white/80 leading-relaxed mt-6">
@@ -56,7 +51,7 @@ export default function LoginPage() {
                 <div className="w-full max-w-[380px] flex flex-col gap-8 mt-12">
                     {/* Welcome Header */}
                     <div className="text-center space-y-3">
-                        <h1 className={`text-4xl font-semibold tracking-tight text-black ${serif.className}`}>
+                        <h1 className={`text-4xl font-semibold tracking-tight text-black`}>
                             Welcome Back
                         </h1>
                         <p className="text-sm text-gray-500 font-medium">

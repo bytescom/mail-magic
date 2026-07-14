@@ -2,11 +2,11 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { FiArrowRight, FiSend, FiCheckCircle, FiTrendingUp, FiZap } from 'react-icons/fi'
+import InteractiveHeroUI from './InteractiveHeroUI'
 
 const Hero = () => {
     return (
-        <section className="relative w-full overflow-hidden bg-white min-h-[92vh] flex items-center justify-center pt-20 pb-16">
+        <section className="relative w-full overflow-hidden bg-background min-h-[92vh] flex items-center pt-10 pb-16 lg:pt-16 lg:pb-24">
             {/* Layered Background */}
             <div className="absolute inset-0 pointer-events-none z-0">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_70%_50%_at_50%_50%,#000_20%,transparent_100%)] opacity-50"></div>
@@ -15,28 +15,36 @@ const Hero = () => {
                 <div className="absolute top-[40%] left-[50%] w-[400px] h-[400px] bg-primary-dark/5 rounded-full blur-[100px]"></div>
             </div>
 
-            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center gap-8">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-text-dark leading-[1.08] max-w-4xl">
-                    Stop Sending Generic Outreach. <br className="hidden md:block" />
-                    <span className="text-transparent bg-clip-text bg-[linear-gradient(135deg,var(--color-primary)_0%,#6366f1_40%,var(--color-primary-dark)_100%)]">
-                        Automate Personalization at Scale.
-                    </span>
-                </h1>
+            <div className="relative z-10 max-w-[1280px] w-full mx-auto px-6 sm:px-8 lg:px-12 grid lg:grid-cols-2 gap-16 lg:gap-8 items-center">
+                
+                {/* Left Column (Text & CTAs) */}
+                <div className="flex flex-col items-start text-left lg:pr-12">
 
-                <p className="text-lg sm:text-xl md:text-2xl text-text/70 max-w-3xl leading-relaxed font-medium">
-                    Create personalized emails, send high-converting outreach, and track every reply — all from a single, unified workspace.
-                </p>
+                    {/* Heading */}
+                    <h1 className="text-[2.75rem] sm:text-6xl lg:text-[4.25rem] font-semibold tracking-tight text-text-dark leading-[1.05] mb-6">
+                        Outreach for <br />
+                        <span className="text-text-dark">professionals</span>
+                    </h1>
 
-                <div className="w-full mt-4 flex flex-col sm:flex-row justify-center items-center gap-4">
-                    <Link href="/signup" className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-14 px-8 text-base font-bold bg-primary text-white shadow-[0_8px_30px_rgb(79,70,229,0.35)] hover:bg-primary-dark hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(79,70,229,0.4)] transition-all duration-300 group">
-                        Get Started for Free
-                        <FiArrowRight size={20} strokeWidth={3} className="transition-transform group-hover:translate-x-1" />
-                    </Link>
-                    <Link href="#features" className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg h-14 px-8 text-base font-bold bg-white text-text-dark border border-border hover:bg-surface hover:-translate-y-1 transition-all duration-300 shadow-sm group">
-                        See How It Works
-                        <FiArrowRight size={18} className="text-primary group-hover:translate-x-1 transition-transform" />
-                    </Link>
+                    {/* Subtitle */}
+                    <p className="text-lg sm:text-[22px] text-text max-w-lg leading-[1.6] font-normal mb-10">
+                        The best way to reach humans instead of spam folders. Create personalized emails and automate outreach at scale.
+                    </p>
+
+                    {/* Buttons */}
+                    <div className="flex flex-wrap items-center gap-6">
+                        <Link href="/signup" className="inline-flex items-center justify-center h-12 px-6 rounded-full text-[15px] font-medium bg-text-dark text-white hover:bg-black hover:shadow-lg hover:shadow-text-dark/20 transition-all duration-200">
+                            Get started
+                        </Link>
+                    </div>
+
                 </div>
+
+                {/* Right Column (Interactive Dashboard UI) */}
+                <div className="relative w-full flex items-center justify-center lg:justify-end z-10">
+                    <InteractiveHeroUI />
+                </div>
+
             </div>
         </section>
     )

@@ -2,19 +2,19 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FiRefreshCw, FiSearch } from 'react-icons/fi';
-import { Playfair_Display } from "next/font/google";
 import TrackingStats from './TrackingStats';
 import TrackingTable from './TrackingTable';
 import TrackingDrawer from './drawer/TrackingDrawer';
 import { fetchApplications, setFilter } from '../trackingSlice';
+import { useScrollLock } from "@/lib/useScrollLock";
 
-const serif = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 const tabDisplayNames = ["ALL", "SENT", "FOLLOW-UP SENT", "REPLIED", "INTERVIEW", "REJECTED", "CLOSED"];
 
 export default function TrackingPage() {
     const dispatch = useDispatch();
     const { applications, metrics, currentFilters, loading, isDrawerOpen, pagination } = useSelector((state) => state.tracking);
+    useScrollLock(isDrawerOpen);
 
     useEffect(() => {
         dispatch(fetchApplications({
@@ -45,7 +45,7 @@ export default function TrackingPage() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
                     <p className="text-[11px] font-bold text-primary tracking-[0.1em] uppercase mb-1.5">Tracking</p>
-                    <h1 className={`text-[32px] md:text-[36px] font-bold text-text-dark leading-[1.1] mb-1 tracking-tight ${serif.className}`}>Applications</h1>
+                    <h1 className={`text-[32px] md:text-[36px] font-bold text-text-dark leading-[1.1] mb-1 tracking-tight`}>Applications</h1>
                     <p className="text-[15px] font-medium text-text">Track every application, reply, and follow-up in one place.</p>
                 </div>
                 <button 

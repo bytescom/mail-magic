@@ -9,6 +9,7 @@ import { LuPanelLeftClose, LuPanelRightClose } from "react-icons/lu";
 import { FiGrid, FiBriefcase, FiFileText, FiUser, FiClock, FiSettings, FiCheckCircle, FiLogOut, FiChevronUp, FiMenu, FiX } from "react-icons/fi";
 import { Playfair_Display } from "next/font/google";
 
+
 const serif = Playfair_Display({
     subsets: ["latin"],
     weight: ["400", "500", "600", "700"],
@@ -23,14 +24,35 @@ const navItems = [
     { name: 'Settings', path: '/dashboard/settings', icon: <FiSettings size={20} strokeWidth={1.5} /> },
 ];
 
-/** Renders a small avatar: Google image or initials fallback */
-function UserAvatar({ src, name, size = 40, className = "" }) {
-    const [imgError, setImgError] = useState(false);
+/**
+ * UserAvatar — priority order:
+ *  1. Google profile image (src prop)
+ *  2. DiceBear "notionists-neutral" illustrated avatar (seeded from email)
+ *  3. Gradient initials fallback
+ */
+function UserAvatar({ src, name, email, size = 40, className = "" }) {
+    const [googleError, setGoogleError]   = useState(false);
+    const [dicebearError, setDicebearError] = useState(false);
+
+    const gradients = [
+        "from-violet-500 to-indigo-500",
+        "from-rose-500 to-pink-500",
+        "from-amber-500 to-orange-500",
+        "from-emerald-500 to-teal-500",
+        "from-sky-500 to-blue-500",
+        "from-fuchsia-500 to-purple-500",
+    ];
+    const gradientIndex = name ? name.charCodeAt(0) % gradients.length : 0;
+    const gradient = gradients[gradientIndex];
+
     const initials = name
         ? name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()
         : "?";
 
-    if (src && !imgError) {
+    const seed = encodeURIComponent(email || name || "user");
+    const dicebearUrl = `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf,f0f0f0&backgroundType=gradientLinear&radius=50`;
+
+    if (src && !googleError) {
         return (
             <Image
                 src={src}
@@ -39,13 +61,27 @@ function UserAvatar({ src, name, size = 40, className = "" }) {
                 height={size}
                 referrerPolicy="no-referrer"
                 className={`w-full h-full object-cover ${className}`}
-                onError={() => setImgError(true)}
+                onError={() => setGoogleError(true)}
+            />
+        );
+    }
+
+    if (!dicebearError) {
+        return (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+                src={dicebearUrl}
+                alt={name || "Generated avatar"}
+                width={size}
+                height={size}
+                className={`w-full h-full object-cover ${className}`}
+                onError={() => setDicebearError(true)}
             />
         );
     }
 
     return (
-        <span className={`flex items-center justify-center w-full h-full text-[13px] font-bold text-primary bg-primary/10 ${className}`}>
+        <span className={`flex items-center justify-center w-full h-full text-white font-bold bg-gradient-to-br ${gradient} text-[13px] ${className}`}>
             {initials}
         </span>
     );
@@ -205,8 +241,8 @@ export default function Sidebar() {
                             <div className="fixed inset-0" style={{ zIndex: 9998 }} onClick={() => setProfileOpen(false)} />
                             <div ref={menuRef} className="fixed bg-background border border-border rounded-2xl shadow-xl overflow-hidden" style={{ ...popupStyle, zIndex: 9999 }}>
                                 <div className="flex items-center gap-3 px-4 py-4 border-b border-border bg-surface">
-                                    <div className="w-11 h-11 rounded-xl bg-primary/10 overflow-hidden border border-primary/20 shrink-0">
-                                        <UserAvatar src={avatarSrc} name={userName} size={44} />
+                                    <div className="w-11 h-11 rounded-xl overflow-hidden border border-border shrink-0">
+                                        <UserAvatar src={avatarSrc} name={userName} email={displayEmail} size={44} />
                                     </div>
                                     <div className="min-w-0 pr-2">
                                         <p className="text-[14px] font-bold text-text-dark flex items-center gap-1 truncate">
@@ -242,8 +278,8 @@ export default function Sidebar() {
                         className={`w-full flex items-center rounded-b-xl cursor-pointer transition-all group active:scale-[0.98] ${isOpen || mobileOpen ? 'justify-between p-5' : 'justify-center py-5 px-2'} ${profileOpen ? 'bg-surface' : 'hover:bg-surface'}`}
                     >
                         <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-10 h-10 rounded-lg overflow-hidden border border-primary/20 shrink-0 bg-primary/10">
-                                <UserAvatar src={avatarSrc} name={userName} size={40} />
+                            <div className="w-10 h-10 rounded-lg overflow-hidden border border-border shrink-0">
+                                <UserAvatar src={avatarSrc} name={userName} email={displayEmail} size={40} />
                             </div>
                             {(isOpen || mobileOpen) && (
                                 <div className="flex flex-col items-start leading-tight min-w-0">

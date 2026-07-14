@@ -11,10 +11,10 @@ export default async function DashboardLayout({ children }) {
     }
 
     return (
-        <div className="w-full min-h-screen flex flex-col md:flex-row gap-2 p-1 sm:p-2 bg-primary/5">
+        <div className="w-full h-[100dvh] flex flex-col md:flex-row gap-2 p-1 sm:p-2 bg-primary/5">
             <Sidebar />
 
-            <main className="flex-1 min-w-0 min-h-[calc(100vh-16px)] bg-background/90 backdrop-blur-xl border border-border/50 shadow-sm rounded-xl p-5 flex flex-col gap-5 overflow-hidden">
+            <main className="flex-1 min-w-0 bg-background/90 backdrop-blur-xl border border-border/50 shadow-sm rounded-xl p-3 sm:p-5 flex flex-col gap-3 sm:gap-5 overflow-y-auto overflow-x-hidden relative">
                 {children}
             </main>
         </div>

@@ -5,10 +5,8 @@ import {
     FiX, FiTrash2, FiFileText, FiChevronDown, FiEdit2, FiMail,
     FiUsers, FiLink, FiClock
 } from 'react-icons/fi';
-import { Playfair_Display } from "next/font/google";
 import { useSearchParams } from 'next/navigation';
 
-const serif = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 // ── UTILS ──────────────────────────────────────────────────────────────────
 const pastelColors = ['#fdf4ff', '#eff6ff', '#f0fdf4', '#fffbeb', '#fef2f2', '#f3f4f6'];
@@ -143,7 +141,7 @@ const ContactDetailsPanel = ({ lead, onClose, onEdit }) => {
                             {initials}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <h2 className={`text-[20px] font-bold text-text-dark truncate ${serif.className}`}>{lead.company}</h2>
+                            <h2 className={`text-[20px] font-bold text-text-dark truncate`}>{lead.company}</h2>
                             <div className="flex items-center gap-1.5 text-[13px] text-muted font-medium mt-0.5">
                                 <FiMail size={12} className="shrink-0" />
                                 <span className="truncate">{lead.email}</span>
@@ -297,7 +295,7 @@ const AddContactForm = ({ onClose, onSave, editingLead }) => {
                         <div className="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
                             {editingLead ? <FiEdit2 size={16} /> : <FiUser size={16} />}
                         </div>
-                        <h3 className={`text-[20px] font-bold text-text-dark tracking-tight ${serif.className}`}>
+                        <h3 className={`text-[20px] font-bold text-text-dark tracking-tight`}>
                             {editingLead ? "Edit Contact" : "Add New Contact"}
                         </h3>
                     </div>
@@ -397,7 +395,7 @@ const BulkImportModal = ({ onClose }) => {
             <div className="absolute inset-0 bg-black/20 backdrop-blur-sm transition-opacity" onClick={onClose} />
             <div className="relative bg-background rounded-t-2xl sm:rounded-2xl shadow-xl border border-border/50 w-full sm:max-w-md p-6 sm:p-8 z-10 max-h-[90vh] overflow-y-auto">
                 <div className="flex items-center justify-between mb-5">
-                    <h3 className={`text-[18px] font-bold text-text-dark ${serif.className}`}>Import Contacts</h3>
+                    <h3 className={`text-[18px] font-bold text-text-dark`}>Import Contacts</h3>
                     <button onClick={onClose} className="p-2 rounded-lg hover:bg-surface text-muted hover:text-text-dark transition-colors cursor-pointer"><FiX size={18} /></button>
                 </div>
 
@@ -585,7 +583,7 @@ const Leads = () => {
     ];
 
     return (
-        <div className="relative flex flex-col h-[calc(100vh-2rem)] lg:h-full w-full min-h-0 max-w-full overflow-x-hidden px-1 sm:px-2 pb-2">
+        <div className="relative flex flex-col min-h-full h-full w-full max-w-full overflow-x-hidden px-1 sm:px-2 pb-2">
 
             {showBulk && <BulkImportModal onClose={() => setShowBulk(false)} />}
 
@@ -609,7 +607,7 @@ const Leads = () => {
             <div className="flex flex-col gap-5 shrink-0 mb-6 mt-2">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className={`text-[28px] md:text-[32px] font-extrabold text-text-dark leading-[1.1] mb-1.5 tracking-tight ${serif.className}`}>Contacts</h1>
+                        <h1 className={`text-[28px] md:text-[32px] font-extrabold text-text-dark leading-[1.1] mb-1.5 tracking-tight`}>Contacts</h1>
                         <p className="text-[14px] font-medium text-muted">Manage your HR network and recruitment professionals.</p>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
@@ -730,7 +728,7 @@ const Leads = () => {
                         <div className="w-24 h-24 rounded-full bg-primary/5 flex items-center justify-center mb-6 border border-primary/10">
                             <FiUsers size={36} className="text-primary/40" />
                         </div>
-                        <h3 className={`text-[20px] font-bold text-text-dark mb-2 ${serif.className}`}>No contacts found</h3>
+                        <h3 className={`text-[20px] font-bold text-text-dark mb-2`}>No contacts found</h3>
                         <p className="text-[13.5px] text-muted text-center max-w-sm mb-8 font-medium leading-relaxed">
                             {searchQuery ? "Try adjusting your search or filters to find what you're looking for." : "Build your network by adding contacts manually or importing a CSV file."}
                         </p>

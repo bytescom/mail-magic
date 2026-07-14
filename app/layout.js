@@ -1,17 +1,10 @@
-import { Geist, Geist_Mono, Manrope } from "next/font/google";
+import { Manrope } from "next/font/google";
 import AuthProvider from "@/lib/AuthProvider";
 import ReduxProvider from "@/components/providers/ReduxProvider";
+import VersionUpgradeModal from "@/components/VersionUpgradeModal";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -34,7 +27,30 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <AuthProvider>
           <ReduxProvider>
+            <VersionUpgradeModal />
             {children}
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                duration: 3500,
+                style: {
+                  background: "var(--color-background, #fff)",
+                  color: "var(--color-text-dark, #111)",
+                  border: "1px solid var(--color-border, #e5e7eb)",
+                  borderRadius: "12px",
+                  fontSize: "13px",
+                  fontWeight: "600",
+                  boxShadow: "0 8px 30px rgba(0,0,0,0.10)",
+                  padding: "12px 16px",
+                },
+                success: {
+                  iconTheme: { primary: "#10b981", secondary: "#fff" },
+                },
+                error: {
+                  iconTheme: { primary: "#ef4444", secondary: "#fff" },
+                },
+              }}
+            />
           </ReduxProvider>
         </AuthProvider>
       </body>

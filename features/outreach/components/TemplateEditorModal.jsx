@@ -1,11 +1,11 @@
 "use client"
 import React, { useState, useRef } from 'react'
 import { FiX, FiInfo } from 'react-icons/fi';
-import { Playfair_Display } from "next/font/google";
+import { useScrollLock } from "@/lib/useScrollLock";
 
-const serif = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 const TemplateEditorModal = ({ onClose, onSave, initialData }) => {
+    useScrollLock(true);
     const [name, setName] = useState(initialData?.name || '');
     const [subject, setSubject] = useState(initialData?.subject || '');
     const [content, setContent] = useState(initialData?.body || initialData?.content || 'Hi {{name}},\n\n');
@@ -46,7 +46,7 @@ const TemplateEditorModal = ({ onClose, onSave, initialData }) => {
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-border/50 bg-[#f9f9f9]">
                     <div className="flex flex-col">
-                        <h2 className={`text-[20px] font-bold text-text-dark ${serif.className}`}>Create Email Template</h2>
+                        <h2 className={`text-[20px] font-bold text-text-dark`}>Create Email Template</h2>
                         <p className="text-[12px] font-medium text-muted">Design a reusable template for your campaigns.</p>
                     </div>
                     <button 

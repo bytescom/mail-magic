@@ -1,14 +1,13 @@
-﻿"use client"
+"use client"
 import React, { useState, useEffect } from 'react';
 import {
     FiCheck, FiAlertCircle, FiClock, FiPlus,
     FiCheckCircle, FiZap, FiMail, FiX, FiEdit2,
     FiChevronDown, FiSave, FiSend, FiInfo
 } from 'react-icons/fi';
-import { Playfair_Display } from "next/font/google";
 import TimelineStep from './TimelineStep';
+import { useScrollLock } from "@/lib/useScrollLock";
 
-const serif = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 const Toggle = ({ checked, onChange, size = 'md' }) => {
     const w = size === 'sm' ? 'w-9 h-5' : 'w-11 h-6';
@@ -33,6 +32,7 @@ const Toast = ({ message, type = 'success', onDismiss }) => {
 };
 
 const StepEditModal = ({ step, onClose, onSave }) => {
+    useScrollLock(true);
     const [waitTime, setWaitTime] = useState(step.waitTime || '3 Days');
     const [templateName, setTemplateName] = useState(step.templateName || '');
     const [subject, setSubject] = useState(step.subject || '');
@@ -45,7 +45,7 @@ const StepEditModal = ({ step, onClose, onSave }) => {
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0"><FiEdit2 size={16} /></div>
-                        <h3 className={`text-[20px] font-bold text-text-dark tracking-tight ${serif.className}`}>Edit Step</h3>
+                        <h3 className={`text-[20px] font-bold text-text-dark tracking-tight`}>Edit Step</h3>
                     </div>
                     <button onClick={onClose} className="p-2 rounded-lg hover:bg-surface text-muted hover:text-text-dark transition-colors cursor-pointer"><FiX size={18} /></button>
                 </div>
@@ -79,6 +79,7 @@ const StepEditModal = ({ step, onClose, onSave }) => {
 };
 
 const LaunchModal = ({ steps, automationActive, onClose, onLaunch }) => {
+    useScrollLock(true);
     const [launching, setLaunching] = useState(false);
     const handleLaunch = async () => { setLaunching(true); await new Promise(r => setTimeout(r, 1500)); setLaunching(false); onLaunch(); onClose(); };
     return (
@@ -86,7 +87,7 @@ const LaunchModal = ({ steps, automationActive, onClose, onLaunch }) => {
             <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={onClose} />
             <div className="relative bg-background rounded-2xl shadow-xl border border-border/50 w-full max-w-md mx-4 p-6 z-10">
                 <div className="flex items-center justify-between mb-5">
-                    <h3 className={`text-[20px] font-bold text-text-dark tracking-tight ${serif.className}`}>Review & Launch</h3>
+                    <h3 className={`text-[20px] font-bold text-text-dark tracking-tight`}>Review & Launch</h3>
                     <button onClick={onClose} className="p-2 rounded-lg hover:bg-surface text-muted hover:text-text-dark transition-colors cursor-pointer"><FiX size={18} /></button>
                 </div>
                 <div className="bg-surface/60 border border-border/50 rounded-xl p-4 mb-5 flex flex-col gap-3">
@@ -111,6 +112,7 @@ const LaunchModal = ({ steps, automationActive, onClose, onLaunch }) => {
 };
 
 const AIOptimizerPanel = ({ onClose, onApply }) => {
+    useScrollLock(true);
     const [applying, setApplying] = useState(false);
     const [applied, setApplied] = useState(false);
     const suggestions = [
@@ -127,7 +129,7 @@ const AIOptimizerPanel = ({ onClose, onApply }) => {
                     <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0"><FiZap size={16} /></div>
                         <div>
-                            <h2 className={`text-[17px] font-bold text-text-dark ${serif.className}`}>AI Optimizer</h2>
+                            <h2 className={`text-[17px] font-bold text-text-dark`}>AI Optimizer</h2>
                             <p className="text-[11px] font-medium text-muted">Powered by live performance data</p>
                         </div>
                     </div>
@@ -245,7 +247,7 @@ export default function FollowUpAutomationPage() {
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
                     </div>
                     <div>
-                        <h1 className={`text-[24px] md:text-[28px] font-extrabold text-text-dark leading-[1.1] mb-0.5 tracking-tight ${serif.className}`}>Follow-Up Automation</h1>
+                        <h1 className={`text-[24px] md:text-[28px] font-extrabold text-text-dark leading-[1.1] mb-0.5 tracking-tight`}>Follow-Up Automation</h1>
                         <p className="text-[13px] font-medium text-muted">Campaign: <span className="font-bold text-text-dark">Q4 Enterprise Outreach 2024</span></p>
                     </div>
                 </div>

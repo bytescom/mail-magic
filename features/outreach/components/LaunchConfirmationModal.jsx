@@ -1,11 +1,11 @@
 "use client"
 import React from 'react'
 import { FiX, FiCheck, FiSend } from 'react-icons/fi';
-import { Playfair_Display } from "next/font/google";
+import { useScrollLock } from "@/lib/useScrollLock";
 
-const serif = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 const LaunchConfirmationModal = ({ onClose, onConfirm, campaignName, audienceCount }) => {
+    useScrollLock(true);
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             {/* Backdrop */}
@@ -21,7 +21,7 @@ const LaunchConfirmationModal = ({ onClose, onConfirm, campaignName, audienceCou
                         <FiSend size={28} className="translate-x-0.5" />
                     </div>
                     
-                    <h2 className={`text-[22px] font-bold text-text-dark mb-2 ${serif.className}`}>Launch Campaign?</h2>
+                    <h2 className={`text-[22px] font-bold text-text-dark mb-2`}>Launch Campaign?</h2>
                     <p className="text-[14px] text-muted font-medium mb-6">
                         You are about to launch <span className="font-bold text-text-dark">"{campaignName}"</span> to <span className="font-bold text-text-dark">{audienceCount} contacts</span>. Once launched, the first batch of emails will begin sending.
                     </p>

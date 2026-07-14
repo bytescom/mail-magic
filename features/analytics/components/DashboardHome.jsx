@@ -10,8 +10,8 @@ import {
   FiMail, FiUser, FiMessageSquare, FiCalendar,
   FiClock, FiAlertCircle,
 } from 'react-icons/fi';
-import { IoIosNotifications } from "react-icons/io";
 import { Playfair_Display } from "next/font/google";
+import NotificationPanel from "@/components/layout/NotificationPanel";
 
 const serif = Playfair_Display({
   subsets: ["latin"],
@@ -323,9 +323,7 @@ const Dashboard = () => {
           Dashboard
         </h1>
         <div className="flex items-center gap-2">
-          <button className="w-9 h-9 rounded-full bg-background border border-border flex items-center justify-center text-text hover:bg-surface transition-colors cursor-pointer shadow-sm">
-            <IoIosNotifications size={20} />
-          </button>
+          <NotificationPanel isOpen={true} mobileOpen={false} />
         </div>
       </header>
 

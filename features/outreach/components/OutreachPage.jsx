@@ -4,11 +4,9 @@ import {
     FiPlus, FiSearch, FiEdit2, FiTrash2,
     FiCopy, FiPlay, FiFilter, FiCalendar, FiEye, FiLoader
 } from 'react-icons/fi';
-import { Playfair_Display } from "next/font/google";
 import CampaignBuilder from './CampaignBuilder';
 import TemplateEditorModal from './TemplateEditorModal';
 
-const serif = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const CARD_COLORS = ['bg-orange-100', 'bg-blue-100', 'bg-green-100', 'bg-purple-100', 'bg-yellow-100', 'bg-pink-100'];
@@ -233,13 +231,13 @@ const Outreach = () => {
     }
 
     return (
-        <div className="relative flex flex-col h-[calc(100vh-2rem)] lg:h-full w-full min-h-0 max-w-full overflow-x-hidden px-1 sm:px-2 pb-2">
+        <div className="relative flex flex-col min-h-full h-full w-full max-w-full overflow-x-hidden px-1 sm:px-2 pb-2">
 
             {/* Header & Tabs */}
             <div className="flex flex-col gap-5 shrink-0 mb-6 mt-2">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className={`text-[28px] md:text-[32px] font-extrabold text-text-dark leading-[1.1] mb-1.5 tracking-tight ${serif.className}`}>Outreach</h1>
+                        <h1 className={`text-[28px] md:text-[32px] font-extrabold text-text-dark leading-[1.1] mb-1.5 tracking-tight`}>Outreach</h1>
                         <p className="text-[14px] font-medium text-muted">Manage your email campaigns and outreach templates.</p>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">

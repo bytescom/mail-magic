@@ -19,13 +19,13 @@ export async function GET() {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        console.log(`📋 Leads GET — session: ${session.user.email}, userId: ${user._id}`);
+
 
         const contacts = await HrEmail.find({ userId: user._id })
             .sort({ createdAt: -1 })
             .lean();
 
-        console.log(`📋 Found ${contacts.length} contacts for ${session.user.email}`);
+
 
         return NextResponse.json({ contacts });
     } catch (error) {

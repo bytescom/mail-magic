@@ -4,12 +4,7 @@ import {
     FiPlus, FiX, FiCheck, FiClock, FiSkipForward, FiMoreHorizontal,
     FiAlertTriangle, FiRefreshCw, FiCalendar
 } from 'react-icons/fi';
-import { Playfair_Display } from "next/font/google";
 
-const serif = Playfair_Display({
-    subsets: ["latin"],
-    weight: ["400", "500", "600", "700"],
-});
 
 const sampleFollowUps = [
     {
@@ -96,7 +91,7 @@ const FollowUp = () => {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
                     <p className="text-[11px] font-bold text-primary tracking-[0.1em] uppercase mb-1.5">Automation</p>
-                    <h1 className={`text-[32px] md:text-[36px] font-bold text-text-dark leading-[1.1] mb-1 tracking-tight ${serif.className}`}>Follow-Up Manager</h1>
+                    <h1 className={`text-[32px] md:text-[36px] font-bold text-text-dark leading-[1.1] mb-1 tracking-tight`}>Follow-Up Manager</h1>
                     <p className="text-[15px] font-medium text-text">Stay top of mind with recruiters. Never miss a follow-up.</p>
                 </div>
                 <button
@@ -132,7 +127,7 @@ const FollowUp = () => {
                 {showForm && (
                     <div className="border-b border-border bg-surface p-5 lg:p-6">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className={`text-[16px] font-bold text-primary ${serif.className}`}>Schedule a Follow-Up</h3>
+                            <h3 className={`text-[16px] font-bold text-primary`}>Schedule a Follow-Up</h3>
                             <button onClick={() => setShowForm(false)} className="p-1.5 rounded-full hover:bg-gray-200 transition-colors cursor-pointer">
                                 <FiX size={16} className="text-text" />
                             </button>

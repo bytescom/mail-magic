@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FiX, FiMail, FiBriefcase, FiUser, FiActivity, FiLayers, FiFileText } from 'react-icons/fi';
-import { Playfair_Display } from "next/font/google";
 import { closeDrawer, fetchApplicationDetails } from '../../trackingSlice';
 
-const serif = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 export default function TrackingDrawer() {
     const dispatch = useDispatch();
@@ -49,7 +47,7 @@ export default function TrackingDrawer() {
                             {data ? data.letter : ''}
                         </div>
                         <div>
-                            <h2 className={`text-[20px] font-bold text-text-dark tracking-tight leading-tight ${serif.className}`}>
+                            <h2 className={`text-[20px] font-bold text-text-dark tracking-tight leading-tight`}>
                                 {data ? data.company : 'Loading...'}
                             </h2>
                             <div className="flex items-center gap-2 mt-1">
