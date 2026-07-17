@@ -1,6 +1,6 @@
 {
-  "name": "mail-magic",
-  "version": "2.1.0",
+  "name": "desento",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,29 +9,24 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@vercel/analytics": "^1.6.1",
-    "@vercel/blob": "^2.0.1",
-    "@vercel/speed-insights": "^1.3.1",
-    "clsx": "^2.1.1",
-    "googleapis": "^170.1.0",
-    "lucide-react": "^0.562.0",
-    "mongodb": "^7.0.0",
-    "mongoose": "^9.1.4",
-    "next": "^16.2.6",
-    "next-auth": "^4.24.13",
-    "papaparse": "^5.5.3",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "sonner": "^2.0.7",
-    "tailwind-merge": "^3.4.0",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@reduxjs/toolkit": "^2.12.0",
+    "dotenv": "^17.4.2",
+    "mongoose": "^9.7.4",
+    "next": "15.5.20",
+    "next-auth": "^4.24.14",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-hot-toast": "^2.6.0",
+    "react-icons": "^5.7.0",
+    "react-redux": "^9.3.0",
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "autoprefixer": "^10.4.23",
     "eslint": "^9",
-    "eslint-config-next": "16.1.3",
-    "sharp": "^0.34.5",
+    "eslint-config-next": "16.2.10",
     "tailwindcss": "^4"
   }
 }

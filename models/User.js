@@ -76,7 +76,7 @@ const UserSchema = new mongoose.Schema({
     settings: {
         emailDelay: {
             type: Number,
-            default: 3000, // 3 seconds delay between emails
+            default: 3000,
         },
         theme: {
             type: String,
@@ -85,6 +85,23 @@ const UserSchema = new mongoose.Schema({
         autoAttachResume: {
             type: Boolean,
             default: true,
+        },
+        // Profile enrichment fields used in AI email generation
+        headline: {
+            type: String,
+            default: '',
+        },
+        portfolioLink: {
+            type: String,
+            default: '',
+        },
+        experienceSummary: {
+            type: String,
+            default: '',
+        },
+        skills: {
+            type: [String],
+            default: [],
         },
     },
     createdAt: {
