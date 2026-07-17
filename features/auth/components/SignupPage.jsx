@@ -11,6 +11,7 @@ export default function SignUpPage() {
             <div className="flex-1 min-h-[calc(100vh-16px)] w-full bg-white rounded-2xl flex flex-col items-center justify-center p-6 sm:p-12 lg:p-16 relative">
                 <div className="absolute top-10 left-0 w-full flex justify-center items-center">
                     <Link href="/" className="flex items-center gap-3 group" aria-label="Desento">
+                        <img src="/icon.svg" alt="Desento Logo" className="w-8 h-8" />
                         <h1 className="text-2xl font-black tracking-tighter text-text-dark transition-colors">
                             Desento<span className="text-secondary">.</span>
                         </h1>

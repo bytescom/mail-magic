@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import InteractiveHeroUI from './InteractiveHeroUI'
+import DesentoHeroIllustration from '@/components/DesentoHeroIllustration'
 
 const Hero = () => {
     return (
@@ -42,7 +42,7 @@ const Hero = () => {
 
                 {/* Right Column (Interactive Dashboard UI) */}
                 <div className="relative w-full flex items-center justify-center lg:justify-end z-10">
-                    <InteractiveHeroUI />
+                    <DesentoHeroIllustration />
                 </div>
 
             </div>

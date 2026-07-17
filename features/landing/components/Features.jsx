@@ -6,7 +6,7 @@ const featuresData = [
         icon: FiZap,
         title: "Lightning Fast Generation",
         desc: "AI writes highly professional, personalized outreach emails instantly using your value proposition.",
-        span: "md:col-span-3 h-[420px]",
+        span: "md:col-span-3 min-h-[420px]",
         customContent: (
             <div className="w-full max-w-sm flex-1 flex flex-col gap-3 justify-center">
                 <div className="flex items-center gap-2 p-3 bg-white border border-gray-100 rounded-xl shadow-sm">
@@ -36,7 +36,7 @@ const featuresData = [
         icon: FiShield,
         title: "Secure Gmail Sync",
         desc: "Send outreach campaigns directly through your own Gmail account with bank-tier security.",
-        span: "md:col-span-3 h-[420px]",
+        span: "md:col-span-3 min-h-[420px]",
         customContent: (
             <div className="w-full flex-1 flex flex-col items-center justify-center gap-4 relative">
                 <div className="w-full max-w-sm flex flex-col gap-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -63,7 +63,7 @@ const featuresData = [
         icon: FiBarChart2,
         title: "Visual Tracking",
         desc: "Track every outreach campaign from sent to reply on a visual dashboard.",
-        span: "md:col-span-2 h-[380px]",
+        span: "md:col-span-2 min-h-[380px]",
         customContent: (
             <div className="w-full max-w-xs h-full flex flex-col justify-center gap-3">
                 {[
@@ -86,7 +86,7 @@ const featuresData = [
         icon: FiDatabase,
         title: "Auto-Fill Profile",
         desc: "Store target personas and templates. Auto-fills perfectly.",
-        span: "md:col-span-2 h-[380px]",
+        span: "md:col-span-2 min-h-[380px]",
         customContent: (
             <div className="w-full h-full flex flex-col justify-center items-center relative">
                 <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 w-full max-w-[220px] flex flex-col gap-3">
@@ -104,7 +104,7 @@ const featuresData = [
         icon: FiCopy,
         title: "Smart Templates",
         desc: "Reuse and perfectly customize dynamic email outreach templates.",
-        span: "md:col-span-2 h-[380px]",
+        span: "md:col-span-2 min-h-[380px]",
         customContent: (
             <div className="w-full max-w-xs h-full flex flex-col justify-center gap-3">
                 {["Cold Outreach Pitch", "Product Demo Invite", "Quick Follow-Up Thread"].map((tpl, i) => (

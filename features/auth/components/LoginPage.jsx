@@ -41,6 +41,7 @@ export default function LoginPage() {
                 {/* Upper Spacing / Logo Header */}
                 <div className="absolute top-10 left-0 w-full flex justify-center items-center">
                     <Link href="/" className="flex items-center gap-3 group" aria-label="Desento">
+                        <img src="/icon.svg" alt="Desento Logo" className="w-8 h-8" />
                         <h1 className="text-2xl font-black tracking-tighter text-text-dark transition-colors">
                             Desento<span className="text-secondary">.</span>
                         </h1>

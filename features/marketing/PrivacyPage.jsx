@@ -34,7 +34,8 @@ export default function PrivacyPage() {
 
             <header className="relative z-10 border-b border-border/60 bg-white/75 backdrop-blur-md">
                 <nav className="mx-auto flex h-17.5 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Privacy navigation">
-                    <Link href="/" className="flex items-center gap-1" aria-label="Desento home">
+                    <Link href="/" className="flex items-center gap-2" aria-label="Desento home">
+                        <img src="/icon.svg" alt="Desento Logo" className="w-6 h-6" />
                         <span className="text-xl font-black tracking-tight text-text-dark hover:text-primary">
                             Desento<span className="text-secondary">.</span>
                         </span>

@@ -57,14 +57,7 @@ export default function VersionUpgradeModal() {
         try {
             const seenVersion = localStorage.getItem(STORAGE_KEY);
 
-            // Show only if user has a PREVIOUS version stored (returning user)
-            // but hasn't seen the current version yet.
-            // Brand-new users (no key at all) get the current version silently.
-            if (seenVersion === null) {
-                // First-ever visit — silently stamp version, no modal
-                localStorage.setItem(STORAGE_KEY, CURRENT_VERSION);
-                return;
-            }
+            // Show if user hasn't seen the current version yet (including brand new users)
 
             if (seenVersion !== CURRENT_VERSION) {
                 // Returning user who hasn't seen this version → show modal
