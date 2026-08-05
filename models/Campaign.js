@@ -64,12 +64,12 @@ const CampaignSchema = new mongoose.Schema({
     updatedAt: { type: Date, default: Date.now },
 });
 
-// Auto-update updatedAt on save
-CampaignSchema.pre('save', function (next) {
+// Auto-update updatedAt on save (async pattern — Mongoose 7+ compatible)
+CampaignSchema.pre('save', async function () {
     this.updatedAt = new Date();
-    next();
 });
 
 CampaignSchema.index({ userId: 1, createdAt: -1 });
 
-export default mongoose.models.Campaign || mongoose.model('Campaign', CampaignSchema);
+const Campaign = mongoose.models.Campaign || mongoose.model('Campaign', CampaignSchema);
+export default Campaign;

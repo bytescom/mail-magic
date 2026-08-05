@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions, auth } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import HrEmail from "@/models/HrEmail";
 import User from "@/models/User";
@@ -8,7 +7,7 @@ import User from "@/models/User";
 // GET — fetch all HR contacts for logged-in user
 export async function GET() {
     try {
-        const session = await getServerSession(authOptions);
+        const session = await auth();
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
@@ -37,7 +36,7 @@ export async function GET() {
 // POST — create a new HR contact
 export async function POST(request) {
     try {
-        const session = await getServerSession(authOptions);
+        const session = await auth();
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }

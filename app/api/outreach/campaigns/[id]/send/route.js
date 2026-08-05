@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions, auth } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import Campaign from "@/models/Campaign";
 import HrEmail from "@/models/HrEmail";
@@ -15,7 +14,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // Sends the campaign emails via Gmail API and updates progress in DB.
 export async function POST(request, { params }) {
     try {
-        const session = await getServerSession(authOptions);
+        const session = await auth();
         if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
         await connectDB();

@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions, auth } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import Campaign from "@/models/Campaign";
 import User from "@/models/User";
+import mongoose from "mongoose";
 
 // GET — fetch all campaigns for logged-in user
 export async function GET() {
     try {
-        const session = await getServerSession(authOptions);
+        const session = await auth();
         if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
         await connectDB();
@@ -29,7 +29,7 @@ export async function GET() {
 // POST — create a new campaign
 export async function POST(request) {
     try {
-        const session = await getServerSession(authOptions);
+        const session = await auth();
         if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
         await connectDB();
@@ -43,15 +43,18 @@ export async function POST(request) {
             return NextResponse.json({ error: "Campaign name is required" }, { status: 400 });
         }
 
+        const validTemplateId = mongoose.Types.ObjectId.isValid(templateId) ? templateId : null;
+        const validAudienceIds = (audienceIds || []).filter(id => mongoose.Types.ObjectId.isValid(id));
+
         const campaign = await Campaign.create({
             userId: user._id,
             name: name.trim(),
             senderEmail: senderEmail || '',
-            templateId: templateId || null,
+            templateId: validTemplateId,
             templateSnapshot: templateSnapshot || {},
-            audienceIds: audienceIds || [],
+            audienceIds: validAudienceIds,
             attachments: attachments || [],
-            totalRecipients: (audienceIds || []).length,
+            totalRecipients: validAudienceIds.length,
             trackOpens: trackOpens ?? true,
             trackReplies: trackReplies ?? true,
             stopAfterReply: stopAfterReply ?? true,

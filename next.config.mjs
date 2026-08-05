@@ -16,7 +16,16 @@ const nextConfig = {
       },
     ],
   },
+  webpack: (config, { dev }) => {
+    if (dev) {
+      // Disable filesystem cache in development to prevent ENOENT
+      // pack.gz corruption errors on Windows during hot reloads
+      config.cache = false;
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
+
 
